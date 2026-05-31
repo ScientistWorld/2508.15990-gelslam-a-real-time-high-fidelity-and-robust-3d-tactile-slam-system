@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU smoke job after retaining the origin coverage keyframe so final revisits can be proposed as loop closures; checks valid-loop acceptance and GelSLAM tracking improvement."
+notes: "CPU smoke job after forcing the final frame into the keyframe graph; checks whether the closed-loop endpoint is accepted as a valid loop and improves GelSLAM tracking."

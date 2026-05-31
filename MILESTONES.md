@@ -36,6 +36,10 @@
 - Diagnostics showed the origin keyframe was pruned from coverage, so the final revisit could not be proposed as a loop closure.
 - Updated coverage pruning to retain the initial anchor keyframe as a loop target.
 
+### [2026-05-31 19:00] - method_runs
+- The origin anchor remained in coverage, but the final closed-loop frame was not itself promoted to a keyframe, so the true endpoint revisit was still not checked.
+- Refactored loop evaluation into a shared helper and forced the final frame into the keyframe graph before pose-graph optimization.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.

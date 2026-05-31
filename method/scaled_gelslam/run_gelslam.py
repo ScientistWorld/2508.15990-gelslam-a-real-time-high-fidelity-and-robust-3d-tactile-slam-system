@@ -142,6 +142,56 @@ def run(
     rejected_loops = 0
     rejected_loop_details = []
 
+    def evaluate_loop_candidates(new_key: int, k_new: int) -> None:
+        nonlocal rejected_loops
+        for cov_idx in coverage:
+            if abs(new_key - cov_idx) < 8:
+                continue
+            proposal = feature_candidate(frames[cov_idx], frames[new_key])
+            if proposal is None:
+                continue
+            init, inliers = proposal
+            refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
+            cov_key = keyframes.index(cov_idx)
+            odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])
+            odom_err = se3_error(odom_rel, refined)
+            odom_translation_err = float(np.linalg.norm(odom_err[:2]))
+            odom_yaw_err = float(abs(odom_err[5]))
+            if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
+                if odom_translation_err <= loop_odom_translation_gate and odom_yaw_err <= loop_odom_yaw_gate:
+                    loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers))
+                    keyframe_edges.append((cov_key, k_new, refined))
+                else:
+                    rejected_loops += 1
+                    if len(rejected_loop_details) < 50:
+                        rejected_loop_details.append(
+                            {
+                                "coverage_frame": int(cov_idx),
+                                "new_keyframe": int(new_key),
+                                "reason": "odometry_gate",
+                                "ccs": float(qccs),
+                                "scr": float(qscr),
+                                "sift_inliers": int(inliers),
+                                "odom_translation_err_px": odom_translation_err,
+                                "odom_yaw_err_rad": odom_yaw_err,
+                            }
+                        )
+            else:
+                rejected_loops += 1
+                if len(rejected_loop_details) < 50:
+                    rejected_loop_details.append(
+                        {
+                            "coverage_frame": int(cov_idx),
+                            "new_keyframe": int(new_key),
+                            "reason": "normalflow_quality",
+                            "ccs": float(qccs),
+                            "scr": float(qscr),
+                            "sift_inliers": int(inliers),
+                            "odom_translation_err_px": odom_translation_err,
+                            "odom_yaw_err_rad": odom_yaw_err,
+                        }
+                    )
+
     for t in range(1, n):
         rel, ccs, scr, _ = estimate_relative(frames[latest_key], frames[t], prev_rel)
         if ccs < ccs_threshold or scr < scr_threshold:
@@ -154,56 +204,7 @@ def run(
                 keyframe_abs_est.append(compose(keyframe_abs_est[-1], edge_measurement))
                 frame_parent[new_key] = k_new
                 frame_to_parent[new_key] = 0.0
-                for cov_idx in coverage:
-                    if abs(new_key - cov_idx) < 8:
-                        continue
-                    proposal = feature_candidate(frames[cov_idx], frames[new_key])
-                    if proposal is None:
-                        continue
-                    init, inliers = proposal
-                    refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
-                    cov_key = keyframes.index(cov_idx)
-                    odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])
-                    odom_err = se3_error(odom_rel, refined)
-                    odom_translation_err = float(np.linalg.norm(odom_err[:2]))
-                    odom_yaw_err = float(abs(odom_err[5]))
-                    if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
-                        if (
-                            odom_translation_err <= loop_odom_translation_gate
-                            and odom_yaw_err <= loop_odom_yaw_gate
-                        ):
-                            loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers))
-                            keyframe_edges.append((cov_key, k_new, refined))
-                        else:
-                            rejected_loops += 1
-                            if len(rejected_loop_details) < 50:
-                                rejected_loop_details.append(
-                                    {
-                                        "coverage_frame": int(cov_idx),
-                                        "new_keyframe": int(new_key),
-                                        "reason": "odometry_gate",
-                                        "ccs": float(qccs),
-                                        "scr": float(qscr),
-                                        "sift_inliers": int(inliers),
-                                        "odom_translation_err_px": odom_translation_err,
-                                        "odom_yaw_err_rad": odom_yaw_err,
-                                    }
-                                )
-                    else:
-                        rejected_loops += 1
-                        if len(rejected_loop_details) < 50:
-                            rejected_loop_details.append(
-                                {
-                                    "coverage_frame": int(cov_idx),
-                                    "new_keyframe": int(new_key),
-                                    "reason": "normalflow_quality",
-                                    "ccs": float(qccs),
-                                    "scr": float(qscr),
-                                    "sift_inliers": int(inliers),
-                                    "odom_translation_err_px": odom_translation_err,
-                                    "odom_yaw_err_rad": odom_yaw_err,
-                                }
-                            )
+                evaluate_loop_candidates(new_key, k_new)
                 coverage = update_coverage_set(coverage, new_key, keyframes, frames, keyframe_abs_est)
                 latest_key = new_key
                 prev_rel = np.zeros(6, dtype=np.float64)
@@ -218,6 +219,19 @@ def run(
         frame_parent[t] = len(keyframes) - 1
         frame_to_parent[t] = rel
         prev_rel = rel
+
+    final_frame = n - 1
+    if latest_key != final_frame:
+        edge_measurement = frame_to_parent[final_frame].copy()
+        keyframes.append(final_frame)
+        k_new = len(keyframes) - 1
+        keyframe_edges.append((k_new - 1, k_new, edge_measurement))
+        keyframe_abs_est.append(compose(keyframe_abs_est[-1], edge_measurement))
+        frame_parent[final_frame] = k_new
+        frame_to_parent[final_frame] = 0.0
+        evaluate_loop_candidates(final_frame, k_new)
+        coverage = update_coverage_set(coverage, final_frame, keyframes, frames, keyframe_abs_est)
+        latest_key = final_frame
 
     initial_keys = np.zeros((len(keyframes), 6), dtype=np.float64)
     for i, j, meas in keyframe_edges:
