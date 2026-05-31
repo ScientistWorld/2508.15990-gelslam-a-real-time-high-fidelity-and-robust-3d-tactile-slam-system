@@ -74,6 +74,11 @@
 - Tightened the loop CCS verifier from 0.58 to 0.75 to reject ambiguous SIFT matches.
 - Relaxed only the final origin-anchor odometry gate from 25 px to 32 px so the high-quality endpoint revisit candidate remains testable.
 
+### [2026-05-31 21:00] - method_runs
+- Tightening loop verification fixed false loop closures on the 144-frame benchmark: one valid loop was accepted with 0.0 false-loop rate.
+- Tracking still failed because the single loop was over-weighted, degrading GelSLAM to 14.66 deg / 1.69 mm versus NormalFlow at 9.20 deg / 1.21 mm.
+- Reduced the verified-loop edge weight from 12 to 2 for the next run while keeping the stricter verifier unchanged.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.

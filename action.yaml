@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU smoke job after tightening loop CCS verification to 0.75 and allowing only the high-quality final origin-anchor closure through a 32px gate on the 144-frame benchmark."
+notes: "CPU smoke job on the 144-frame benchmark with strict loop verification retained and verified loop-edge weight reduced from 12 to 2 to avoid over-correcting from one closure."

@@ -296,7 +296,7 @@ def main() -> None:
     parser.add_argument("--loop-odom-translation-gate", type=float, default=18.0)
     parser.add_argument("--loop-odom-yaw-gate", type=float, default=0.70)
     parser.add_argument("--final-anchor-translation-gate", type=float, default=32.0)
-    parser.add_argument("--loop-edge-weight", type=int, default=12)
+    parser.add_argument("--loop-edge-weight", type=int, default=2)
     args = parser.parse_args()
     run(
         Path(args.dataset),
