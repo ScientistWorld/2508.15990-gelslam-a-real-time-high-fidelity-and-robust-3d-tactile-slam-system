@@ -1,6 +1,7 @@
 {
-  "frames": 144,
+  "frames": 192,
   "patch_size": 56,
   "seed": 7,
-  "description": "Synthetic GelSight-like long-horizon loop trajectory."
+  "trajectory": "sixdof",
+  "description": "Synthetic GelSight-like long-horizon loop trajectory with known 6DoF ground truth."
 }
