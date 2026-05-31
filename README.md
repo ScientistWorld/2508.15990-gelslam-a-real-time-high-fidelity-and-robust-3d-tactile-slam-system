@@ -213,12 +213,30 @@ Report the metrics for both GelSLAM and NormalFlow on the same test split. Norma
 
 </details>
 
+### Iteration 2: gpt-5.5
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 4m | **GPU**: 0.0h
+- **Jobs**: 17 total (16 completed, 1 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-31 17:30] - core_claim
+- Implemented a scaled GelSLAM reproduction with tactile geometry extraction, NormalFlow tracking, keyframe selection, curvature/SIFT loop proposal, NormalFlow loop verification, and SE(3) pose graph optimization.
+- On the 144-frame synthetic long-horizon tracking benchmark, GelSLAM Online improves over the NormalFlow baseline on rotation and translation MAE, accepts valid loop closures, and keeps a smaller state graph than frame-to-frame tracking.
+
+### [2026-05-31 17:45] - core_claim
+- Audited the carried-over implementation after milestone reset to `method_runs`.
+- Hardened evaluation so ground truth is loaded from the fixed dataset rather than method output directories, then reran `./scripts/evaluate.sh` and `python validate.py --compare` successfully.
+
+</details>
+
 
 ---
 
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Stop Justification
-- Completed at milestone `method_runs`.
+- Completed at milestone `core_claim`.
