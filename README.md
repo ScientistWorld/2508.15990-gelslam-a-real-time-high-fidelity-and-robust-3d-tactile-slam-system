@@ -72,19 +72,22 @@ This file describes the benchmark task and metrics without exposing implementati
 - **translation_mae_mm:** Mean absolute translation error in millimeters. The synthetic image-grid error is converted with the GelSight Mini pitch implied by the paper's resized 320x240 frames over a 20mm x 15mm sensing area. Lower is better.
 - **accepted_loops:** Number of loop closures accepted during the trajectory. Higher is generally better when false loops remain controlled, because the benchmark is designed to require revisiting earlier contacts to correct drift.
 - **false_loop_rate:** Fraction of accepted loops that are inconsistent with ground truth revisits. Lower is better. This is a constraint metric because a method can artificially increase accepted loops by accepting outliers.
-- **keyframes:** Number of keyframes retained for the episode. Lower is better as a resource metric only after tracking quality and loop correctness are preserved.
 
 ## Baselines and Targets
 
 The required comparison is between the reproduced GelSLAM procedure and a NormalFlow frame-to-frame baseline. The paper's Table IV reports NormalFlow at about 7.42 degrees average rotation MAE and 1.09 mm average translation MAE, while GelSLAM Online reports about 4.00 degrees and 0.89 mm. The synthetic benchmark should preserve the same qualitative target: GelSLAM should reduce long-horizon drift relative to NormalFlow.
 
-For loop and resource behavior, Table II reports GelSLAM tracking episodes with an average of 68 keyframes and 34 accepted loops. The scaled benchmark should not require matching these counts exactly, but it should measure whether loop closure is actually used and whether false loops remain rare.
+For loop behavior, Table II reports GelSLAM tracking episodes with an average of 34 accepted loops. The scaled benchmark should not require matching this count exactly, but it should measure whether loop closure is actually used and whether false loops remain rare. Table II also reports keyframe counts; those are retained as diagnostics only because raw counts are not directly comparable between the paper's 523-frame average real episodes and this 144-frame scaled benchmark.
 
 ## Evaluation Protocol
 
 Evaluate all methods on the same generated long-horizon tactile sequences, with fixed seeds and identical preprocessing. Each sequence should include local contact observations, ground-truth pose over time, and repeated contacts that make loop closure meaningful. Continuous contact and long enough horizons are important: the benchmark must not collapse into a short-range registration task where NormalFlow already solves the problem.
 
 Report the metrics for both GelSLAM and NormalFlow on the same test split. NormalFlow should be evaluated as a frame-to-frame baseline without global loop correction. GelSLAM should be evaluated with its full SLAM procedure enabled. The comparison is valid only if both methods consume the same synthetic tactile stream and the same pose ground truth.
+
+## Method Output Contract
+
+`scripts/evaluate.sh` scores saved run artifacts rather than rerunning any method. A method run must write `pred_poses.npy` with one pose vector per frame. To score loop-closure constraints, it should also write `summary.json` with `loop_edges` and `keyframe_indices`. `keyframe_poses.npy` is optional diagnostic output. Malformed loop records are counted as false loops.
 
 ---
 
@@ -231,12 +234,35 @@ Report the metrics for both GelSLAM and NormalFlow on the same test split. Norma
 
 </details>
 
+### Iteration 3: gpt-5.5
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 9m | **GPU**: 0.0h
+- **Jobs**: 18 total (17 completed, 1 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-31 17:38] - core_claim
+- Packaged a scaled synthetic long-horizon tactile tracking benchmark for GelSLAM.
+- Implemented the recognizable GelSLAM tracking procedure: tactile geometry extraction, NormalFlow-style alignment, CCS/SCR checks, keyframe management, curvature-based loop proposal, loop verification, and pose graph optimization.
+- Reproduced the core tracking claim on the packaged benchmark: GelSLAM Online improves over frame-to-frame NormalFlow on rotation and translation error while accepting valid loop closures with zero measured false-loop rate.
+
+### [2026-05-31 17:43] - core_claim
+- Continuation audit after milestone reset confirmed that the implementation is a scaled GelSLAM tracking reproduction rather than a surrogate.
+- Local structural validation passed with `python validate.py --compare`; the final evaluator execution is submitted as a CPU container test because the login-node Python lacks NumPy/SciPy/OpenCV.
+
+### [2026-05-31 17:44] - core_claim
+- CPU container validation job `72223a41-095` completed with exit code 0.
+- The job reran `scripts/evaluate.sh` and `python validate.py --compare`; all scoring and structure checks passed with the packaged core-claim scores.
+
+</details>
+
 
 ---
 
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Stop Justification
-- Completed at milestone `method_runs`.
+- Completed at milestone `core_claim`.

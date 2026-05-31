@@ -22,4 +22,4 @@
 - Removed `keyframe_budget` from automated scoring and kept keyframe counts as diagnostics; `python validate.py --compare` now passes with trajectory and loop-closure experiments.
 
 ## Stop Justification
-- Current result supports `core_claim` for the documented scaled synthetic tracking setting and has passed container-side evaluation. The full physical GelSight 6DoF reconstruction benchmark remains out of scope for this package because it requires the 73 GB released dataset plus ROS2/GTSAM reconstruction infrastructure.
+- Completed at milestone `core_claim`.
