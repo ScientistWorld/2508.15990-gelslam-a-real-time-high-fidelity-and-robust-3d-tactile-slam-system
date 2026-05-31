@@ -27,11 +27,22 @@ cd /home/user
 mkdir -p scoring
 
 ARGS=()
-if [ -f checkpoints/normalflow_baseline/pred_poses.npy ]; then
-  ARGS+=(--method-run normalflow checkpoints/normalflow_baseline)
-fi
-if [ -f checkpoints/scaled_gelslam/pred_poses.npy ]; then
-  ARGS+=(--method-run gelslam_online checkpoints/scaled_gelslam)
+if [ "$#" -gt 0 ]; then
+  if [ $(( $# % 2 )) -ne 0 ]; then
+    echo "Usage: scripts/evaluate.sh [METHOD_NAME RUN_DIR]..." >&2
+    exit 2
+  fi
+  while [ "$#" -gt 0 ]; do
+    ARGS+=(--method-run "$1" "$2")
+    shift 2
+  done
+else
+  if [ -f checkpoints/normalflow_baseline/pred_poses.npy ]; then
+    ARGS+=(--method-run normalflow checkpoints/normalflow_baseline)
+  fi
+  if [ -f checkpoints/scaled_gelslam/pred_poses.npy ]; then
+    ARGS+=(--method-run gelslam_online checkpoints/scaled_gelslam)
+  fi
 fi
 
 if [ ${#ARGS[@]} -eq 0 ]; then

@@ -72,8 +72,8 @@ def make_trajectory(n: int, center: tuple[float, float], radius: float) -> np.nd
         wobble = 0.35 * np.sin(3 * a)
         x = cx + radius * np.cos(a) + 10.0 * np.sin(2.2 * a)
         y = cy + (radius * 0.72) * np.sin(a) + 8.0 * np.cos(1.6 * a)
-        theta = 0.42 * np.sin(a + 0.3) + wobble
-        poses.append((x, y, theta))
+        yaw = 0.42 * np.sin(a + 0.3) + wobble
+        poses.append((x, y, 0.0, 0.0, 0.0, yaw))
     return np.asarray(poses, dtype=np.float64)
 
 
@@ -82,7 +82,8 @@ def patch_from_surface(surface: np.ndarray, pose: np.ndarray, patch: int, noise:
     yy, xx = np.mgrid[0:patch, 0:patch].astype(np.float64)
     xx -= half
     yy -= half
-    c, s = np.cos(pose[2]), np.sin(pose[2])
+    yaw = pose[5] if len(pose) >= 6 else pose[2]
+    c, s = np.cos(yaw), np.sin(yaw)
     wx = pose[0] + c * xx - s * yy
     wy = pose[1] + s * xx + c * yy
     height = _bilinear(surface, wx, wy)

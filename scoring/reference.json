@@ -1,23 +1,23 @@
 {
   "experiments": {
     "synthetic_long_horizon_tracking": {
-      "description": "Scaled synthetic long-horizon tactile tracking benchmark, anchored to the paper's Table IV tracking MAE trends. Translation is reported in synthetic pixels for this benchmark; the paper values are millimeter MAE before synthetic scaling.",
+      "description": "Scaled synthetic long-horizon tactile tracking benchmark, anchored to the paper's Table IV tracking MAE trends. Translation is reported in millimeters using the GelSight Mini pixel pitch implied by 320x240 images over a 20mm x 15mm sensing area.",
       "weight": 0.6,
       "primary_metric": "rotation_mae_deg",
       "metrics": {
         "rotation_mae_deg": {"higher_is_better": false, "coefficient": 1.0},
-        "translation_mae_px": {"higher_is_better": false, "coefficient": 0.8}
+        "translation_mae_mm": {"higher_is_better": false, "coefficient": 0.8}
       },
       "results": {
         "normalflow": {
           "type": "baseline",
           "rotation_mae_deg": 7.4233333333,
-          "translation_mae_px": 1.0866666667
+          "translation_mae_mm": 1.0866666667
         },
         "gelslam_online": {
           "type": "proposed",
           "rotation_mae_deg": 4.0033333333,
-          "translation_mae_px": 0.8933333333
+          "translation_mae_mm": 0.8933333333
         }
       }
     },

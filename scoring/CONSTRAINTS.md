@@ -16,7 +16,7 @@ Report the NormalFlow frame-to-frame baseline on the same test split whenever re
 
 ## Evaluation
 
-Use the fixed metrics: `rotation_mae_deg`, `translation_mae_px`, `accepted_loops`, `false_loop_rate`, and `keyframes`. Do not remove `false_loop_rate` or `keyframes`; they are constraint metrics that prevent trivial improvements by accepting excessive loops or retaining unbounded state.
+Use the fixed metrics: `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`. Do not remove `false_loop_rate` or `keyframes`; they are constraint metrics that prevent trivial improvements by accepting excessive loops or retaining unbounded state.
 
 ## Procedure
 

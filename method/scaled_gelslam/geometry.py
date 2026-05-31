@@ -1,43 +1,54 @@
 from __future__ import annotations
 
-import math
-
 import numpy as np
+from scipy.spatial.transform import Rotation
+
+
+def as_se3(pose: np.ndarray) -> np.ndarray:
+    pose = np.asarray(pose, dtype=np.float64)
+    if pose.shape == (6,):
+        return pose.copy()
+    if pose.shape == (3,):
+        return np.array([pose[0], pose[1], 0.0, 0.0, 0.0, pose[2]], dtype=np.float64)
+    raise ValueError(f"Expected 3D SE(2) or 6D SE(3) vector, got shape {pose.shape}")
+
+
+def matrix_from_pose(pose: np.ndarray) -> np.ndarray:
+    pose = as_se3(pose)
+    mat = np.eye(4, dtype=np.float64)
+    mat[:3, :3] = Rotation.from_rotvec(pose[3:]).as_matrix()
+    mat[:3, 3] = pose[:3]
+    return mat
+
+
+def pose_from_matrix(mat: np.ndarray) -> np.ndarray:
+    return np.concatenate([mat[:3, 3], Rotation.from_matrix(mat[:3, :3]).as_rotvec()]).astype(np.float64)
 
 
 def compose(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    ca, sa = math.cos(a[2]), math.sin(a[2])
-    x = a[0] + ca * b[0] - sa * b[1]
-    y = a[1] + sa * b[0] + ca * b[1]
-    return np.array([x, y, wrap(a[2] + b[2])], dtype=np.float64)
+    return pose_from_matrix(matrix_from_pose(a) @ matrix_from_pose(b))
 
 
 def invert(a: np.ndarray) -> np.ndarray:
-    c, s = math.cos(a[2]), math.sin(a[2])
-    return np.array([-c * a[0] - s * a[1], s * a[0] - c * a[1], wrap(-a[2])], dtype=np.float64)
+    return pose_from_matrix(np.linalg.inv(matrix_from_pose(a)))
 
 
 def between(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     return compose(invert(a), b)
 
 
-def wrap(theta: float) -> float:
-    return (theta + math.pi) % (2.0 * math.pi) - math.pi
+def se3_error(measured: np.ndarray, predicted: np.ndarray) -> np.ndarray:
+    return pose_from_matrix(np.linalg.inv(matrix_from_pose(measured)) @ matrix_from_pose(predicted))
 
 
-def warp_coords(shape: tuple[int, int], transform: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    h, w = shape
-    yy, xx = np.mgrid[0:h, 0:w].astype(np.float64)
-    cx = (w - 1) / 2.0
-    cy = (h - 1) / 2.0
-    x = xx - cx
-    y = yy - cy
-    c, s = np.cos(transform[2]), np.sin(transform[2])
-    # Target sampled into reference coordinates. Positive transform means target
-    # pose relative to reference; inverse warp samples target at corresponding px.
-    xs = c * x + s * y - transform[0] + cx
-    ys = -s * x + c * y - transform[1] + cy
-    return xs, ys
+def transform_points(points: np.ndarray, pose: np.ndarray) -> np.ndarray:
+    pose = as_se3(pose)
+    rot = Rotation.from_rotvec(pose[3:]).as_matrix()
+    return points @ rot.T + pose[:3]
+
+
+def rotate_vectors(vectors: np.ndarray, pose: np.ndarray) -> np.ndarray:
+    return Rotation.from_rotvec(as_se3(pose)[3:]).apply(vectors)
 
 
 def bilinear_image(image: np.ndarray, xs: np.ndarray, ys: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -67,15 +78,3 @@ def bilinear_image(image: np.ndarray, xs: np.ndarray, ys: np.ndarray) -> tuple[n
         + wd[valid] * image[y1c[valid], x1c[valid]]
     )
     return out, valid
-
-
-def se2_to_matrix(pose: np.ndarray) -> np.ndarray:
-    c, s = np.cos(pose[2]), np.sin(pose[2])
-    mat = np.eye(4, dtype=float)
-    mat[0, 0] = c
-    mat[0, 1] = -s
-    mat[1, 0] = s
-    mat[1, 1] = c
-    mat[0, 3] = pose[0]
-    mat[1, 3] = pose[1]
-    return mat

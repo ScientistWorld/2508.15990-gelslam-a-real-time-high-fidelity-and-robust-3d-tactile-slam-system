@@ -7,7 +7,7 @@ Every target below corresponds to an experiment and metric in `scoring/reference
 Tests whether the method reduces long-horizon tactile tracking drift on generated tactile sequences with repeated contacts.
 
 - **Metric:** `rotation_mae_deg` (lower is better)
-- **Metric:** `translation_mae_px` (lower is better)
+- **Metric:** `translation_mae_mm` (lower is better)
 - **How to run:** Evaluate GelSLAM and NormalFlow on the fixed synthetic tracking test split with identical input streams and preprocessing.
 
 ## Constraint: loop_closure_quality

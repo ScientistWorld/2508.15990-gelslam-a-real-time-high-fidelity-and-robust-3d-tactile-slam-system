@@ -6,25 +6,48 @@ import json
 from pathlib import Path
 
 import numpy as np
+from scipy.spatial.transform import Rotation
+
+GELSIGHT_MM_PER_PIXEL = 20.0 / 320.0
 
 
-def wrap(theta: np.ndarray) -> np.ndarray:
-    return (theta + np.pi) % (2 * np.pi) - np.pi
+def as_se3(pose: np.ndarray) -> np.ndarray:
+    pose = np.asarray(pose, dtype=np.float64)
+    if pose.shape == (6,):
+        return pose.copy()
+    if pose.shape == (3,):
+        return np.array([pose[0], pose[1], 0.0, 0.0, 0.0, pose[2]], dtype=np.float64)
+    raise ValueError(f"Expected pose vector with 3 or 6 entries, got {pose.shape}")
+
+
+def matrix_from_pose(pose: np.ndarray) -> np.ndarray:
+    pose = as_se3(pose)
+    mat = np.eye(4, dtype=np.float64)
+    mat[:3, :3] = Rotation.from_rotvec(pose[3:]).as_matrix()
+    mat[:3, 3] = pose[:3]
+    return mat
+
+
+def pose_from_matrix(mat: np.ndarray) -> np.ndarray:
+    return np.concatenate([mat[:3, 3], Rotation.from_matrix(mat[:3, :3]).as_rotvec()]).astype(np.float64)
 
 
 def compose(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    c, s = np.cos(a[2]), np.sin(a[2])
-    return np.array([a[0] + c * b[0] - s * b[1], a[1] + s * b[0] + c * b[1], float(wrap(a[2] + b[2]))])
+    return pose_from_matrix(matrix_from_pose(a) @ matrix_from_pose(b))
 
 
 def invert(a: np.ndarray) -> np.ndarray:
-    c, s = np.cos(a[2]), np.sin(a[2])
-    return np.array([-c * a[0] - s * a[1], s * a[0] - c * a[1], float(wrap(-a[2]))])
+    return pose_from_matrix(np.linalg.inv(matrix_from_pose(a)))
 
 
 def origin_relative(poses: np.ndarray) -> np.ndarray:
+    poses = np.asarray([as_se3(p) for p in poses], dtype=np.float64)
     inv0 = invert(poses[0])
     return np.asarray([compose(inv0, p) for p in poses])
+
+
+def relative_error(pred: np.ndarray, gt: np.ndarray) -> np.ndarray:
+    return pose_from_matrix(np.linalg.inv(matrix_from_pose(gt)) @ matrix_from_pose(pred))
 
 
 def metrics(run_dir: Path) -> dict[str, float]:
@@ -32,8 +55,9 @@ def metrics(run_dir: Path) -> dict[str, float]:
     gt = np.load(run_dir / "gt_poses.npy")
     pred = origin_relative(pred)
     gt = origin_relative(gt)
-    pos_err = np.linalg.norm(pred[:, :2] - gt[:, :2], axis=1)
-    rot_err = np.abs(wrap(pred[:, 2] - gt[:, 2]))
+    errors = np.asarray([relative_error(p, g) for p, g in zip(pred, gt)], dtype=np.float64)
+    pos_err = np.linalg.norm(errors[:, :3], axis=1)
+    rot_err = np.linalg.norm(errors[:, 3:], axis=1)
     summary_path = run_dir / "summary.json"
     summary = json.loads(summary_path.read_text()) if summary_path.exists() else {}
     accepted = int(summary.get("accepted_loops", 0))
@@ -42,17 +66,18 @@ def metrics(run_dir: Path) -> dict[str, float]:
     for edge in summary.get("loop_edges", []):
         if len(edge) < 3 or not keyframe_indices:
             continue
-        key_i, key_j, measurement = int(edge[0]), int(edge[1]), np.asarray(edge[2], dtype=float)
+        key_i, key_j, measurement = int(edge[0]), int(edge[1]), as_se3(np.asarray(edge[2], dtype=float))
         if key_i >= len(keyframe_indices) or key_j >= len(keyframe_indices):
             continue
         true_rel = compose(invert(gt[int(keyframe_indices[key_i])]), gt[int(keyframe_indices[key_j])])
-        terr = float(np.linalg.norm(true_rel[:2] - measurement[:2]))
-        rerr = float(abs(wrap(true_rel[2] - measurement[2])))
+        loop_err = relative_error(measurement, true_rel)
+        terr = float(np.linalg.norm(loop_err[:3]))
+        rerr = float(np.linalg.norm(loop_err[3:]))
         if terr > 10.0 or np.degrees(rerr) > 20.0:
             false_loops += 1
     return {
         "rotation_mae_deg": float(np.degrees(rot_err).mean()),
-        "translation_mae_px": float(pos_err.mean()),
+        "translation_mae_mm": float(pos_err.mean() * GELSIGHT_MM_PER_PIXEL),
         "accepted_loops": accepted,
         "false_loop_rate": float(false_loops / max(accepted, 1)),
         "keyframes": int(summary.get("keyframes", len(pred))),
@@ -73,7 +98,7 @@ def main() -> None:
                 "results": {
                     name: {
                         "rotation_mae_deg": vals["rotation_mae_deg"],
-                        "translation_mae_px": vals["translation_mae_px"],
+                        "translation_mae_mm": vals["translation_mae_mm"],
                     }
                     for name, vals in flat_results.items()
                 }

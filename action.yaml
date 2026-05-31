@@ -1,5 +1,5 @@
 action: submit
 gpus: 0
 test: true
-milestone: core_claim
-notes: "CPU smoke job runs scripts/reproduce.sh to regenerate the synthetic tactile benchmark, run NormalFlow and scaled GelSLAM, and write scoring/scores.json."
+milestone: none
+notes: "CPU smoke job runs scripts/reproduce.sh after the SE(3) GelSLAM fidelity fixes, regenerates the synthetic tactile benchmark, runs NormalFlow and scaled GelSLAM, and writes scoring/scores.json."

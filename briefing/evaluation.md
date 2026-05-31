@@ -5,7 +5,7 @@ This file describes the benchmark task and metrics without exposing implementati
 ## Metrics
 
 - **rotation_mae_deg:** Mean absolute rotation error in degrees over the evaluated trajectory. Lower is better.
-- **translation_mae_px:** Mean absolute translation error in synthetic image/grid pixels. Lower is better. The paper reports translation in millimeters; the scaled benchmark uses pixel units because the generated tactile field has known image coordinates rather than physical calibration.
+- **translation_mae_mm:** Mean absolute translation error in millimeters. The synthetic image-grid error is converted with the GelSight Mini pitch implied by the paper's resized 320x240 frames over a 20mm x 15mm sensing area. Lower is better.
 - **accepted_loops:** Number of loop closures accepted during the trajectory. Higher is generally better when false loops remain controlled, because the benchmark is designed to require revisiting earlier contacts to correct drift.
 - **false_loop_rate:** Fraction of accepted loops that are inconsistent with ground truth revisits. Lower is better. This is a constraint metric because a method can artificially increase accepted loops by accepting outliers.
 - **keyframes:** Number of keyframes retained for the episode. Lower is better as a resource metric only after tracking quality and loop correctness are preserved.

@@ -9,23 +9,22 @@ import cv2
 import numpy as np
 from scipy.optimize import least_squares
 
-from method.scaled_gelslam.geometry import between, compose, se2_to_matrix, wrap
-from method.scaled_gelslam.normalflow import estimate_relative, quality
+from method.scaled_gelslam.geometry import as_se3, between, compose, matrix_from_pose, se3_error, transform_points
+from method.scaled_gelslam.normalflow import estimate_relative, geometric_properties
+
+MM_PER_PIXEL = 20.0 / 320.0
+COVERAGE_AREA_THRESHOLD_MM2 = 0.2
 
 
 def load_frames(path: Path) -> tuple[list[dict], np.ndarray]:
     data = np.load(path)
     frames = []
     for i in range(len(data["poses"])):
-        frames.append(
-            {
-                "normal": data["normals"][i].astype(np.float64),
-                "curvature": data["curvatures"][i].astype(np.float64),
-                "mask": data["masks"][i].astype(bool),
-                "height": data["heights"][i].astype(np.float64),
-            }
-        )
-    return frames, data["poses"].astype(np.float64)
+        frames.append(geometric_properties(data["heights"][i].astype(np.float64), data["masks"][i].astype(bool)))
+    poses = data["poses"].astype(np.float64)
+    if poses.shape[1] == 3:
+        poses = np.asarray([as_se3(p) for p in poses], dtype=np.float64)
+    return frames, poses
 
 
 def feature_candidate(ref: dict, tgt: dict) -> np.ndarray | None:
@@ -44,12 +43,12 @@ def feature_candidate(ref: dict, tgt: dict) -> np.ndarray | None:
     src = np.float32([kp1[m.queryIdx].pt for m in good])
     dst = np.float32([kp2[m.trainIdx].pt for m in good])
     mat, inliers = cv2.estimateAffinePartial2D(src, dst, method=cv2.RANSAC, ransacReprojThreshold=3.0)
-    if mat is None or inliers is None or int(inliers.sum()) < 4:
+    if mat is None or inliers is None or int(inliers.sum()) <= 8:
         return None
     theta = float(np.arctan2(mat[1, 0], mat[0, 0]))
     tx = float(mat[0, 2])
     ty = float(mat[1, 2])
-    return np.array([tx, ty, theta], dtype=np.float64)
+    return np.array([tx, ty, 0.0, 0.0, 0.0, theta], dtype=np.float64)
 
 
 def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initial: np.ndarray) -> np.ndarray:
@@ -60,9 +59,9 @@ def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initia
         return poses[1:].reshape(-1)
 
     def unpack(vec: np.ndarray) -> np.ndarray:
-        out = np.zeros((n, 3), dtype=np.float64)
+        out = np.zeros((n, 6), dtype=np.float64)
         out[0] = initial[0]
-        out[1:] = vec.reshape(n - 1, 3)
+        out[1:] = vec.reshape(n - 1, 6)
         return out
 
     def residual(vec: np.ndarray) -> np.ndarray:
@@ -70,15 +69,50 @@ def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initia
         terms = []
         for i, j, meas in edges:
             pred = between(poses[i], poses[j])
-            err = pred - meas
-            err[2] = wrap(err[2])
-            terms.extend([err[0] / 2.0, err[1] / 2.0, err[2] / 0.08])
+            err = se3_error(meas, pred)
+            terms.extend([err[0] / 2.0, err[1] / 2.0, err[2] / 2.0, err[3] / 0.08, err[4] / 0.08, err[5] / 0.08])
         return np.asarray(terms)
 
     opt = least_squares(residual, pack(initial), max_nfev=200, loss="soft_l1", f_scale=1.0)
-    poses = unpack(opt.x)
-    poses[:, 2] = np.vectorize(wrap)(poses[:, 2])
-    return poses
+    return unpack(opt.x)
+
+
+def contact_footprint(frame: dict, pose: np.ndarray) -> set[tuple[int, int]]:
+    ys, xs = np.nonzero(frame["mask"])
+    h, w = frame["height"].shape
+    points = np.column_stack(
+        [
+            xs.astype(np.float64) - (w - 1) / 2.0,
+            ys.astype(np.float64) - (h - 1) / 2.0,
+            frame["height"][ys, xs],
+        ]
+    )
+    warped = transform_points(points, pose)
+    return set(zip(np.rint(warped[:, 0]).astype(int), np.rint(warped[:, 1]).astype(int)))
+
+
+def update_coverage_set(
+    coverage: list[int],
+    candidate_frame: int,
+    keyframes: list[int],
+    frames: list[dict],
+    keyframe_abs: list[np.ndarray],
+) -> list[int]:
+    footprints = {frame_idx: contact_footprint(frames[frame_idx], keyframe_abs[keyframes.index(frame_idx)]) for frame_idx in coverage}
+    candidate_fp = contact_footprint(frames[candidate_frame], keyframe_abs[keyframes.index(candidate_frame)])
+    covered = set().union(*footprints.values()) if footprints else set()
+    new_area = len(candidate_fp - covered) * (MM_PER_PIXEL**2)
+    updated = coverage + [candidate_frame] if new_area > COVERAGE_AREA_THRESHOLD_MM2 else coverage.copy()
+    footprints[candidate_frame] = candidate_fp
+
+    pruned = []
+    for frame_idx in updated:
+        others = [footprints[o] for o in updated if o != frame_idx]
+        other_union = set().union(*others) if others else set()
+        unique_area = len(footprints[frame_idx] - other_union) * (MM_PER_PIXEL**2)
+        if unique_area > COVERAGE_AREA_THRESHOLD_MM2 or frame_idx == candidate_frame:
+            pruned.append(frame_idx)
+    return pruned
 
 
 def run(dataset: Path, output_dir: Path, ccs_threshold: float, scr_threshold: float) -> None:
@@ -86,12 +120,13 @@ def run(dataset: Path, output_dir: Path, ccs_threshold: float, scr_threshold: fl
     n = len(frames)
     keyframes = [0]
     frame_parent = np.zeros(n, dtype=int)
-    frame_to_parent = np.zeros((n, 3), dtype=np.float64)
+    frame_to_parent = np.zeros((n, 6), dtype=np.float64)
     keyframe_edges: list[tuple[int, int, np.ndarray]] = []
     coverage = [0]
+    keyframe_abs_est = [np.zeros(6, dtype=np.float64)]
     latest_key = 0
-    prev_rel = np.zeros(3, dtype=np.float64)
-    predicted = np.zeros((n, 3), dtype=np.float64)
+    prev_rel = np.zeros(6, dtype=np.float64)
+    predicted = np.zeros((n, 6), dtype=np.float64)
     loops = []
     rejected_loops = 0
 
@@ -104,37 +139,35 @@ def run(dataset: Path, output_dir: Path, ccs_threshold: float, scr_threshold: fl
                 k_new = len(keyframes) - 1
                 edge_measurement = frame_to_parent[new_key].copy()
                 keyframe_edges.append((k_new - 1, k_new, edge_measurement))
+                keyframe_abs_est.append(compose(keyframe_abs_est[-1], edge_measurement))
                 frame_parent[new_key] = k_new
                 frame_to_parent[new_key] = 0.0
-                # Greedy coverage: add keyframe if it is not already well covered.
-                best_scr = 0.0
                 for cov_idx in coverage:
                     init = feature_candidate(frames[cov_idx], frames[new_key])
                     if init is None:
                         continue
                     refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
-                    best_scr = max(best_scr, qscr)
                     if qccs >= ccs_threshold and qscr >= scr_threshold:
                         loops.append((keyframes.index(cov_idx), k_new, refined.tolist(), qccs, qscr))
                         keyframe_edges.append((keyframes.index(cov_idx), k_new, refined))
                     else:
                         rejected_loops += 1
-                if best_scr < 0.45:
-                    coverage.append(new_key)
+                coverage = update_coverage_set(coverage, new_key, keyframes, frames, keyframe_abs_est)
                 latest_key = new_key
-                prev_rel = np.zeros(3, dtype=np.float64)
+                prev_rel = np.zeros(6, dtype=np.float64)
             else:
                 keyframes.append(t)
                 latest_key = t
+                keyframe_abs_est.append(keyframe_abs_est[-1].copy())
                 coverage.append(t)
-                prev_rel = np.zeros(3, dtype=np.float64)
+                prev_rel = np.zeros(6, dtype=np.float64)
                 continue
             rel, ccs, scr, _ = estimate_relative(frames[latest_key], frames[t], prev_rel)
         frame_parent[t] = len(keyframes) - 1
         frame_to_parent[t] = rel
         prev_rel = rel
 
-    initial_keys = np.zeros((len(keyframes), 3), dtype=np.float64)
+    initial_keys = np.zeros((len(keyframes), 6), dtype=np.float64)
     for i, j, meas in keyframe_edges:
         if j == i + 1:
             initial_keys[j] = compose(initial_keys[i], meas)
@@ -146,7 +179,7 @@ def run(dataset: Path, output_dir: Path, ccs_threshold: float, scr_threshold: fl
     np.save(output_dir / "pred_poses.npy", predicted)
     np.save(output_dir / "gt_poses.npy", gt)
     np.save(output_dir / "keyframe_poses.npy", optimized_keys)
-    np.save(output_dir / "pred_matrices.npy", np.asarray([se2_to_matrix(p) for p in predicted]))
+    np.save(output_dir / "pred_matrices.npy", np.asarray([matrix_from_pose(p) for p in predicted]))
     summary = {
         "method": "scaled_gelslam",
         "frames": n,
