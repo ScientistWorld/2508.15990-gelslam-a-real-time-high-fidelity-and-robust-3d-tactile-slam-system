@@ -52,7 +52,7 @@
       "results": {
         "normalflow": {
           "type": "baseline",
-          "keyframes": 0
+          "keyframes": 523
         },
         "gelslam_online": {
           "type": "proposed",

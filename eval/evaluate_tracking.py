@@ -58,6 +58,15 @@ def load_ground_truth(dataset: Path) -> np.ndarray:
 
 
 def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
+    """Evaluate one method run.
+
+    Required artifact:
+    - pred_poses.npy: one 3- or 6-vector pose per frame.
+
+    Optional artifacts:
+    - summary.json with loop_edges and keyframe_indices for loop metrics.
+    - keyframe_poses.npy for the retained-state/keyframe metric.
+    """
     pred = np.load(run_dir / "pred_poses.npy")
     if len(pred) != len(gt):
         raise ValueError(f"{run_dir} has {len(pred)} predictions but dataset has {len(gt)} ground-truth poses")
@@ -74,9 +83,11 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     keyframe_indices = summary.get("keyframe_indices", [])
     for edge in loop_edges:
         if len(edge) < 3 or not keyframe_indices:
+            false_loops += 1
             continue
         key_i, key_j, measurement = int(edge[0]), int(edge[1]), as_se3(np.asarray(edge[2], dtype=float))
         if key_i >= len(keyframe_indices) or key_j >= len(keyframe_indices):
+            false_loops += 1
             continue
         true_rel = compose(invert(gt[int(keyframe_indices[key_i])]), gt[int(keyframe_indices[key_j])])
         loop_err = relative_error(measurement, true_rel)

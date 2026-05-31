@@ -21,3 +21,7 @@ For loop and resource behavior, Table II reports GelSLAM tracking episodes with 
 Evaluate all methods on the same generated long-horizon tactile sequences, with fixed seeds and identical preprocessing. Each sequence should include local contact observations, ground-truth pose over time, and repeated contacts that make loop closure meaningful. Continuous contact and long enough horizons are important: the benchmark must not collapse into a short-range registration task where NormalFlow already solves the problem.
 
 Report the metrics for both GelSLAM and NormalFlow on the same test split. NormalFlow should be evaluated as a frame-to-frame baseline without global loop correction. GelSLAM should be evaluated with its full SLAM procedure enabled. The comparison is valid only if both methods consume the same synthetic tactile stream and the same pose ground truth.
+
+## Method Output Contract
+
+`scripts/evaluate.sh` scores saved run artifacts rather than rerunning any method. A method run must write `pred_poses.npy` with one pose vector per frame. To score loop-closure and keyframe constraints, it should also write `summary.json` with `loop_edges` and `keyframe_indices`, plus `keyframe_poses.npy` containing retained keyframe poses. Malformed loop records are counted as false loops.
