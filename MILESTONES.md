@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: none**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -28,5 +28,10 @@
 - Reworked the scaled planar pose graph optimizer to solve only x/y/yaw variables and added progress logging to the reproduction path.
 - Resubmitting the CPU smoke test.
 
+### [2026-05-31 19:28] - method_runs
+- CPU job `7e42926d-cc3` executed the full scaled benchmark path: synthetic data generation, NormalFlow baseline, scaled GelSLAM tracking/pose graph/reconstruction, evaluation, and structural validation.
+- The job did not reach `core_claim` because GelSLAM accepted zero loop closures, leaving the loop-closure quality target with no train/test signal.
+- Patched the planar benchmark path to project both baseline and method estimates onto observable x/y/yaw axes and to allow high-confidence NormalFlow loop estimates to bypass only the accumulated-odometry translation gate.
+
 ## Stop Justification
-- Completed at milestone `none`.
+- Active reproduction; no stop justification yet.

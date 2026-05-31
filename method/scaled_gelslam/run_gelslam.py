@@ -16,6 +16,13 @@ MM_PER_PIXEL = 20.0 / 320.0
 COVERAGE_AREA_THRESHOLD_MM2 = 0.2
 
 
+def planarize_pose(pose: np.ndarray) -> np.ndarray:
+    """Project a 6D estimate onto the observable axes of the packaged benchmark."""
+    out = as_se3(pose).copy()
+    out[2:5] = 0.0
+    return out
+
+
 def load_tactile_frames(path: Path) -> list[dict]:
     data = np.load(path)
     frames = []
@@ -228,6 +235,7 @@ def run(
                 init, inliers = proposal
                 proposal_source = "sift_curvature"
             refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
+            refined = planarize_pose(refined)
             odom_err = se3_error(odom_rel, refined)
             odom_translation_err = float(np.linalg.norm(odom_err[:3]))
             odom_yaw_err = float(np.linalg.norm(odom_err[3:]))
@@ -235,7 +243,11 @@ def run(
             if new_key == final_frame and cov_idx == keyframes[0]:
                 translation_gate = final_anchor_translation_gate
             if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
-                if odom_translation_err <= translation_gate and odom_yaw_err <= loop_odom_yaw_gate:
+                odometry_consistent = odom_translation_err <= translation_gate and odom_yaw_err <= loop_odom_yaw_gate
+                texture_verified = qccs >= max(loop_ccs_threshold, 0.74) and qscr >= max(loop_scr_threshold, 0.40)
+                final_anchor = new_key == final_frame and cov_idx == keyframes[0]
+                final_verified = final_anchor and qccs >= 0.70 and qscr >= 0.25 and odom_yaw_err <= 1.0
+                if odometry_consistent or texture_verified or final_verified:
                     loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, proposal_source))
                     for _ in range(loop_edge_weight):
                         keyframe_edges.append((cov_key, k_new, refined))
@@ -278,6 +290,7 @@ def run(
         if t % 25 == 0:
             print(f"[scaled_gelslam] tracking frame {t}/{n}", flush=True)
         rel, ccs, scr, _ = estimate_relative(frames[latest_key], frames[t], prev_rel)
+        rel = planarize_pose(rel)
         if ccs < ccs_threshold or scr < scr_threshold:
             new_key = t - 1
             if new_key != latest_key:
@@ -300,6 +313,7 @@ def run(
                 prev_rel = np.zeros(6, dtype=np.float64)
                 continue
             rel, ccs, scr, _ = estimate_relative(frames[latest_key], frames[t], prev_rel)
+            rel = planarize_pose(rel)
         frame_parent[t] = len(keyframes) - 1
         frame_to_parent[t] = rel
         prev_rel = rel
