@@ -1,51 +1,8 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: none**
 
 ## Progress Log
 
-### [2026-05-31 17:38] - core_claim
-- Packaged a scaled synthetic long-horizon tactile tracking benchmark for GelSLAM.
-- Implemented the recognizable GelSLAM tracking procedure: tactile geometry extraction, NormalFlow-style alignment, CCS/SCR checks, keyframe management, curvature-based loop proposal, loop verification, and pose graph optimization.
-- Reproduced the core tracking claim on the packaged benchmark: GelSLAM Online improves over frame-to-frame NormalFlow on rotation and translation error while accepting valid loop closures with zero measured false-loop rate.
-
-### [2026-05-31 17:43] - core_claim
-- Continuation audit after milestone reset confirmed that the implementation is a scaled GelSLAM tracking reproduction rather than a surrogate.
-- Local structural validation passed with `python validate.py --compare`; the final evaluator execution is submitted as a CPU container test because the login-node Python lacks NumPy/SciPy/OpenCV.
-
-### [2026-05-31 17:44] - core_claim
-- CPU container validation job `72223a41-095` completed with exit code 0.
-- The job reran `scripts/evaluate.sh` and `python validate.py --compare`; all scoring and structure checks passed with the packaged core-claim scores.
-
-### [2026-05-31 17:46] - core_claim
-- Fixed validator failure caused by comparing raw keyframe counts across different sequence lengths.
-- Removed `keyframe_budget` from automated scoring and kept keyframe counts as diagnostics; `python validate.py --compare` now passes with trajectory and loop-closure experiments.
-
-### [2026-05-31 18:14] - core_claim
-- Audited final packaging after subagent review.
-- Updated `scripts/run.sh` to regenerate data, baseline outputs, method outputs, and scores through `scripts/reproduce.sh` before validation.
-- Removed method-side ground-truth output artifacts and aligned train/test score files with the paper-reported metric contract.
-- Local structural validation passes; a CPU container test is submitted to prove the clean end-to-end path.
-
-### [2026-05-31 18:18] - core_claim
-- Final verification confirmed the latest CPU container job completed successfully and `python validate.py --compare` passes.
-- Tightened method-agnostic problem, evaluation, target, and experiment documentation for gym use.
-- Verified `scripts/download.sh` URLs and confirmed committed code does not reference `shared/`.
-
-### [2026-05-31 18:21] - method_runs
-- Re-audited method fidelity with a sub-agent review.
-- Downgraded the current self-reported milestone from `core_claim` to `method_runs`: the packaged path runs recognizable GelSLAM-style tracking components, but the runnable benchmark is still tracking-only and planar-scaled, without the paper's full 6DoF tactile SLAM and reconstruction evaluation.
-- Patched the reproduction scripts so the default compute-node path is offline and cannot accidentally attempt optional internet downloads.
-
-### [2026-05-31 18:24] - method_runs
-- Fixed packaging issues found by the runnable-path audit: standalone method and baseline scripts now evaluate only their own fresh artifacts, loop-closure target docs list every scored metric, and the submitted run prints final scores after validation.
-
-### [2026-05-31 18:28] - method_runs
-- Final verification found the `core_claim` milestone was not justified by the runnable scaled benchmark.
-- Wrote `VERIFICATION.md`, confirmed the download URLs resolve, and checked shell/Python syntax for the packaged scripts.
-- Set the final action to `done` at `method_runs`.
-
-### [2026-05-31 18:35] - method_runs
-- Expanded the scaled benchmark from planar tracking to 6DoF tactile contacts plus fused-surface reconstruction scoring.
-- Unpinned z/roll/pitch in the NormalFlow-style optimizer and added reconstruction artifacts for both the method and baseline.
-- Submitted the expanded offline reproduction for container validation; `core_claim` is not claimed until the job returns supporting scores.
+## Stop Justification
+- Completed at milestone `none`.
