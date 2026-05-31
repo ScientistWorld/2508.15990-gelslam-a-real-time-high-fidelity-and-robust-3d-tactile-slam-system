@@ -1,3 +1,8 @@
-action: done
-milestone: core_claim
-notes: "Reproduced the core GelSLAM claim on the packaged 144-frame synthetic long-horizon benchmark: GelSLAM improves rotation/translation over NormalFlow with 4 valid loop closures, 0.0 false-loop rate, and fewer keyframes."
+# IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
+# Do NOT sleep, poll, or wait for jobs. The system reads this file
+# only after your turn ends. Sleeping blocks the entire pipeline.
+action: pending
+gpus: 1
+test: false
+milestone: method_runs
+notes: ""
