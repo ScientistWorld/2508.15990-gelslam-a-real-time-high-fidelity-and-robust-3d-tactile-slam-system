@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+from scipy.spatial import cKDTree
 from scipy.spatial.transform import Rotation
 
 GELSIGHT_MM_PER_PIXEL = 20.0 / 320.0
@@ -41,6 +42,16 @@ def invert(a: np.ndarray) -> np.ndarray:
     return pose_from_matrix(np.linalg.inv(matrix_from_pose(a)))
 
 
+def transform_points(points: np.ndarray, pose: np.ndarray) -> np.ndarray:
+    pose = as_se3(pose)
+    rot = Rotation.from_rotvec(pose[3:]).as_matrix()
+    return points @ rot.T + pose[:3]
+
+
+def rotate_vectors(vectors: np.ndarray, pose: np.ndarray) -> np.ndarray:
+    return Rotation.from_rotvec(as_se3(pose)[3:]).apply(vectors)
+
+
 def origin_relative(poses: np.ndarray) -> np.ndarray:
     poses = np.asarray([as_se3(p) for p in poses], dtype=np.float64)
     inv0 = invert(poses[0])
@@ -56,6 +67,60 @@ def load_ground_truth(dataset: Path) -> np.ndarray:
     if "poses" not in data:
         raise KeyError(f"{dataset} does not contain required 'poses' ground-truth array")
     return np.asarray([as_se3(p) for p in data["poses"]], dtype=np.float64)
+
+
+def target_reconstruction(dataset: Path, stride: int = 4) -> tuple[np.ndarray, np.ndarray]:
+    data = np.load(dataset)
+    gt = np.asarray([as_se3(p) for p in data["poses"]], dtype=np.float64)
+    heights = data["heights"]
+    normals = data["normals"]
+    masks = data["masks"]
+    points_out, normals_out = [], []
+    for pose, height, normal, mask in zip(gt, heights, normals, masks):
+        ys, xs = np.nonzero(mask)
+        keep = (xs % stride == 0) & (ys % stride == 0)
+        ys = ys[keep]
+        xs = xs[keep]
+        if len(xs) == 0:
+            continue
+        h, w = height.shape
+        local = np.column_stack(
+            [
+                xs.astype(np.float64) - (w - 1) / 2.0,
+                ys.astype(np.float64) - (h - 1) / 2.0,
+                height[ys, xs].astype(np.float64),
+            ]
+        )
+        points_out.append(transform_points(local, pose))
+        normals_out.append(rotate_vectors(normal[ys, xs].astype(np.float64), pose))
+    points = np.concatenate(points_out, axis=0)
+    nrms = np.concatenate(normals_out, axis=0)
+    nrms /= np.linalg.norm(nrms, axis=1, keepdims=True) + 1e-9
+    return points, nrms
+
+
+def reconstruction_metrics(run_dir: Path, target_points: np.ndarray, target_normals: np.ndarray) -> dict[str, float]:
+    points_path = run_dir / "reconstructed_points.npy"
+    normals_path = run_dir / "reconstructed_normals.npy"
+    if not points_path.exists() or not normals_path.exists():
+        return {"chamfer_distance_mm": 1e6, "normal_cosine_distance": 0.0}
+    pred_points = np.load(points_path).astype(np.float64)
+    pred_normals = np.load(normals_path).astype(np.float64)
+    if len(pred_points) == 0 or len(target_points) == 0:
+        return {"chamfer_distance_mm": 1e6, "normal_cosine_distance": 0.0}
+    pred_normals /= np.linalg.norm(pred_normals, axis=1, keepdims=True) + 1e-9
+    target_tree = cKDTree(target_points)
+    pred_tree = cKDTree(pred_points)
+    d_pred_to_target, idx_target = target_tree.query(pred_points, k=1, workers=1)
+    d_target_to_pred, idx_pred = pred_tree.query(target_points, k=1, workers=1)
+    chamfer_px = 0.5 * (float(np.mean(d_pred_to_target)) + float(np.mean(d_target_to_pred)))
+    pred_cos = np.sum(pred_normals * target_normals[idx_target], axis=1)
+    target_cos = np.sum(target_normals * pred_normals[idx_pred], axis=1)
+    ncd = 0.5 * (float(np.mean(np.clip(pred_cos, -1.0, 1.0))) + float(np.mean(np.clip(target_cos, -1.0, 1.0))))
+    return {
+        "chamfer_distance_mm": chamfer_px * GELSIGHT_MM_PER_PIXEL,
+        "normal_cosine_distance": ncd,
+    }
 
 
 def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
@@ -117,9 +182,12 @@ def main() -> None:
     parser.add_argument("--output", default="scoring/scores.json")
     args = parser.parse_args()
     gt = load_ground_truth(Path(args.dataset))
+    recon_target_points, recon_target_normals = target_reconstruction(Path(args.dataset))
     flat_results = {}
     for name, directory in args.method_run:
-        flat_results[name] = metrics(Path(directory), gt)
+        vals = metrics(Path(directory), gt)
+        vals.update(reconstruction_metrics(Path(directory), recon_target_points, recon_target_normals))
+        flat_results[name] = vals
     scores = {
         "experiments": {
             "synthetic_long_horizon_tracking": {
@@ -141,6 +209,16 @@ def main() -> None:
                         "false_loop_rate": vals["false_loop_rate"],
                     }
                     for name, vals in flat_results.items()
+                }
+            },
+            "synthetic_reconstruction": {
+                "results": {
+                    name: {
+                        "chamfer_distance_mm": vals["chamfer_distance_mm"],
+                        "normal_cosine_distance": vals["normal_cosine_distance"],
+                    }
+                    for name, vals in flat_results.items()
+                    if name.startswith("gelslam")
                 }
             },
         }

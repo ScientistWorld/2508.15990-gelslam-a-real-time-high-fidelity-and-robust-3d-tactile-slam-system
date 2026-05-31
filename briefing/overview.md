@@ -9,7 +9,7 @@
 
 The paper addresses long-horizon tactile object tracking and reconstruction from vision-based tactile sensor streams. Frame-to-frame tactile tracking drifts over time because each tactile image covers only a small local patch; GelSLAM extends tactile tracking into a SLAM pipeline with keyframes, loop detection, loop verification, and global pose graph correction. The reported real-world experiments use GelSight Mini tactile videos for tracking and object scanning, with NormalFlow as the strongest frame-to-frame tracking baseline.
 
-This workspace is a scaled synthetic substitute for the paper's full real-data reproduction. It preserves the paper's computational procedure for the tracking benchmark while replacing the large real GelSLAM dataset and physical sensor calibration with generated long-horizon tactile sequences that expose the same failure mode: drift under local frame-to-frame registration and recovery through valid loop closures.
+This workspace is a scaled synthetic substitute for the paper's full real-data reproduction. It preserves the paper's computational procedure for a CPU-sized tracking and reconstruction benchmark while replacing the large real GelSLAM dataset and physical sensor calibration with generated long-horizon tactile sequences that expose the same failure mode: drift under local frame-to-frame registration, recovery through valid revisits, and reconstruction quality that depends on globally consistent poses.
 
 ## Key Results From Paper
 

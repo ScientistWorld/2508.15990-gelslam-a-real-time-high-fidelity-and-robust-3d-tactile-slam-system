@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 from scipy.optimize import least_squares
 
-from method.scaled_gelslam.geometry import as_se3, between, compose, invert, matrix_from_pose, se3_error, transform_points
+from method.scaled_gelslam.geometry import as_se3, between, compose, invert, matrix_from_pose, rotate_vectors, se3_error, transform_points
 from method.scaled_gelslam.normalflow import estimate_relative, geometric_properties
 
 MM_PER_PIXEL = 20.0 / 320.0
@@ -71,7 +71,7 @@ def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initia
             terms.extend([err[0] / 2.0, err[1] / 2.0, err[2] / 2.0, err[3] / 0.08, err[4] / 0.08, err[5] / 0.08])
         return np.asarray(terms)
 
-    opt = least_squares(residual, pack(initial), max_nfev=200, loss="soft_l1", f_scale=1.0)
+    opt = least_squares(residual, pack(initial), max_nfev=200, method="lm")
     return unpack(opt.x)
 
 
@@ -87,6 +87,64 @@ def contact_footprint(frame: dict, pose: np.ndarray) -> set[tuple[int, int]]:
     )
     warped = transform_points(points, pose)
     return set(zip(np.rint(warped[:, 0]).astype(int), np.rint(warped[:, 1]).astype(int)))
+
+
+def reconstruct_points(
+    frames: list[dict],
+    frame_indices: list[int],
+    poses: np.ndarray,
+    stride: int = 2,
+    voxel_size: float = 0.8,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Fuse local tactile patches into a global point set.
+
+    This is the scaled benchmark analogue of the paper's fast fusion step:
+    local tactile surface points are transformed by estimated poses and averaged
+    in overlapping regions. The full paper triangulates/remeshes this fused
+    surface; the gym scores the fused surface directly to keep the experiment
+    CPU-sized and reusable.
+    """
+    bins: dict[tuple[int, int, int], tuple[np.ndarray, np.ndarray, float]] = {}
+    for frame_idx in frame_indices:
+        frame = frames[frame_idx]
+        mask = frame["mask"]
+        if mask.sum() == 0:
+            continue
+        boundary_weight = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 3)
+        ys, xs = np.nonzero(mask)
+        keep = (xs % stride == 0) & (ys % stride == 0)
+        ys = ys[keep]
+        xs = xs[keep]
+        if len(xs) == 0:
+            continue
+        h, w = frame["height"].shape
+        local = np.column_stack(
+            [
+                xs.astype(np.float64) - (w - 1) / 2.0,
+                ys.astype(np.float64) - (h - 1) / 2.0,
+                frame["height"][ys, xs],
+            ]
+        )
+        weights = 1.0 / (1.0 + np.exp(-(boundary_weight[ys, xs] - 3.0)))
+        world = transform_points(local, poses[frame_idx])
+        normals = rotate_vectors(frame["normal"][ys, xs], poses[frame_idx])
+        keys = np.rint(world / voxel_size).astype(np.int64)
+        for key_arr, point, normal, weight in zip(keys, world, normals, weights):
+            key = tuple(int(v) for v in key_arr)
+            if key not in bins:
+                bins[key] = (point * weight, normal * weight, float(weight))
+            else:
+                psum, nsum, wsum = bins[key]
+                bins[key] = (psum + point * weight, nsum + normal * weight, wsum + float(weight))
+
+    if not bins:
+        return np.zeros((0, 3), dtype=np.float64), np.zeros((0, 3), dtype=np.float64)
+    points, normals = [], []
+    for psum, nsum, wsum in bins.values():
+        points.append(psum / max(wsum, 1e-9))
+        normal = nsum / max(np.linalg.norm(nsum), 1e-9)
+        normals.append(normal)
+    return np.asarray(points, dtype=np.float64), np.asarray(normals, dtype=np.float64)
 
 
 def update_coverage_set(
@@ -161,8 +219,8 @@ def run(
                 proposal_source = "sift_curvature"
             refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
             odom_err = se3_error(odom_rel, refined)
-            odom_translation_err = float(np.linalg.norm(odom_err[:2]))
-            odom_yaw_err = float(abs(odom_err[5]))
+            odom_translation_err = float(np.linalg.norm(odom_err[:3]))
+            odom_yaw_err = float(np.linalg.norm(odom_err[3:]))
             translation_gate = loop_odom_translation_gate
             if new_key == final_frame and cov_idx == keyframes[0]:
                 translation_gate = final_anchor_translation_gate
@@ -258,6 +316,10 @@ def run(
     np.save(output_dir / "pred_poses.npy", predicted)
     np.save(output_dir / "keyframe_poses.npy", optimized_keys)
     np.save(output_dir / "pred_matrices.npy", np.asarray([matrix_from_pose(p) for p in predicted]))
+    reconstruction_frames = sorted(set(coverage + keyframes))
+    recon_points, recon_normals = reconstruct_points(frames, reconstruction_frames, predicted)
+    np.save(output_dir / "reconstructed_points.npy", recon_points)
+    np.save(output_dir / "reconstructed_normals.npy", recon_normals)
     summary = {
         "method": "scaled_gelslam",
         "frames": n,
@@ -276,6 +338,8 @@ def run(
         "final_anchor_translation_gate_px": final_anchor_translation_gate,
         "loop_edge_weight": loop_edge_weight,
         "coverage_keyframe_indices": coverage,
+        "reconstruction_frame_indices": reconstruction_frames,
+        "reconstructed_points": int(len(recon_points)),
         "rejected_loop_details": rejected_loop_details,
     }
     (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")

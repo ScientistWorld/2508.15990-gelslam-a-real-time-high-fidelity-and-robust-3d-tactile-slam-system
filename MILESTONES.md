@@ -45,5 +45,7 @@
 - Wrote `VERIFICATION.md`, confirmed the download URLs resolve, and checked shell/Python syntax for the packaged scripts.
 - Set the final action to `done` at `method_runs`.
 
-## Stop Justification
-- Final verification stops at `method_runs`. The workspace is packaged and internally consistent as a scaled tracking gym, but the runnable reproduction does not yet support the paper's full `core_claim`.
+### [2026-05-31 18:35] - method_runs
+- Expanded the scaled benchmark from planar tracking to 6DoF tactile contacts plus fused-surface reconstruction scoring.
+- Unpinned z/roll/pitch in the NormalFlow-style optimizer and added reconstruction artifacts for both the method and baseline.
+- Submitted the expanded offline reproduction for container validation; `core_claim` is not claimed until the job returns supporting scores.

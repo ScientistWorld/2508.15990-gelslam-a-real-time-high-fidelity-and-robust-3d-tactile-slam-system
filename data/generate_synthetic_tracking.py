@@ -64,7 +64,17 @@ def make_surface(seed: int, size: int) -> np.ndarray:
     return surface
 
 
-def make_trajectory(n: int, center: tuple[float, float], radius: float) -> np.ndarray:
+def _rotation_matrix(rotvec: np.ndarray) -> np.ndarray:
+    theta = float(np.linalg.norm(rotvec))
+    if theta < 1e-12:
+        return np.eye(3, dtype=np.float64)
+    axis = rotvec / theta
+    x, y, z = axis
+    skew = np.array([[0.0, -z, y], [z, 0.0, -x], [-y, x, 0.0]], dtype=np.float64)
+    return np.eye(3, dtype=np.float64) + np.sin(theta) * skew + (1.0 - np.cos(theta)) * (skew @ skew)
+
+
+def make_trajectory(n: int, center: tuple[float, float], radius: float, mode: str) -> np.ndarray:
     poses = []
     cx, cy = center
     for i in range(n):
@@ -72,9 +82,70 @@ def make_trajectory(n: int, center: tuple[float, float], radius: float) -> np.nd
         wobble = 0.35 * np.sin(3 * a)
         x = cx + radius * np.cos(a) + 10.0 * np.sin(2.2 * a)
         y = cy + (radius * 0.72) * np.sin(a) + 8.0 * np.cos(1.6 * a)
+        if mode == "planar":
+            z = roll = pitch = 0.0
+        else:
+            z = 0.55 * np.sin(1.7 * a + 0.2) + 0.25 * np.cos(3.1 * a)
+            roll = 0.18 * np.sin(1.3 * a + 0.4)
+            pitch = 0.16 * np.cos(1.1 * a - 0.3)
         yaw = 0.42 * np.sin(a + 0.3) + wobble
-        poses.append((x, y, 0.0, 0.0, 0.0, yaw))
+        poses.append((x, y, z, roll, pitch, yaw))
     return np.asarray(poses, dtype=np.float64)
+
+
+def patch_from_surface_6dof(
+    surface: np.ndarray,
+    pose: np.ndarray,
+    patch: int,
+    noise: float,
+    rng: np.random.Generator,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Render a local tactile height/normal patch from a 6DoF sensor pose.
+
+    The object is represented as a textured height field in object coordinates.
+    For each local sensor pixel (u, v), we solve for the local z value whose
+    transformed point lies on that object surface. This keeps the observation
+    model simple but makes z, roll, and pitch observable through the local
+    height and normal fields.
+    """
+    half = (patch - 1) / 2.0
+    vv, uu = np.mgrid[0:patch, 0:patch].astype(np.float64)
+    uu -= half
+    vv -= half
+    rot = _rotation_matrix(pose[3:])
+    trans = pose[:3].astype(np.float64)
+
+    local_z = np.zeros_like(uu, dtype=np.float64)
+    valid = np.ones_like(uu, dtype=bool)
+    world_x = world_y = None
+    for _ in range(8):
+        world_x = trans[0] + rot[0, 0] * uu + rot[0, 1] * vv + rot[0, 2] * local_z
+        world_y = trans[1] + rot[1, 0] * uu + rot[1, 1] * vv + rot[1, 2] * local_z
+        sampled = _bilinear(surface, world_x, world_y)
+        valid &= (world_x >= 1) & (world_y >= 1) & (world_x < surface.shape[1] - 2) & (world_y < surface.shape[0] - 2)
+        local_z = (sampled - trans[2] - rot[2, 0] * uu - rot[2, 1] * vv) / (rot[2, 2] + 1e-9)
+
+    assert world_x is not None and world_y is not None
+    height = local_z + rng.normal(0.0, noise, size=local_z.shape)
+
+    surf_gy, surf_gx = np.gradient(surface)
+    grad_x = _bilinear(surf_gx, world_x, world_y)
+    grad_y = _bilinear(surf_gy, world_x, world_y)
+    obj_normals = np.stack([-grad_x, -grad_y, np.ones_like(grad_x)], axis=-1)
+    obj_normals /= np.linalg.norm(obj_normals, axis=-1, keepdims=True) + 1e-9
+    normals = np.einsum("ij,hwj->hwi", rot.T, obj_normals)
+    normals /= np.linalg.norm(normals, axis=-1, keepdims=True) + 1e-9
+
+    gy, gx = np.gradient(height)
+    curvature = np.abs(np.gradient(gx, axis=1) + np.gradient(gy, axis=0))
+    curvature = curvature / (np.percentile(curvature[valid], 98) + 1e-8)
+    mask = valid.copy()
+    border = 3
+    mask[:border] = False
+    mask[-border:] = False
+    mask[:, :border] = False
+    mask[:, -border:] = False
+    return height, normals, np.clip(curvature, 0.0, 1.0), mask
 
 
 def patch_from_surface(surface: np.ndarray, pose: np.ndarray, patch: int, noise: float, rng: np.random.Generator) -> np.ndarray:
@@ -109,14 +180,18 @@ def main() -> None:
     parser.add_argument("--patch-size", type=int, default=56)
     parser.add_argument("--surface-size", type=int, default=260)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--trajectory", choices=["sixdof", "planar"], default="sixdof")
     args = parser.parse_args()
 
     rng = np.random.default_rng(args.seed)
     surface = make_surface(args.seed, args.surface_size)
-    poses = make_trajectory(args.frames, (args.surface_size / 2, args.surface_size / 2), args.surface_size * 0.20)
+    poses = make_trajectory(args.frames, (args.surface_size / 2, args.surface_size / 2), args.surface_size * 0.20, args.trajectory)
     heights, normals, curvatures, masks = [], [], [], []
     for pose in poses:
-        h, n, c, m = patch_from_surface(surface, pose, args.patch_size, 0.018, rng)
+        if args.trajectory == "planar":
+            h, n, c, m = patch_from_surface(surface, pose, args.patch_size, 0.018, rng)
+        else:
+            h, n, c, m = patch_from_surface_6dof(surface, pose, args.patch_size, 0.018, rng)
         heights.append(h)
         normals.append(n)
         curvatures.append(c)
@@ -136,7 +211,8 @@ def main() -> None:
         "frames": args.frames,
         "patch_size": args.patch_size,
         "seed": args.seed,
-        "description": "Synthetic GelSight-like long-horizon loop trajectory.",
+        "trajectory": args.trajectory,
+        "description": "Synthetic GelSight-like long-horizon loop trajectory with known 6DoF ground truth.",
     }
     out.with_suffix(".json").write_text(json.dumps(meta, indent=2) + "\n")
 

@@ -9,7 +9,7 @@ import numpy as np
 
 from method.scaled_gelslam.geometry import compose, matrix_from_pose
 from method.scaled_gelslam.normalflow import estimate_relative
-from method.scaled_gelslam.run_gelslam import load_tactile_frames
+from method.scaled_gelslam.run_gelslam import load_tactile_frames, reconstruct_points
 
 
 def run(dataset: Path, output_dir: Path) -> None:
@@ -23,8 +23,20 @@ def run(dataset: Path, output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     np.save(output_dir / "pred_poses.npy", pred)
     np.save(output_dir / "pred_matrices.npy", np.asarray([matrix_from_pose(p) for p in pred]))
+    recon_points, recon_normals = reconstruct_points(frames, list(range(len(frames))), pred)
+    np.save(output_dir / "reconstructed_points.npy", recon_points)
+    np.save(output_dir / "reconstructed_normals.npy", recon_normals)
     (output_dir / "summary.json").write_text(
-        json.dumps({"method": "normalflow_baseline", "frames": len(frames), "keyframes": len(frames), "accepted_loops": 0}, indent=2)
+        json.dumps(
+            {
+                "method": "normalflow_baseline",
+                "frames": len(frames),
+                "keyframes": len(frames),
+                "accepted_loops": 0,
+                "reconstructed_points": int(len(recon_points)),
+            },
+            indent=2,
+        )
         + "\n"
     )
 

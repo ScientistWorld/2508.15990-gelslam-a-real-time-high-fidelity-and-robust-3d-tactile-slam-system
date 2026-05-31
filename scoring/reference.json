@@ -2,7 +2,7 @@
   "experiments": {
     "synthetic_long_horizon_tracking": {
       "description": "Scaled synthetic long-horizon tactile tracking benchmark, anchored to the paper's Table IV tracking MAE trends. Translation is reported in millimeters using the GelSight Mini pixel pitch implied by 320x240 images over a 20mm x 15mm sensing area.",
-      "weight": 0.7,
+      "weight": 0.55,
       "primary_metric": "rotation_mae_deg",
       "metrics": {
         "rotation_mae_deg": {
@@ -31,7 +31,7 @@
     },
     "loop_closure_quality": {
       "description": "Loop-closure behavior for the scaled synthetic benchmark, anchored to Table II tracking statistics and the paper's qualitative requirement that accepted loops be valid.",
-      "weight": 0.3,
+      "weight": 0.2,
       "primary_metric": "valid_loop_recall",
       "metrics": {
         "accepted_loops": {
@@ -76,6 +76,30 @@
           "valid_loop_recall": 0.5230769231,
           "valid_loop_rate": 1.0,
           "false_loop_rate": 0.0
+        }
+      }
+    },
+    "synthetic_reconstruction": {
+      "description": "Scaled tactile surface reconstruction benchmark, anchored to the paper's Table VI reconstruction metrics. The evaluator scores the fused touched surface against the known synthetic surface sampled by the tactile sequence.",
+      "weight": 0.25,
+      "primary_metric": "chamfer_distance_mm",
+      "metrics": {
+        "chamfer_distance_mm": {
+          "higher_is_better": false,
+          "coefficient": 1.0,
+          "description": "Symmetric Chamfer distance between the reconstructed touched surface and the known target surface, reported in millimeters."
+        },
+        "normal_cosine_distance": {
+          "higher_is_better": true,
+          "coefficient": 0.6,
+          "description": "Average nearest-neighbor surface-normal cosine similarity between the reconstructed and target touched surfaces; a perfect match is 1.0."
+        }
+      },
+      "results": {
+        "gelslam_online": {
+          "type": "proposed",
+          "chamfer_distance_mm": 0.60,
+          "normal_cosine_distance": 0.962
         }
       }
     }

@@ -10,7 +10,7 @@ The method operates on a stream of GelSight tactile images. Each frame is conver
 
 Because tactile sensing is local, GelSLAM inserts keyframes frequently. A subset of keyframes represents unique surface coverage, while candidate loop pairs are proposed when the current contact resembles an earlier contact. Loop detection uses curvature-based local feature matching to find plausible revisits and then refines or rejects each candidate with tactile registration and overlap/consistency checks. Accepted odometry and loop constraints are added to a pose graph, which is optimized to correct accumulated drift.
 
-For reconstruction, the optimized poses are used to fuse tactile surface observations into a global object mesh. This workspace focuses on the scaled synthetic long-horizon tracking benchmark, but the briefing keeps the reconstruction numbers as context for the paper's broader claims.
+For reconstruction, the optimized poses are used to fuse tactile surface observations into a global object mesh. This workspace uses a scaled fused-point-surface target rather than the paper's full physical meshing stack, but it preserves the essential computation: local tactile surface samples are transformed by estimated poses and fused globally for surface scoring.
 
 ## Main Claims
 
@@ -21,4 +21,4 @@ For reconstruction, the optimized poses are used to fuse tactile surface observa
 
 ## Scaled Reproduction Scope
 
-This reproduction evaluates a synthetic long-horizon tactile tracking substitute rather than the full physical GelSight dataset. The benchmark should still implement the paper's computational steps: tactile geometry extraction, NormalFlow baseline tracking, GelSLAM keyframe management, loop proposal, loop verification, pose graph optimization, and trajectory evaluation. Scaling down data source and sequence size is acceptable; replacing the algorithm with a learned end-to-end pose predictor or unrelated tracker is not.
+This reproduction evaluates a synthetic long-horizon tactile tracking and reconstruction substitute rather than the full physical GelSight dataset. The benchmark should still implement the paper's computational steps: tactile geometry extraction, NormalFlow baseline tracking, GelSLAM keyframe management, loop proposal, loop verification, pose graph optimization, fused-surface reconstruction, and trajectory/reconstruction evaluation. Scaling down data source and sequence size is acceptable; replacing the algorithm with a learned end-to-end pose predictor or unrelated tracker is not.
