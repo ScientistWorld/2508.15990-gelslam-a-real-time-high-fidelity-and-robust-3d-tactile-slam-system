@@ -3,12 +3,12 @@
     "synthetic_long_horizon_tracking": {
       "results": {
         "normalflow": {
-          "rotation_mae_deg": 23.895589473260966,
-          "translation_mae_mm": 1779.0974402391885
+          "rotation_mae_deg": 12.982135488154588,
+          "translation_mae_mm": 2118.3274381961837
         },
         "gelslam_online": {
-          "rotation_mae_deg": 12.026781966570608,
-          "translation_mae_mm": 105.275098725288
+          "rotation_mae_deg": 12.221332099469054,
+          "translation_mae_mm": 3.542903210277726
         }
       }
     },
@@ -33,8 +33,8 @@
     "synthetic_reconstruction": {
       "results": {
         "gelslam_online": {
-          "chamfer_distance_mm": 58.23308472971895,
-          "normal_cosine_distance": 0.9803227049639451
+          "chamfer_distance_mm": 12.50440253297355,
+          "normal_cosine_distance": 0.9947475463611206
         }
       }
     }
