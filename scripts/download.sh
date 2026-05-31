@@ -10,6 +10,7 @@
 # Update the storage estimate below as you add downloads.
 #
 # Estimated total download size: 0 GB for the default scaled benchmark.
+# Optional official calibration model: 12 KB.
 # Optional full dataset download: 68.1 GiB compressed / 73.1 GB reported.
 # Estimated disk usage after default generation: <20 MB.
 #
@@ -27,10 +28,15 @@ python data/generate_synthetic_tracking.py \
   --frames 144 \
   --surface-size 300
 
-mkdir -p method/gelslam/src/gelslam/resources/example_calibration/model
-if [ ! -e method/gelslam/src/gelslam/resources/example_calibration/model/nnmodel.pth ]; then
-  wget -O method/gelslam/src/gelslam/resources/example_calibration/model/nnmodel.pth \
-    https://raw.githubusercontent.com/rpl-cmu/gelslam/main/src/gelslam/resources/example_calibration/model/nnmodel.pth
+if [ "${DOWNLOAD_OFFICIAL_GELSLAM_CALIBRATION:-0}" = "1" ]; then
+  mkdir -p data/downloads/gelslam_example_calibration
+  if [ ! -e data/downloads/gelslam_example_calibration/nnmodel.pth ]; then
+    wget -O data/downloads/gelslam_example_calibration/nnmodel.pth \
+      https://raw.githubusercontent.com/rpl-cmu/gelslam/main/src/gelslam/resources/example_calibration/model/nnmodel.pth
+  fi
+  mkdir -p method/gelslam/src/gelslam/resources/example_calibration/model
+  cp data/downloads/gelslam_example_calibration/nnmodel.pth \
+    method/gelslam/src/gelslam/resources/example_calibration/model/nnmodel.pth
 fi
 
 # The full released GelSLAM dataset is not required for the packaged CPU core

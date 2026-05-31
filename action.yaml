@@ -1,3 +1,5 @@
-action: done
-milestone: core_claim
-notes: "Final verification passed: clean CPU reproduction job and validator pass; docs tightened for method-agnostic gym use."
+action: submit
+gpus: 0
+test: true
+milestone: method_runs
+notes: "CPU offline validation of current method_runs GelSLAM-style tracking package after packaging fixes; scripts/run.sh regenerates data, baseline, method outputs, scores, train/test slices, and validator results without network access."

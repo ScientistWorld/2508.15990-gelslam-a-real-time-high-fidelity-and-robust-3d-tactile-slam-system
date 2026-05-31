@@ -18,7 +18,8 @@
 
 ## Code And Scripts
 
-- [x] Method code implements GelSLAM computational steps
+- [x] Method code implements GelSLAM-style tracking computational steps
+- [ ] Full 6DoF tracking and reconstruction path is implemented and scored
 - [x] NormalFlow baseline is available for the same synthetic benchmark
 - [x] Evaluation code reports all required metrics
 - [x] `scripts/run.sh` regenerates the benchmark, baseline, method outputs, and scores before validation

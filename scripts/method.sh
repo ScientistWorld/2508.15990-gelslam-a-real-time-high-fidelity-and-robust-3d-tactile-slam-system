@@ -15,4 +15,4 @@ DATASET="${1:-data/synthetic_tracking/loop_patch.npz}"
 OUT="${2:-checkpoints/scaled_gelslam}"
 
 python method/scaled_gelslam/run_gelslam.py --dataset "$DATASET" --output-dir "$OUT"
-bash scripts/evaluate.sh
+bash scripts/evaluate.sh gelslam_online "$OUT"

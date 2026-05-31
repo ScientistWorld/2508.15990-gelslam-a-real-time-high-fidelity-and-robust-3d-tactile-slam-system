@@ -2,19 +2,19 @@
 
 ## What Works
 
-Documentation, scoring metadata, and a scaled GelSLAM reproduction are in place. A continuation audit found the earlier implementation was too planar to justify `core_claim`, so the method code has been reworked to use an SE(3) pose representation, an SE(3) NormalFlow-style objective, and SE(3) pose graph residuals. The current validated milestone is `core_claim`.
+Documentation, scoring metadata, and a scaled GelSLAM reproduction are in place. A continuation audit found the earlier implementation was too planar to justify `core_claim`, so the method code has been reworked to use an SE(3) pose representation, an SE(3) NormalFlow-style objective, and SE(3) pose graph residuals. A second method-fidelity audit on 2026-05-31 found that the runnable path is still tracking-only and uses a planar synthetic benchmark, so the current honest milestone is `method_runs` until a fuller 6DoF/reconstruction experiment is implemented and validated.
 
 A continuation audit on 2026-05-31 rechecked method fidelity, evaluator independence, scripts, and deliverables. The method remains a scaled partial reproduction rather than the full physical GelSight/ROS2/GTSAM system, but it implements the recognizable GelSLAM tracking computation rather than a surrogate. The audit found one evaluation hardening issue: `eval/evaluate_tracking.py` loaded `gt_poses.npy` from each method run directory. This is now fixed so evaluation loads ground truth from the fixed dataset and counts accepted loops from actual loop-edge records. The documented shell entrypoints were also made executable.
 
-Final packaging audit on 2026-05-31 aligned `MILESTONES.md` with the achieved `core_claim`, documented the evaluator artifact contract, hardened malformed loop-edge handling so malformed accepted loops count as false loops, and kept raw keyframe counts as diagnostics rather than scored values because the scaled benchmark is shorter than the paper's real episodes. Local structural validation passes; evaluator execution itself depends on NumPy/SciPy/OpenCV from the container overlay, so the final check was submitted as a CPU test job.
+Final packaging audit on 2026-05-31 documented the evaluator artifact contract, hardened malformed loop-edge handling so malformed accepted loops count as false loops, and kept raw keyframe counts as diagnostics rather than scored values because the scaled benchmark is shorter than the paper's real episodes. Local structural validation passes; evaluator execution itself depends on NumPy/SciPy/OpenCV from the container overlay, so the final check was submitted as a CPU test job.
 
-The continuation audit after the milestone reset rechecked the method/evaluation separation, scoring consistency, and data-download portability. The audit restored `core_claim` for the documented scaled synthetic tracking benchmark: the method code contains GelSLAM's tracking, keyframe, loop-verification, and pose-graph computation; `eval/` reads artifacts independently from `method/`; all targets in `scoring/TARGETS.md` have corresponding entries in `scoring/scores.json` and `scoring/EXPERIMENTS.md`. `scripts/download.sh` now keeps the small generated benchmark as the default and includes an optional verified HuggingFace fetch for the full 68.1 GiB released dataset.
+The continuation audit after the milestone reset rechecked the method/evaluation separation, scoring consistency, and data-download portability. The method code contains GelSLAM-style tracking, keyframe, loop-verification, and pose-graph computation; `eval/` reads artifacts independently from `method/`; all targets in `scoring/TARGETS.md` have corresponding entries in `scoring/scores.json` and `scoring/EXPERIMENTS.md`. `scripts/download.sh` now keeps the small generated benchmark as the default and includes an optional verified HuggingFace fetch for the full 68.1 GiB released dataset.
 
-CPU container validation job `72223a41-095` completed successfully on 2026-05-31. It reran `scripts/evaluate.sh` against the saved prediction artifacts and then ran `python validate.py --compare`; both completed with exit code 0, confirming the evaluator works inside the packaged container environment and the final `scoring/scores.json` is consistent with the documented `core_claim`.
+CPU container validation job `72223a41-095` completed successfully on 2026-05-31. It reran `scripts/evaluate.sh` against the saved prediction artifacts and then ran `python validate.py --compare`; both completed with exit code 0, confirming the evaluator works inside the packaged container environment. Those results are retained as useful tracking evidence, but no longer justify claiming `core_claim` because reconstruction and full 6DoF behavior are not covered by the runnable path.
 
 A subsequent validator check rejected the raw `keyframe_budget` experiment because the paper-side NormalFlow reference used the 523-frame average real episode length while the scaled benchmark has only 144 frames. That comparison was invalid rather than a method failure. The automated scoring contract now covers trajectory accuracy plus loop-closure correctness; keyframe counts remain in method artifacts and documentation as diagnostics only.
 
-Final clean-clone packaging audit on 2026-05-31 found that `scripts/run.sh` was only validating existing ignored checkpoint artifacts. This has been fixed: `scripts/run.sh` now calls `scripts/reproduce.sh`, which regenerates the synthetic benchmark, runs the NormalFlow baseline, runs the scaled GelSLAM method, and writes fresh scores before train/test slice evaluation and validation. The method and baseline scripts no longer write ground-truth pose arrays into their output directories; evaluation loads ground truth only from the fixed dataset.
+Final clean-clone packaging audit on 2026-05-31 found that `scripts/run.sh` was only validating existing ignored checkpoint artifacts. This has been fixed: `scripts/run.sh` now calls `scripts/reproduce.sh`, which regenerates the synthetic benchmark, runs the NormalFlow baseline, runs the scaled GelSLAM method, and writes fresh scores before train/test slice evaluation and validation. The method and baseline scripts no longer write ground-truth pose arrays into their output directories; evaluation loads ground truth only from the fixed dataset. The default reproduction path no longer calls `scripts/download.sh`, so compute-node runs remain offline-safe; optional official data/model downloads are controlled by explicit environment variables in `scripts/download.sh`. Standalone `scripts/method.sh` and `scripts/baseline.sh` now pass explicit run directories to the evaluator so they cannot accidentally include stale checkpoint artifacts.
 
 ## Results
 
@@ -30,7 +30,7 @@ The previous `scoring/scores.json` was removed because it was generated by the p
 - Table II tracking statistics: 523 frames, 68 keyframes, 21 coverage keyframes, 65 loop candidates, and 34 accepted loops on average.
 - Table VI reconstruction context: average CD 0.60 mm and average NCD 0.962 over ten 3D-printed objects.
 
-The latest packaged 144-frame synthetic benchmark supports the paper's core claim:
+The latest packaged 144-frame synthetic benchmark supports a tracking-only GelSLAM-style effect, not the full paper core claim:
 
 - NormalFlow baseline: 9.20 deg rotation MAE, 1.21 mm translation MAE.
 - Scaled GelSLAM Online: 5.78 deg rotation MAE, 0.90 mm translation MAE.
@@ -40,14 +40,15 @@ The latest packaged 144-frame synthetic benchmark supports the paper's core clai
 
 ## Remaining
 
+- To reclaim `core_claim`, implement and validate either the full official pipeline on accessible released data or a scaled benchmark that preserves full 6DoF tactile pose estimation plus reconstruction/fusion scoring.
 - Higher milestones would require expanding to more synthetic objects/settings or downloading the full 73 GB released dataset and running the official ROS2/GTSAM reconstruction code.
 - The current keyframe count is lower than the frame-to-frame baseline but still higher than the paper's reported average. It is tracked as a diagnostic because raw keyframe counts are not directly comparable across the scaled and real episode lengths.
 
 ## Issues
 
-The current reproduction intentionally uses a synthetic benchmark because the full real GelSLAM dataset is a 73 GB archive and the official release depends on ROS2/GTSAM reconstruction infrastructure. This is a data/scale substitution, not an algorithm substitution.
+The current reproduction intentionally uses a synthetic benchmark because the full real GelSLAM dataset is a 73 GB archive and the official release depends on ROS2/GTSAM reconstruction infrastructure. This is a data/scale substitution, but the present packaged benchmark is still too narrow for `core_claim`: it preserves the main tracking computation while omitting reconstruction and relying on planar motion observability in the generated data.
 
-The scaled benchmark pins z, roll, and pitch during NormalFlow optimization because the synthetic orthographic height-map observations do not independently constrain those axes. The paper's real GelSight tracking task is full 6DoF; this remains a documented scale/data-model deviation. The reproduction therefore supports the tracking core claim on a constrained synthetic long-horizon setting, not the full real 6DoF plus reconstruction claim.
+The scaled benchmark pins z, roll, and pitch during NormalFlow optimization because the synthetic orthographic height-map observations do not independently constrain those axes. The paper's real GelSight tracking task is full 6DoF; this remains a documented scale/data-model deviation. The reproduction therefore supports only `method_runs` on a constrained synthetic long-horizon setting, not the full real 6DoF plus reconstruction claim.
 
 The NormalFlow baseline reuses the same NormalFlow primitive implementation as the proposed method to keep the registration operator identical across the comparison. This keeps the paper's intended ablation comparison but means future agents should avoid changing shared NormalFlow behavior without rerunning both baseline and method.
 
@@ -83,7 +84,7 @@ The tightened verifier fixed loop validity on the 144-frame benchmark: GelSLAM a
 
 Reducing the loop-edge weight to 2 did not materially improve the 144-frame result: GelSLAM remained at 14.57 deg / 1.68 mm with one valid loop and 0.0 false-loop rate. This indicates the main error is not loop over-weighting but the front-end using too few keyframes for the longer synthetic path. The next run raises keyframe promotion thresholds (`ccs` 0.72 -> 0.85, `scr` 0.25 -> 0.35) so local NormalFlow constraints cover shorter frame spans, and sets loop-edge weight to 1 now that only one valid loop is available.
 
-The denser-keyframe run reached `core_claim`: GelSLAM improved rotation and translation over NormalFlow on the 144-frame long-horizon benchmark, accepted four valid loop closures with 0.0 false-loop rate, and kept a smaller keyframe graph than the frame-to-frame baseline. The reproduced values are worse than the full-paper numbers, as expected for a synthetic scaled substitute, but the result demonstrates the claimed loop-closure benefit under the packaged evaluation.
+The denser-keyframe run produced a useful tracking result: GelSLAM improved rotation and translation over NormalFlow on the 144-frame long-horizon benchmark, accepted four valid loop closures with 0.0 false-loop rate, and kept a smaller keyframe graph than the frame-to-frame baseline. The reproduced values are worse than the full-paper numbers, as expected for a synthetic scaled substitute, and they are not sufficient for `core_claim` because the evaluated task is still planar tracking only.
 
 ## Deviations From Paper
 

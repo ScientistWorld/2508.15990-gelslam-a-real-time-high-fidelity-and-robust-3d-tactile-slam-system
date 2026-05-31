@@ -22,4 +22,4 @@ DATASET="${1:-data/synthetic_tracking/loop_patch.npz}"
 OUT="${2:-checkpoints/normalflow_baseline}"
 
 python baseline/normalflow_baseline.py --dataset "$DATASET" --output-dir "$OUT"
-bash scripts/evaluate.sh
+bash scripts/evaluate.sh normalflow "$OUT"

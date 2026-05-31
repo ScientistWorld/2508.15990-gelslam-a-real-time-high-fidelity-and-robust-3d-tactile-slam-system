@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -32,5 +32,13 @@
 - Tightened method-agnostic problem, evaluation, target, and experiment documentation for gym use.
 - Verified `scripts/download.sh` URLs and confirmed committed code does not reference `shared/`.
 
+### [2026-05-31 18:21] - method_runs
+- Re-audited method fidelity with a sub-agent review.
+- Downgraded the current self-reported milestone from `core_claim` to `method_runs`: the packaged path runs recognizable GelSLAM-style tracking components, but the runnable benchmark is still tracking-only and planar-scaled, without the paper's full 6DoF tactile SLAM and reconstruction evaluation.
+- Patched the reproduction scripts so the default compute-node path is offline and cannot accidentally attempt optional internet downloads.
+
+### [2026-05-31 18:24] - method_runs
+- Fixed packaging issues found by the runnable-path audit: standalone method and baseline scripts now evaluate only their own fresh artifacts, loop-closure target docs list every scored metric, and the submitted run prints final scores after validation.
+
 ## Stop Justification
-- Completed at milestone `core_claim`.
+- Not stopped. The next submitted job validates the current offline `method_runs` package before expanding toward a defensible `core_claim`.
