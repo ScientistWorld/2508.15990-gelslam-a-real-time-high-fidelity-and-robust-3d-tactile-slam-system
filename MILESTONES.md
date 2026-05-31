@@ -54,6 +54,11 @@
 - The method still trailed the NormalFlow baseline, so `core_claim` is not yet reached.
 - Added a loop-edge pose-graph weight so verified loop closures have enough influence against the sequential odometry chain.
 
+### [2026-05-31 20:00] - method_runs
+- The weighted-loop run beat NormalFlow on the primary rotation metric, 4.83 deg versus 4.93 deg, and kept three valid loops with 0.0 false-loop rate.
+- Translation remained slightly worse than NormalFlow, 0.49 mm versus 0.45 mm, so `core_claim` is still held back.
+- Increased the verified-loop edge weight from 4 to 6 for the next run.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.
