@@ -7,23 +7,23 @@
     "synthetic_long_horizon_tracking": {
       "results": {
         "gelslam_online": {
-          "rotation_mae_deg": 12.086240702736713,
-          "translation_mae_mm": 3.809012386000189
+          "rotation_mae_deg": 33.298961840528335,
+          "translation_mae_mm": 9.224880080950113
         },
         "normalflow": {
-          "rotation_mae_deg": 14.225875609214025,
-          "translation_mae_mm": 2285.752871535915
+          "rotation_mae_deg": 9.396095680362269,
+          "translation_mae_mm": 0.9348700111700106
         }
       }
     },
     "loop_closure_quality": {
       "results": {
         "gelslam_online": {
-          "accepted_loops": 0,
+          "accepted_loops": 2,
           "valid_loops": 0,
           "valid_loop_recall": 0.0,
           "valid_loop_rate": 0.0,
-          "false_loop_rate": 0.0
+          "false_loop_rate": 1.0
         },
         "normalflow": {
           "accepted_loops": 0,
