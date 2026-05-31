@@ -18,5 +18,10 @@
 - Reset the default runnable benchmark to the previously stable 144-frame closed-loop planar substitute, while keeping reconstruction artifact generation and scoring enabled.
 - Submitting another CPU test job to regenerate honest scores for this stable benchmark.
 
+### [2026-05-31 19:30] - none
+- CPU job `20afefce-dd6` failed in pose graph optimization because Levenberg-Marquardt was applied to an underdetermined keyframe graph.
+- Patched pose graph optimization to use trust-region least squares when residuals are fewer than variables and to softly anchor planar-only unobservable axes.
+- Resubmitting the same 144-frame closed-loop benchmark.
+
 ## Stop Justification
 - Completed at milestone `none`.

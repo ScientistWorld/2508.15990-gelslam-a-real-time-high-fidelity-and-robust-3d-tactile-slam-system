@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "Retry CPU container smoke test after resetting the default benchmark to the stable 144-frame closed-loop planar sequence with reconstruction artifacts. Regenerate data, rerun NormalFlow and scaled GelSLAM, evaluate tracking/loop/reconstruction, and validate train/test slices."
+notes: "Retry CPU smoke test after fixing underdetermined pose graph optimization with a TRF fallback and planar-axis soft anchors. Regenerate the 144-frame closed-loop benchmark, run baseline and GelSLAM, evaluate reconstruction-inclusive scores, and validate train/test slices."
