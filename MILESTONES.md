@@ -48,5 +48,10 @@
 - Reverted the residual weighting to the previous stable pose graph formulation.
 - Increased the default planar benchmark from 144 to 192 frames so frame-to-frame NormalFlow has a longer horizon for drift accumulation while preserving the same algorithm and synthetic observation model.
 
+### [2026-05-31 19:55] - method_runs
+- CPU job `3fd2d331-371` ran the 192-frame benchmark but failed validation because no loops were accepted, leaving the loop-closure primary metric at 0.0 for every method on train and test.
+- The longer horizon did make rotation non-trivial: GelSLAM improved rotation MAE over NormalFlow, 7.57 deg versus 11.77 deg, but translation remained worse and the loop constraint was unmet.
+- Relaxed the loop verification CCS/SCR defaults from 0.75/0.12 to 0.68/0.30 so short odometry-consistent revisits just below the old CCS threshold can enter the pose graph while the long-span odometry gate still blocks ambiguous SIFT matches.
+
 ## Stop Justification
 - Active reproduction; no stop justification yet.

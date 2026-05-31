@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Retry CPU smoke test after 29df8353-28c showed loop-specific residual weighting was harmful. Revert to the stable pose graph weights and test a longer 192-frame planar benchmark so NormalFlow has more horizon for drift while GelSLAM keeps the tightened loop verifier. Run baseline, GelSLAM, full/train/test evaluation, and validation."
+notes: "Retry CPU smoke test after 3fd2d331-371 showed the 192-frame benchmark accepted no loops. Test modestly relaxed loop verification defaults (CCS 0.68, SCR 0.30) so short odometry-consistent revisits can be accepted while long-span false SIFT matches remain gated. Run baseline, GelSLAM, full/train/test evaluation, and validation."
