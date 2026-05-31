@@ -10,6 +10,7 @@ from scipy.spatial.transform import Rotation
 
 SLICE_NAME = "train"
 BLOCK_SIZE = 8
+LONG_LOOP_SPAN_FRAMES = 32
 GELSIGHT_MM_PER_PIXEL = 20.0 / 320.0
 LEGACY_SCORE_NAMES = {
     "normalflow_baseline": "normalflow",
@@ -67,8 +68,18 @@ def tracking_indices(n_frames: int) -> np.ndarray:
     return np.asarray([idx for idx in range(n_frames) if (idx // BLOCK_SIZE) % 2 == 0], dtype=np.int64)
 
 
-def loop_edges_for_slice(loop_edges: list) -> list:
-    return [edge for idx, edge in enumerate(loop_edges) if idx % 2 == 0]
+def loop_edges_for_slice(loop_edges: list, keyframe_indices: list) -> list:
+    selected = []
+    for edge in loop_edges:
+        is_long = False
+        if len(edge) >= 2 and keyframe_indices:
+            key_i, key_j = int(edge[0]), int(edge[1])
+            if key_i < len(keyframe_indices) and key_j < len(keyframe_indices):
+                span = abs(int(keyframe_indices[key_j]) - int(keyframe_indices[key_i]))
+                is_long = span >= LONG_LOOP_SPAN_FRAMES
+        if not is_long:
+            selected.append(edge)
+    return selected
 
 
 def read_summary(run_dir: Path) -> dict:
@@ -138,10 +149,10 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     rot_err_deg = np.degrees(rot_err)
 
     summary = read_summary(run_dir)
-    loop_edges = loop_edges_for_slice(summary.get("loop_edges", []))
+    keyframe_indices = summary.get("keyframe_indices", [])
+    loop_edges = loop_edges_for_slice(summary.get("loop_edges", []), keyframe_indices)
     accepted = len(loop_edges)
     false_loops = 0
-    keyframe_indices = summary.get("keyframe_indices", [])
     for edge in loop_edges:
         if len(edge) < 3 or not keyframe_indices:
             false_loops += 1
@@ -200,7 +211,7 @@ def main() -> None:
     scores = {
         "_metadata": {
             "slice": SLICE_NAME,
-            "split": f"block_interleaved_{BLOCK_SIZE}_frames_even_blocks_and_even_loop_edges",
+            "split": f"block_interleaved_{BLOCK_SIZE}_frames_and_short_loop_spans_lt_{LONG_LOOP_SPAN_FRAMES}_frames",
         },
         "experiments": {
             "synthetic_long_horizon_tracking": {

@@ -52,7 +52,7 @@
     "loop_closure_quality": {
       "description": "Loop-closure behavior for the scaled synthetic benchmark, anchored to Table II tracking statistics and the paper's qualitative requirement that accepted loops be valid.",
       "weight": 0.3,
-      "primary_metric": "false_loop_rate",
+      "primary_metric": "valid_loops",
       "metrics": {
         "accepted_loops": {
           "higher_is_better": true,
@@ -79,11 +79,15 @@
         "normalflow": {
           "type": "baseline",
           "accepted_loops": 0,
+          "valid_loops": 0,
+          "valid_loop_rate": 0.0,
           "false_loop_rate": 0.0
         },
         "gelslam_online": {
           "type": "proposed",
           "accepted_loops": 34,
+          "valid_loops": 34,
+          "valid_loop_rate": 1.0,
           "false_loop_rate": 0.0
         }
       }

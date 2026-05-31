@@ -97,10 +97,13 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
         rerr = float(np.linalg.norm(loop_err[3:]))
         if terr > 10.0 or np.degrees(rerr) > 20.0:
             false_loops += 1
+    valid_loops = accepted - false_loops
     return {
         "rotation_mae_deg": float(np.degrees(rot_err).mean()),
         "translation_mae_mm": float(pos_err.mean() * GELSIGHT_MM_PER_PIXEL),
         "accepted_loops": accepted,
+        "valid_loops": valid_loops,
+        "valid_loop_rate": float(valid_loops / max(accepted, 1)),
         "false_loop_rate": float(false_loops / max(accepted, 1)),
     }
 
@@ -130,6 +133,8 @@ def main() -> None:
                 "results": {
                     name: {
                         "accepted_loops": vals["accepted_loops"],
+                        "valid_loops": vals["valid_loops"],
+                        "valid_loop_rate": vals["valid_loop_rate"],
                         "false_loop_rate": vals["false_loop_rate"],
                     }
                     for name, vals in flat_results.items()
