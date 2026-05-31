@@ -5,8 +5,36 @@
       "weight": 0.7,
       "primary_metric": "rotation_mae_deg",
       "metrics": {
-        "rotation_mae_deg": {"higher_is_better": false, "coefficient": 1.0},
-        "translation_mae_mm": {"higher_is_better": false, "coefficient": 0.8}
+        "rotation_mae_deg": {
+          "higher_is_better": false,
+          "coefficient": 1.0,
+          "description": "Mean rotational pose error over the evaluated slice; lower values indicate better tactile tracking."
+        },
+        "translation_mae_mm": {
+          "higher_is_better": false,
+          "coefficient": 0.8,
+          "description": "Mean translational pose error in millimeters over the evaluated slice; lower values indicate better tactile tracking."
+        },
+        "rotation_p95_deg": {
+          "higher_is_better": false,
+          "coefficient": 0.35,
+          "description": "Ninety-fifth percentile rotational error, included to catch localized drift spikes hidden by mean error."
+        },
+        "translation_p95_mm": {
+          "higher_is_better": false,
+          "coefficient": 0.3,
+          "description": "Ninety-fifth percentile translational error, included to catch localized drift spikes hidden by mean error."
+        },
+        "terminal_rotation_error_deg": {
+          "higher_is_better": false,
+          "coefficient": 0.45,
+          "description": "Rotational error at the last frame in the slice, probing accumulated long-horizon drift."
+        },
+        "terminal_translation_error_mm": {
+          "higher_is_better": false,
+          "coefficient": 0.35,
+          "description": "Translational error at the last frame in the slice, probing accumulated long-horizon drift."
+        }
       },
       "results": {
         "normalflow": {
@@ -26,8 +54,21 @@
       "weight": 0.3,
       "primary_metric": "false_loop_rate",
       "metrics": {
-        "accepted_loops": {"higher_is_better": true, "coefficient": 0.4},
-        "false_loop_rate": {"higher_is_better": false, "coefficient": 1.0}
+        "accepted_loops": {
+          "higher_is_better": true,
+          "coefficient": 0.15,
+          "description": "Number of accepted loop closures in the evaluated slice; retained as a weak productivity signal."
+        },
+        "valid_loops": {
+          "higher_is_better": true,
+          "coefficient": 0.45,
+          "description": "Accepted loop closures whose measured relative pose agrees with the ground-truth revisit relation."
+        },
+        "false_loop_rate": {
+          "higher_is_better": false,
+          "coefficient": -1.0,
+          "description": "Fraction of accepted loop closures that violate the ground-truth revisit relation; this penalizes unsafe loop acceptance."
+        }
       },
       "results": {
         "normalflow": {

@@ -134,6 +134,8 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     errors = np.asarray([relative_error(p, g) for p, g in zip(pred, gt)], dtype=np.float64)
     pos_err = np.linalg.norm(errors[indices, :3], axis=1)
     rot_err = np.linalg.norm(errors[indices, 3:], axis=1)
+    pos_err_mm = pos_err * GELSIGHT_MM_PER_PIXEL
+    rot_err_deg = np.degrees(rot_err)
 
     summary = read_summary(run_dir)
     loop_edges = loop_edges_for_slice(summary.get("loop_edges", []))
@@ -154,10 +156,16 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
         rerr = float(np.linalg.norm(loop_err[3:]))
         if terr > 10.0 or np.degrees(rerr) > 20.0:
             false_loops += 1
+    valid_loops = accepted - false_loops
     return {
-        "rotation_mae_deg": float(np.degrees(rot_err).mean()),
-        "translation_mae_mm": float(pos_err.mean() * GELSIGHT_MM_PER_PIXEL),
+        "rotation_mae_deg": float(rot_err_deg.mean()),
+        "translation_mae_mm": float(pos_err_mm.mean()),
+        "rotation_p95_deg": float(np.percentile(rot_err_deg, 95)),
+        "translation_p95_mm": float(np.percentile(pos_err_mm, 95)),
+        "terminal_rotation_error_deg": float(rot_err_deg[-1]),
+        "terminal_translation_error_mm": float(pos_err_mm[-1]),
         "accepted_loops": accepted,
+        "valid_loops": valid_loops,
         "false_loop_rate": float(false_loops / max(accepted, 1)),
     }
 
@@ -199,6 +207,10 @@ def main() -> None:
                     name: {
                         "rotation_mae_deg": vals["rotation_mae_deg"],
                         "translation_mae_mm": vals["translation_mae_mm"],
+                        "rotation_p95_deg": vals["rotation_p95_deg"],
+                        "translation_p95_mm": vals["translation_p95_mm"],
+                        "terminal_rotation_error_deg": vals["terminal_rotation_error_deg"],
+                        "terminal_translation_error_mm": vals["terminal_translation_error_mm"],
                     }
                     for name, vals in flat_results.items()
                 }
@@ -207,6 +219,7 @@ def main() -> None:
                 "results": {
                     name: {
                         "accepted_loops": vals["accepted_loops"],
+                        "valid_loops": vals["valid_loops"],
                         "false_loop_rate": vals["false_loop_rate"],
                     }
                     for name, vals in flat_results.items()
