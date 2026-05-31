@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Retry CPU smoke job after constraining synthetic-unobservable SE(3) axes and skipping adjacent loop candidates; runs scripts/reproduce.sh and writes scoring/scores.json."
+notes: "CPU smoke job after loosening loop proposals and separate loop-closure thresholds; runs scripts/reproduce.sh and checks whether scaled GelSLAM accepts valid revisits and beats NormalFlow."

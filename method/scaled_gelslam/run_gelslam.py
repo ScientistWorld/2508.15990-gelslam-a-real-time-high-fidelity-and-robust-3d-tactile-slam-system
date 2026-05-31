@@ -27,8 +27,8 @@ def load_frames(path: Path) -> tuple[list[dict], np.ndarray]:
     return frames, poses
 
 
-def feature_candidate(ref: dict, tgt: dict) -> np.ndarray | None:
-    sift = cv2.SIFT_create(nfeatures=300, contrastThreshold=0.005, edgeThreshold=4)
+def feature_candidate(ref: dict, tgt: dict) -> tuple[np.ndarray, int] | None:
+    sift = cv2.SIFT_create(nfeatures=800, contrastThreshold=0.001, edgeThreshold=8)
     a = (ref["curvature"] * 255).astype(np.uint8)
     b = (tgt["curvature"] * 255).astype(np.uint8)
     kp1, des1 = sift.detectAndCompute(a, None)
@@ -37,18 +37,19 @@ def feature_candidate(ref: dict, tgt: dict) -> np.ndarray | None:
         return None
     matcher = cv2.BFMatcher(cv2.NORM_L2)
     matches = matcher.knnMatch(des1, des2, k=2)
-    good = [m for m, n in matches if m.distance < 0.78 * n.distance]
+    good = [m for m, n in matches if m.distance < 0.88 * n.distance]
     if len(good) < 4:
         return None
     src = np.float32([kp1[m.queryIdx].pt for m in good])
     dst = np.float32([kp2[m.trainIdx].pt for m in good])
-    mat, inliers = cv2.estimateAffinePartial2D(src, dst, method=cv2.RANSAC, ransacReprojThreshold=3.0)
-    if mat is None or inliers is None or int(inliers.sum()) <= 8:
+    mat, inliers = cv2.estimateAffinePartial2D(src, dst, method=cv2.RANSAC, ransacReprojThreshold=5.0)
+    inlier_count = int(inliers.sum()) if inliers is not None else 0
+    if mat is None or inliers is None or inlier_count <= 5:
         return None
     theta = float(np.arctan2(mat[1, 0], mat[0, 0]))
     tx = float(mat[0, 2])
     ty = float(mat[1, 2])
-    return invert(np.array([tx, ty, 0.0, 0.0, 0.0, theta], dtype=np.float64))
+    return invert(np.array([tx, ty, 0.0, 0.0, 0.0, theta], dtype=np.float64)), inlier_count
 
 
 def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initial: np.ndarray) -> np.ndarray:
@@ -115,7 +116,14 @@ def update_coverage_set(
     return pruned
 
 
-def run(dataset: Path, output_dir: Path, ccs_threshold: float, scr_threshold: float) -> None:
+def run(
+    dataset: Path,
+    output_dir: Path,
+    ccs_threshold: float,
+    scr_threshold: float,
+    loop_ccs_threshold: float,
+    loop_scr_threshold: float,
+) -> None:
     frames, gt = load_frames(dataset)
     n = len(frames)
     keyframes = [0]
@@ -145,12 +153,13 @@ def run(dataset: Path, output_dir: Path, ccs_threshold: float, scr_threshold: fl
                 for cov_idx in coverage:
                     if abs(new_key - cov_idx) < 8:
                         continue
-                    init = feature_candidate(frames[cov_idx], frames[new_key])
-                    if init is None:
+                    proposal = feature_candidate(frames[cov_idx], frames[new_key])
+                    if proposal is None:
                         continue
+                    init, inliers = proposal
                     refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
-                    if qccs >= ccs_threshold and qscr >= scr_threshold:
-                        loops.append((keyframes.index(cov_idx), k_new, refined.tolist(), qccs, qscr))
+                    if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
+                        loops.append((keyframes.index(cov_idx), k_new, refined.tolist(), qccs, qscr, inliers))
                         keyframe_edges.append((keyframes.index(cov_idx), k_new, refined))
                     else:
                         rejected_loops += 1
@@ -193,6 +202,8 @@ def run(dataset: Path, output_dir: Path, ccs_threshold: float, scr_threshold: fl
         "loop_edges": loops,
         "ccs_threshold": ccs_threshold,
         "scr_threshold": scr_threshold,
+        "loop_ccs_threshold": loop_ccs_threshold,
+        "loop_scr_threshold": loop_scr_threshold,
     }
     (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
 
@@ -203,8 +214,17 @@ def main() -> None:
     parser.add_argument("--output-dir", default="checkpoints/scaled_gelslam")
     parser.add_argument("--ccs-threshold", type=float, default=0.72)
     parser.add_argument("--scr-threshold", type=float, default=0.25)
+    parser.add_argument("--loop-ccs-threshold", type=float, default=0.58)
+    parser.add_argument("--loop-scr-threshold", type=float, default=0.12)
     args = parser.parse_args()
-    run(Path(args.dataset), Path(args.output_dir), args.ccs_threshold, args.scr_threshold)
+    run(
+        Path(args.dataset),
+        Path(args.output_dir),
+        args.ccs_threshold,
+        args.scr_threshold,
+        args.loop_ccs_threshold,
+        args.loop_scr_threshold,
+    )
 
 
 if __name__ == "__main__":
