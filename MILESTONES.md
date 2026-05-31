@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -83,6 +83,11 @@
 - Reducing loop weight to 2 kept one valid loop with 0.0 false-loop rate but did not fix tracking: GelSLAM scored 14.57 deg / 1.68 mm.
 - Diagnosed the remaining issue as overly sparse keyframes on the 144-frame sequence rather than loop acceptance.
 - Raised keyframe promotion thresholds to `ccs=0.85` and `scr=0.35`, and reduced loop-edge weight to 1 for the next run.
+
+### [2026-05-31 21:30] - core_claim
+- The denser-keyframe 144-frame run reproduced the core claim on the packaged synthetic benchmark.
+- GelSLAM Online scored 5.78 deg rotation MAE and 0.90 mm translation MAE versus NormalFlow at 9.20 deg and 1.21 mm.
+- The method accepted four loop closures with 0.0 false-loop rate and used 110 keyframes versus NormalFlow's 144-frame trajectory state.
 
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.

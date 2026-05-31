@@ -1,5 +1,3 @@
-action: submit
-gpus: 0
-test: true
-milestone: method_runs
-notes: "CPU smoke job with denser GelSLAM keyframes on the 144-frame benchmark: ccs=0.85, scr=0.35, strict loop verification retained, loop weight 1."
+action: done
+milestone: core_claim
+notes: "Reproduced the core GelSLAM claim on the packaged 144-frame synthetic long-horizon benchmark: GelSLAM improves rotation/translation over NormalFlow with 4 valid loop closures, 0.0 false-loop rate, and fewer keyframes."
