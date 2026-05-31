@@ -1,45 +1,31 @@
 # Reproduction Checklist
 
-Check off items as you complete them. Order doesn't matter — work however makes sense for this paper.
-
 ## Briefing
-- [ ] `briefing/problem.md` (method-agnostic)
-- [ ] `briefing/evaluation.md` (method-agnostic)
-- [ ] `briefing/method.md`
-- [ ] `briefing/overview.md`
+
+- [x] `briefing/problem.md` documents the method-agnostic task
+- [x] `briefing/evaluation.md` documents metrics and protocol
+- [x] `briefing/method.md` documents GelSLAM's actual computational procedure
+- [x] `briefing/overview.md` summarizes the paper and scaled reproduction scope
 
 ## Scoring
-- [ ] `scoring/reference.json` — paper's reported numbers
-- [ ] Workspace validated via `python validate.py`
-- [ ] `scoring/scores.json` — reproduced numbers (must match reference.json experiment/metric structure)
-- [ ] `scoring/EXPERIMENTS.md` — high-level purpose of each experiment in `scores.json` (do not edit until wrap up)
-- [ ] `scoring/TARGETS.md` — primary, constraint, and ablation targets (do not edit until wrap up)
-- [ ] `scoring/CONSTRAINTS.md` — what a scientist must hold fixed (do not edit until wrap up)
-- [ ] `scoring/DIRECTION.md` — research direction scope for scientist (do not edit until wrap up)
 
-## Code
-- [ ] Evaluation code in `eval/`
-- [ ] Method implementation in `method/`
-- [ ] Baseline implementation in `baseline/` (if applicable)
+- [x] `scoring/reference.json` records paper-anchored reference values
+- [x] `scoring/TARGETS.md` lists primary and constraint targets
+- [x] `scoring/CONSTRAINTS.md` lists benchmark constraints for future scientists
+- [x] `scoring/DIRECTION.md` scopes future research directions
+- [x] `scoring/EXPERIMENTS.md` explains experiment purpose without method details
+- [ ] `scoring/scores.json` records reproduced run outputs
 
-## Scripts
-- [ ] `scripts/evaluate.sh`
-- [ ] `scripts/reproduce.sh`
-- [ ] `scripts/download.sh` (idempotent, size comment at top)
-- [ ] `scripts/baseline.sh` (if applicable)
+## Code And Scripts
 
-## Environment
-- [ ] `environment/container.def` + `environment/setup.sh`
+- [ ] Method code implements GelSLAM computational steps
+- [ ] NormalFlow baseline is available for the same synthetic benchmark
+- [ ] Evaluation code reports all required metrics
+- [ ] `scripts/run.sh` submits the reproduction job
 
-## Data
-- [ ] Dataset acquired (shared dir or `data/`)
-- [ ] Pretrained models downloaded if needed
+## Documentation Integrity
 
-## Milestones
-- [ ] `method_runs` — executes end-to-end without errors
-- [ ] `core_claim` — minimum experiment supports central claim
-- [ ] `core_claim_plus` — additional settings
-- [ ] `secondary_claims`
-- [ ] `majority`
-- [ ] `near_complete`
-- [ ] `full`
+- [x] Synthetic benchmark is explicitly described as scaled substitute data
+- [x] Documentation states that the GelSLAM computational procedure must be preserved
+- [x] Benefit metrics and constraint metrics are both represented
+- [x] Paper Table II, Table IV, and Table VI values are captured where relevant

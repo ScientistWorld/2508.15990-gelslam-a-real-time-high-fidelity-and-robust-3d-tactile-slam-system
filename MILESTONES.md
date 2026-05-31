@@ -2,20 +2,13 @@
 
 **Current: none**
 
-<!-- Milestone levels (update "Current" above as you progress):
-  none             — just started, no meaningful progress yet
-  method_runs      — the paper's method executes end-to-end without errors
-  core_claim       — minimum experiment supports the paper's central claim
-  core_claim_plus  — core claim reproduced on additional settings
-  secondary_claims — secondary results or contributions reproduced
-  majority         — more than half of reported results reproduced
-  near_complete    — most results reproduced, only minor gaps remain
-  full             — all reported results reproduced
--->
-
 ## Progress Log
 
-<!-- Write your progress here -->
+- Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
+- The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
+- Required metrics are `rotation_mae_deg`, `translation_mae_px`, `accepted_loops`, `false_loop_rate`, and `keyframes`.
+- Reference values are anchored to the paper's Table II tracking statistics, Table IV tracking MAE, and Table VI reconstruction quality context.
 
 ## Stop Justification
-- Completed at milestone `none`.
+
+No milestone above `none` is claimed from documentation alone. A higher milestone requires code that runs the GelSLAM computational procedure and produces measured `scoring/scores.json` results.

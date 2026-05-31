@@ -1,0 +1,112 @@
+{
+  "experiments": {
+    "synthetic_long_horizon_tracking": {
+      "description": "Scaled synthetic long-horizon tactile tracking benchmark, anchored to the paper's Table IV tracking MAE trends. Translation is reported in synthetic pixels for this benchmark; the paper values are millimeter MAE before synthetic scaling.",
+      "weight": 0.6,
+      "primary_metric": "rotation_mae_deg",
+      "metrics": {
+        "rotation_mae_deg": {"higher_is_better": false, "coefficient": 1.0},
+        "translation_mae_px": {"higher_is_better": false, "coefficient": 0.8}
+      },
+      "results": {
+        "normalflow": {
+          "type": "baseline",
+          "rotation_mae_deg": 7.4233333333,
+          "translation_mae_px": 1.0866666667
+        },
+        "gelslam_online": {
+          "type": "proposed",
+          "rotation_mae_deg": 4.0033333333,
+          "translation_mae_px": 0.8933333333
+        }
+      }
+    },
+    "loop_closure_quality": {
+      "description": "Loop-closure behavior for the scaled synthetic benchmark, anchored to Table II tracking statistics and the paper's qualitative requirement that accepted loops be valid.",
+      "weight": 0.25,
+      "primary_metric": "false_loop_rate",
+      "metrics": {
+        "accepted_loops": {"higher_is_better": true, "coefficient": 0.4},
+        "false_loop_rate": {"higher_is_better": false, "coefficient": 1.0}
+      },
+      "results": {
+        "normalflow": {
+          "type": "baseline",
+          "accepted_loops": 0,
+          "false_loop_rate": 0.0
+        },
+        "gelslam_online": {
+          "type": "proposed",
+          "accepted_loops": 34,
+          "false_loop_rate": 0.0
+        }
+      }
+    },
+    "keyframe_budget": {
+      "description": "State-size/resource behavior for tactile SLAM on the scaled synthetic benchmark, anchored to Table II mean keyframe count.",
+      "weight": 0.15,
+      "primary_metric": "keyframes",
+      "metrics": {
+        "keyframes": {"higher_is_better": false, "coefficient": 1.0}
+      },
+      "results": {
+        "normalflow": {
+          "type": "baseline",
+          "keyframes": 0
+        },
+        "gelslam_online": {
+          "type": "proposed",
+          "keyframes": 68
+        }
+      }
+    }
+  },
+  "paper_context": {
+    "table_ii_tracking_statistics": {
+      "frames_mean": 523,
+      "frames_std": 50,
+      "keyframes_mean": 68,
+      "keyframes_std": 59,
+      "coverage_keyframes_mean": 21,
+      "coverage_keyframes_std": 14,
+      "loop_candidates_mean": 65,
+      "loop_candidates_std": 78,
+      "accepted_loops_mean": 34,
+      "accepted_loops_std": 36
+    },
+    "table_iv_tracking_mae": {
+      "normalflow": {
+        "theta_x_deg": 7.11,
+        "theta_y_deg": 7.53,
+        "theta_z_deg": 7.63,
+        "x_mm": 1.13,
+        "y_mm": 1.21,
+        "z_mm": 0.92
+      },
+      "gelslam_online": {
+        "theta_x_deg": 4.06,
+        "theta_y_deg": 4.38,
+        "theta_z_deg": 3.57,
+        "x_mm": 1.00,
+        "y_mm": 0.96,
+        "z_mm": 0.72
+      }
+    },
+    "table_vi_reconstruction": {
+      "average_cd_mm": 0.60,
+      "average_ncd": 0.962,
+      "objects": {
+        "dice_small": {"size_mm": 10.0, "cd_mm": 0.44, "ncd": 0.955},
+        "shell_small": {"size_mm": 18.4, "cd_mm": 0.76, "ncd": 0.944},
+        "almond_small": {"size_mm": 17.3, "cd_mm": 0.60, "ncd": 0.966},
+        "seed_small": {"size_mm": 9.5, "cd_mm": 0.63, "ncd": 0.954},
+        "lime_small": {"size_mm": 15.0, "cd_mm": 0.26, "ncd": 0.985},
+        "dice_large": {"size_mm": 15.0, "cd_mm": 0.41, "ncd": 0.947},
+        "shell_large": {"size_mm": 27.6, "cd_mm": 0.91, "ncd": 0.955},
+        "almond_large": {"size_mm": 25.9, "cd_mm": 0.85, "ncd": 0.962},
+        "seed_large": {"size_mm": 14.3, "cd_mm": 0.63, "ncd": 0.967},
+        "lime_large": {"size_mm": 29.9, "cd_mm": 0.50, "ncd": 0.986}
+      }
+    }
+  }
+}

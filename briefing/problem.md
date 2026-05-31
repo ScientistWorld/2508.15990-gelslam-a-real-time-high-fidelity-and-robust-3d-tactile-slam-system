@@ -1,17 +1,13 @@
 # Problem Definition
 
-What problem does this paper address? Write this so that someone with no knowledge of the paper can understand what needs to be solved and how success is measured.
-
-Do NOT describe the paper's method or solution here — only the problem itself. Think about if a future scientist agent try to solve this problem from scratch without knowing what approach the paper took. If you leak the solution, you compromise the benchmark.
-
 ## Research Question
 
-<!-- What problem or challenge does this paper tackle? What gap in existing work does it address? -->
+How can a tactile-only perception system estimate object pose accurately over long horizons when each tactile observation covers only a small local surface patch and frame-to-frame tracking accumulates drift?
 
 ## Why It Matters
 
-<!-- Why is this problem important? What would a good solution enable? Make it short -->
+Robots often manipulate objects under occlusion or close contact, where cameras cannot reliably observe the contact geometry. A tactile long-horizon tracker can support in-hand manipulation, surface exploration, and object modeling using touch alone.
 
 ## Success Criteria
 
-<!-- What would a successful solution look like? What properties should it have? This is about the goal, not the paper's specific approach. Make it short -->
+A successful system should produce low long-horizon rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false loop closures, and keep the number of retained keyframes within a practical range. In this scaled synthetic benchmark, success means outperforming the NormalFlow frame-to-frame baseline on trajectory error while maintaining low false loop rate.
