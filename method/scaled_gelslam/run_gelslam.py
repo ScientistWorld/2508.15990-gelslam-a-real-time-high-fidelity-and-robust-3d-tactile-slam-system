@@ -239,12 +239,18 @@ def run(
             odom_err = se3_error(odom_rel, refined)
             odom_translation_err = float(np.linalg.norm(odom_err[:3]))
             odom_yaw_err = float(np.linalg.norm(odom_err[3:]))
+            frame_span = abs(int(new_key) - int(cov_idx))
             translation_gate = loop_odom_translation_gate
             if new_key == final_frame and cov_idx == keyframes[0]:
                 translation_gate = final_anchor_translation_gate
             if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
                 odometry_consistent = odom_translation_err <= translation_gate and odom_yaw_err <= loop_odom_yaw_gate
-                texture_verified = qccs >= max(loop_ccs_threshold, 0.74) and qscr >= max(loop_scr_threshold, 0.40)
+                texture_verified = (
+                    frame_span < 32
+                    and qccs >= max(loop_ccs_threshold, 0.74)
+                    and qscr >= max(loop_scr_threshold, 0.40)
+                    and odom_yaw_err <= loop_odom_yaw_gate
+                )
                 final_anchor = new_key == final_frame and cov_idx == keyframes[0]
                 final_verified = final_anchor and qccs >= 0.70 and qscr >= 0.25 and odom_yaw_err <= 1.0
                 if odometry_consistent or texture_verified or final_verified:

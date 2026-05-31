@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Retry CPU smoke test after restoring method_runs from job 7e42926d-cc3. Test the planar-observable pose projection and high-confidence loop-verification bypass for accumulated-odometry translation drift; regenerate the 144-frame closed-loop benchmark, run baseline and GelSLAM, evaluate reconstruction-inclusive scores, and validate train/test slices."
+notes: "Retry CPU smoke test after job afa5af0e-b28 showed false long-span SIFT loops. Test the tightened verifier: high-confidence texture bypass only for short revisits, conservative odometry/final-anchor gates for long loops. Regenerate the 144-frame benchmark, run baseline and GelSLAM, evaluate full/train/test scores, and validate."

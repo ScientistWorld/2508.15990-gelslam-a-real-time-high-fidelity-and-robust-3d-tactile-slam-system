@@ -33,5 +33,10 @@
 - The job did not reach `core_claim` because GelSLAM accepted zero loop closures, leaving the loop-closure quality target with no train/test signal.
 - Patched the planar benchmark path to project both baseline and method estimates onto observable x/y/yaw axes and to allow high-confidence NormalFlow loop estimates to bypass only the accumulated-odometry translation gate.
 
+### [2026-05-31 19:37] - method_runs
+- CPU job `afa5af0e-b28` passed structural validation and confirmed the reproduction environment is runnable, but the relaxed loop verifier accepted two false long-span SIFT loops.
+- The false loop edges degraded GelSLAM tracking to 33.51 deg / 9.18 mm versus NormalFlow at 8.52 deg / 0.86 mm, so this does not support `core_claim`.
+- Tightened loop verification so the odometry-translation bypass applies only to short high-confidence revisits; long loops must satisfy the conservative odometry gate or the explicit final-anchor path.
+
 ## Stop Justification
 - Active reproduction; no stop justification yet.
