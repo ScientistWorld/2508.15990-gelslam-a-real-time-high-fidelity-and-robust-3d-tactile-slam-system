@@ -1,4 +1,4 @@
-action: submit
+action: done
 gpus: 0
 test: false
-notes: "Rerun train/test split evaluators after adding valid_loop_rate to avoid no-loop shortcut saturation."
+notes: "Block-interleaved train/test split; 10 train metrics, 10 test metrics; GelSLAM tracking gaps are small (test rotation -0.30 deg, translation -0.032 mm vs train) and baseline remains worse on both; loop counts/rates match across slices, with valid_loop_rate distinguishing valid loops from no-loop abstention."
