@@ -40,6 +40,10 @@
 - The origin anchor remained in coverage, but the final closed-loop frame was not itself promoted to a keyframe, so the true endpoint revisit was still not checked.
 - Refactored loop evaluation into a shared helper and forced the final frame into the keyframe graph before pose-graph optimization.
 
+### [2026-05-31 19:15] - method_runs
+- The forced final keyframe appeared in the graph, but no rejected-candidate diagnostic referenced it, indicating sparse curvature matching produced no endpoint loop proposal.
+- Added an odometry-initialized NormalFlow verification fallback for the forced final keyframe; accepted loops must still pass CCS/SCR and odometry-gate checks.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.

@@ -129,6 +129,7 @@ def run(
 ) -> None:
     frames, gt = load_frames(dataset)
     n = len(frames)
+    final_frame = n - 1
     keyframes = [0]
     frame_parent = np.zeros(n, dtype=int)
     frame_to_parent = np.zeros((n, 6), dtype=np.float64)
@@ -147,19 +148,25 @@ def run(
         for cov_idx in coverage:
             if abs(new_key - cov_idx) < 8:
                 continue
-            proposal = feature_candidate(frames[cov_idx], frames[new_key])
-            if proposal is None:
-                continue
-            init, inliers = proposal
-            refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
             cov_key = keyframes.index(cov_idx)
             odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])
+            proposal = feature_candidate(frames[cov_idx], frames[new_key])
+            if proposal is None:
+                if new_key != final_frame:
+                    continue
+                init = odom_rel
+                inliers = 0
+                proposal_source = "odometry_final_keyframe"
+            else:
+                init, inliers = proposal
+                proposal_source = "sift_curvature"
+            refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
             odom_err = se3_error(odom_rel, refined)
             odom_translation_err = float(np.linalg.norm(odom_err[:2]))
             odom_yaw_err = float(abs(odom_err[5]))
             if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
                 if odom_translation_err <= loop_odom_translation_gate and odom_yaw_err <= loop_odom_yaw_gate:
-                    loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers))
+                    loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, proposal_source))
                     keyframe_edges.append((cov_key, k_new, refined))
                 else:
                     rejected_loops += 1
@@ -172,6 +179,7 @@ def run(
                                 "ccs": float(qccs),
                                 "scr": float(qscr),
                                 "sift_inliers": int(inliers),
+                                "proposal_source": proposal_source,
                                 "odom_translation_err_px": odom_translation_err,
                                 "odom_yaw_err_rad": odom_yaw_err,
                             }
@@ -187,6 +195,7 @@ def run(
                             "ccs": float(qccs),
                             "scr": float(qscr),
                             "sift_inliers": int(inliers),
+                            "proposal_source": proposal_source,
                             "odom_translation_err_px": odom_translation_err,
                             "odom_yaw_err_rad": odom_yaw_err,
                         }
@@ -220,7 +229,6 @@ def run(
         frame_to_parent[t] = rel
         prev_rel = rel
 
-    final_frame = n - 1
     if latest_key != final_frame:
         edge_measurement = frame_to_parent[final_frame].copy()
         keyframes.append(final_frame)

@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU smoke job after forcing the final frame into the keyframe graph; checks whether the closed-loop endpoint is accepted as a valid loop and improves GelSLAM tracking."
+notes: "CPU smoke job after adding odometry-initialized NormalFlow verification for the forced final keyframe; checks whether endpoint revisit passes loop-quality gates."
