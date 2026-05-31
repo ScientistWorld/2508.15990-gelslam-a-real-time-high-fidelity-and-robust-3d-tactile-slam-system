@@ -9,7 +9,7 @@
 
 The paper addresses long-horizon tactile object tracking and reconstruction from vision-based tactile sensor streams. Frame-to-frame tactile tracking drifts over time because each tactile image covers only a small local patch; GelSLAM extends tactile tracking into a SLAM pipeline with keyframes, loop detection, loop verification, and global pose graph correction. The reported real-world experiments use GelSight Mini tactile videos for tracking and object scanning, with NormalFlow as the strongest frame-to-frame tracking baseline.
 
-This workspace is a scaled synthetic substitute for the paper's full real-data reproduction. It preserves the paper's computational procedure for the tracking benchmark while replacing the large real GelSLAM dataset and physical sensor calibration with generated long-horizon tactile sequences that expose the same failure mode: drift under local frame-to-frame registration and recovery through valid loop closures.
+This workspace is a scaled synthetic substitute for the paper's full real-data reproduction. It preserves the paper's computational procedure for a CPU-sized tracking and reconstruction benchmark while replacing the large real GelSLAM dataset and physical sensor calibration with generated long-horizon tactile sequences that expose the same failure mode: drift under local frame-to-frame registration, recovery through valid revisits, and reconstruction quality that depends on globally consistent poses.
 
 ## Key Results From Paper
 
@@ -23,7 +23,7 @@ This workspace is a scaled synthetic substitute for the paper's full real-data r
 
 ## Research Question
 
-How can a tactile-only perception system estimate object pose accurately over long horizons when each tactile observation covers only a small local surface patch and frame-to-frame tracking accumulates drift?
+How can a tactile-only perception system estimate object pose and reconstruct touched object surface geometry accurately over long horizons when each tactile observation covers only a small local patch and short-range tracking accumulates drift?
 
 ## Why It Matters
 
@@ -31,7 +31,7 @@ Robots often manipulate objects under occlusion or close contact, where cameras 
 
 ## Success Criteria
 
-A successful system should produce low long-horizon rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false loop closures, and keep its retained state within a practical range. In this scaled synthetic benchmark, success means outperforming the fixed frame-to-frame tactile registration baseline on trajectory error while maintaining low false loop rate.
+A successful system should produce low long-horizon 6DoF rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false loop closures, and reconstruct a geometrically faithful fused touched surface. In this scaled synthetic benchmark, success means outperforming the fixed frame-to-frame tactile registration baseline on trajectory error, maintaining low false loop rate, and producing a fused surface close to the known touched target surface.
 
 ---
 
@@ -47,7 +47,7 @@ The method operates on a stream of GelSight tactile images. Each frame is conver
 
 Because tactile sensing is local, GelSLAM inserts keyframes frequently. A subset of keyframes represents unique surface coverage, while candidate loop pairs are proposed when the current contact resembles an earlier contact. Loop detection uses curvature-based local feature matching to find plausible revisits and then refines or rejects each candidate with tactile registration and overlap/consistency checks. Accepted odometry and loop constraints are added to a pose graph, which is optimized to correct accumulated drift.
 
-For reconstruction, the optimized poses are used to fuse tactile surface observations into a global object mesh. This workspace focuses on the scaled synthetic long-horizon tracking benchmark, but the briefing keeps the reconstruction numbers as context for the paper's broader claims.
+For reconstruction, the optimized poses are used to fuse tactile surface observations into a global object mesh. This workspace uses a scaled fused-point-surface target rather than the paper's full physical meshing stack, but it preserves the essential computation: local tactile surface samples are transformed by estimated poses and fused globally for surface scoring.
 
 ## Main Claims
 
@@ -58,13 +58,13 @@ For reconstruction, the optimized poses are used to fuse tactile surface observa
 
 ## Scaled Reproduction Scope
 
-This reproduction evaluates a synthetic long-horizon tactile tracking substitute rather than the full physical GelSight dataset. The benchmark should still implement the paper's computational steps: tactile geometry extraction, NormalFlow baseline tracking, GelSLAM keyframe management, loop proposal, loop verification, pose graph optimization, and trajectory evaluation. Scaling down data source and sequence size is acceptable; replacing the algorithm with a learned end-to-end pose predictor or unrelated tracker is not.
+This reproduction evaluates a synthetic long-horizon tactile tracking and reconstruction substitute rather than the full physical GelSight dataset. The benchmark should still implement the paper's computational steps: tactile geometry extraction, NormalFlow baseline tracking, GelSLAM keyframe management, loop proposal, loop verification, pose graph optimization, fused-surface reconstruction, and trajectory/reconstruction evaluation. Scaling down data source and sequence size is acceptable; replacing the algorithm with a learned end-to-end pose predictor or unrelated tracker is not.
 
 ---
 
 # Evaluation
 
-This file describes the benchmark task and metrics without exposing implementation details that future methods must not rely on. The benchmark is a scaled synthetic substitute for the paper's real GelSight long-horizon tracking dataset.
+This file describes the benchmark task and metrics without exposing implementation details that future methods must not rely on. The benchmark is a scaled synthetic substitute for the paper's real GelSight long-horizon tracking and reconstruction dataset.
 
 ## Metrics
 
@@ -72,22 +72,26 @@ This file describes the benchmark task and metrics without exposing implementati
 - **translation_mae_mm:** Mean absolute translation error in millimeters. The synthetic image-grid error is converted with the GelSight Mini pitch implied by the paper's resized 320x240 frames over a 20mm x 15mm sensing area. Lower is better.
 - **accepted_loops:** Number of loop closures accepted during the trajectory. Higher is generally better when false loops remain controlled, because the benchmark is designed to require revisiting earlier contacts to correct drift.
 - **false_loop_rate:** Fraction of accepted loops that are inconsistent with ground truth revisits. Lower is better. This is a constraint metric because a method can artificially increase accepted loops by accepting outliers.
+- **chamfer_distance_mm:** Symmetric nearest-neighbor distance between the fused touched surface and the known target surface sampled by the tactile sequence, converted to millimeters. Lower is better.
+- **normal_cosine_distance:** Average nearest-neighbor normal agreement between the fused surface and target surface. Higher is better, with 1.0 indicating identical local surface orientation.
 
 ## Baselines and Targets
 
-The required comparison is between a candidate long-horizon tactile tracking system and the fixed frame-to-frame tactile registration baseline shipped in `baseline/`. The paper's Table IV reports the baseline at about 7.42 degrees average rotation MAE and 1.09 mm average translation MAE, while the proposed system reports about 4.00 degrees and 0.89 mm. The synthetic benchmark should preserve the same qualitative target: a successful long-horizon tracker should reduce drift relative to the frame-to-frame baseline.
+The required tracking comparison is between a candidate long-horizon tactile tracking system and the fixed frame-to-frame tactile registration baseline shipped in `baseline/`. The paper's Table IV reports the baseline at about 7.42 degrees average rotation MAE and 1.09 mm average translation MAE, while the proposed system reports about 4.00 degrees and 0.89 mm. The synthetic benchmark should preserve the same qualitative target: a successful long-horizon tracker should reduce drift relative to the frame-to-frame baseline.
 
-For loop behavior, Table II reports an average of 34 accepted revisits per real tracking episode. The scaled benchmark should not require matching this count exactly, but it should measure whether revisits are actually used and whether false loops remain rare. Table II also reports retained-state counts; those are retained as diagnostics only because raw counts are not directly comparable between the paper's 523-frame average real episodes and this 144-frame scaled benchmark.
+For loop behavior, Table II reports an average of 34 accepted revisits per real tracking episode. The scaled benchmark should not require matching this count exactly, but it should measure whether revisits are actually used and whether false loops remain rare. Table II also reports retained-state counts; those are retained as diagnostics only because raw counts are not directly comparable between the paper's 523-frame average real episodes and this scaled benchmark.
+
+For reconstruction, Table VI reports average Chamfer Distance of 0.60 mm and average Normal Cosine Distance of 0.962 on physical objects with CAD ground truth. The scaled benchmark scores the same scientific quantities on a generated surface where the touched target geometry is known.
 
 ## Evaluation Protocol
 
-Evaluate all methods on the same generated long-horizon tactile sequences, with fixed seeds and identical preprocessing. Each sequence should include local contact observations, ground-truth pose over time, and repeated contacts that make loop closure meaningful. Continuous contact and long enough horizons are important: the benchmark must not collapse into a short-range registration task where the frame-to-frame baseline already solves the problem.
+Evaluate all methods on the same generated long-horizon tactile sequences, with fixed seeds and identical preprocessing. Each sequence should include local contact observations, ground-truth pose over time, known touched surface geometry, and repeated contacts that make loop closure meaningful. Continuous contact and long enough horizons are important: the benchmark must not collapse into a short-range registration task where the frame-to-frame baseline already solves the problem.
 
-Report the metrics for both the candidate method and the fixed frame-to-frame baseline on the same test split. The baseline should be evaluated without global revisit correction. A long-horizon method may use revisits and global consistency mechanisms, but the comparison is valid only if all methods consume the same synthetic tactile stream and the same pose ground truth.
+Report the tracking and loop metrics for both the candidate method and the fixed frame-to-frame baseline on the same test split. The baseline should be evaluated without global revisit correction. A long-horizon method may use revisits and global consistency mechanisms, but the comparison is valid only if all methods consume the same synthetic tactile stream and the same pose ground truth. Reconstruction metrics are scored for methods that emit fused-surface artifacts under the output contract.
 
 ## Method Output Contract
 
-`scripts/evaluate.sh` scores saved run artifacts rather than rerunning any method. A method run must write `pred_poses.npy` with one pose vector per frame. To score loop-closure constraints, it should also write `summary.json` with `loop_edges` and `keyframe_indices`. `keyframe_poses.npy` is optional diagnostic output. Malformed loop records are counted as false loops.
+`scripts/evaluate.sh` scores saved run artifacts rather than rerunning any method. A method run must write `pred_poses.npy` with one pose vector per frame. To score loop-closure constraints, it should also write `summary.json` with `loop_edges` and `keyframe_indices`. To score reconstruction, it should write `reconstructed_points.npy` and `reconstructed_normals.npy` in the same run directory. `keyframe_poses.npy` is optional diagnostic output. Malformed loop records are counted as false loops.
 
 ---
 
@@ -403,12 +407,65 @@ Report the metrics for both the candidate method and the fixed frame-to-frame ba
 
 </details>
 
+### Iteration 9: gpt-5.5 (verifier)
+- **Milestone**: `method_runs` | **Status**: done
+- **Working time**: 9m | **GPU**: 0.0h
+- **Jobs**: 20 total (19 completed, 1 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-31 17:38] - core_claim
+- Packaged a scaled synthetic long-horizon tactile tracking benchmark for GelSLAM.
+- Implemented the recognizable GelSLAM tracking procedure: tactile geometry extraction, NormalFlow-style alignment, CCS/SCR checks, keyframe management, curvature-based loop proposal, loop verification, and pose graph optimization.
+- Reproduced the core tracking claim on the packaged benchmark: GelSLAM Online improves over frame-to-frame NormalFlow on rotation and translation error while accepting valid loop closures with zero measured false-loop rate.
+
+### [2026-05-31 17:43] - core_claim
+- Continuation audit after milestone reset confirmed that the implementation is a scaled GelSLAM tracking reproduction rather than a surrogate.
+- Local structural validation passed with `python validate.py --compare`; the final evaluator execution is submitted as a CPU container test because the login-node Python lacks NumPy/SciPy/OpenCV.
+
+### [2026-05-31 17:44] - core_claim
+- CPU container validation job `72223a41-095` completed with exit code 0.
+- The job reran `scripts/evaluate.sh` and `python validate.py --compare`; all scoring and structure checks passed with the packaged core-claim scores.
+
+### [2026-05-31 17:46] - core_claim
+- Fixed validator failure caused by comparing raw keyframe counts across different sequence lengths.
+- Removed `keyframe_budget` from automated scoring and kept keyframe counts as diagnostics; `python validate.py --compare` now passes with trajectory and loop-closure experiments.
+
+### [2026-05-31 18:14] - core_claim
+- Audited final packaging after subagent review.
+- Updated `scripts/run.sh` to regenerate data, baseline outputs, method outputs, and scores through `scripts/reproduce.sh` before validation.
+- Removed method-side ground-truth output artifacts and aligned train/test score files with the paper-reported metric contract.
+- Local structural validation passes; a CPU container test is submitted to prove the clean end-to-end path.
+
+### [2026-05-31 18:18] - core_claim
+- Final verification confirmed the latest CPU container job completed successfully and `python validate.py --compare` passes.
+- Tightened method-agnostic problem, evaluation, target, and experiment documentation for gym use.
+- Verified `scripts/download.sh` URLs and confirmed committed code does not reference `shared/`.
+
+### [2026-05-31 18:21] - method_runs
+- Re-audited method fidelity with a sub-agent review.
+- Downgraded the current self-reported milestone from `core_claim` to `method_runs`: the packaged path runs recognizable GelSLAM-style tracking components, but the runnable benchmark is still tracking-only and planar-scaled, without the paper's full 6DoF tactile SLAM and reconstruction evaluation.
+- Patched the reproduction scripts so the default compute-node path is offline and cannot accidentally attempt optional internet downloads.
+
+### [2026-05-31 18:24] - method_runs
+- Fixed packaging issues found by the runnable-path audit: standalone method and baseline scripts now evaluate only their own fresh artifacts, loop-closure target docs list every scored metric, and the submitted run prints final scores after validation.
+
+### [2026-05-31 18:28] - method_runs
+- Final verification found the `core_claim` milestone was not justified by the runnable scaled benchmark.
+- Wrote `VERIFICATION.md`, confirmed the download URLs resolve, and checked shell/Python syntax for the packaged scripts.
+- Set the final action to `done` at `method_runs`.
+
+### [2026-05-31 18:35] - method_runs
+- Expanded the scaled benchmark from planar tracking to 6DoF tactile contacts plus fused-surface reconstruction scoring.
+- Unpinned z/roll/pitch in the NormalFlow-style optimizer and added reconstruction artifacts for both the method and baseline.
+- Submitted the expanded offline reproduction for container validation; `core_claim` is not claimed until the job returns supporting scores.
+
+</details>
+
 
 ---
 
 # Reproduction Milestones
 
-**Current: core_claim**
-
-## Stop Justification
-- Completed at milestone `core_claim`.
+**Current: method_runs**

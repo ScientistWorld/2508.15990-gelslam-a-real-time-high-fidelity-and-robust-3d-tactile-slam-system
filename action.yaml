@@ -1,5 +1,5 @@
-action: done
+action: submit
 gpus: 0
-test: false
+test: true
 milestone: method_runs
-notes: "Final verification complete: workspace is a partial scaled tracking gym, but full core claim is not reproduced, so milestone remains method_runs."
+notes: "CPU test for expanded 6DoF synthetic GelSLAM tracking plus reconstruction benchmark; core_claim is not claimed until this run returns supporting scores."
