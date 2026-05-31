@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "Retry CPU smoke test after fixing underdetermined pose graph optimization with a TRF fallback and planar-axis soft anchors. Regenerate the 144-frame closed-loop benchmark, run baseline and GelSLAM, evaluate reconstruction-inclusive scores, and validate train/test slices."
+notes: "Retry CPU smoke test after replacing the slow underdetermined SE(3) graph solve with an observable x/y/yaw planar pose-graph solve and adding progress logging. Regenerate the 144-frame closed-loop benchmark, run baseline and GelSLAM, evaluate reconstruction-inclusive scores, and validate train/test slices."

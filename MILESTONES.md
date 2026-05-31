@@ -23,5 +23,10 @@
 - Patched pose graph optimization to use trust-region least squares when residuals are fewer than variables and to softly anchor planar-only unobservable axes.
 - Resubmitting the same 144-frame closed-loop benchmark.
 
+### [2026-05-31 19:50] - none
+- CPU job `78d15627-b6e` was cancelled after no useful output for 20 minutes.
+- Reworked the scaled planar pose graph optimizer to solve only x/y/yaw variables and added progress logging to the reproduction path.
+- Resubmitting the CPU smoke test.
+
 ## Stop Justification
 - Completed at milestone `none`.
