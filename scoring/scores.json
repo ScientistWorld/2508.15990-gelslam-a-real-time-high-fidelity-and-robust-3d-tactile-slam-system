@@ -3,12 +3,12 @@
     "synthetic_long_horizon_tracking": {
       "results": {
         "normalflow": {
-          "rotation_mae_deg": 38.0283066347466,
-          "translation_mae_mm": 6.104887636864212
+          "rotation_mae_deg": 3.914762205150545,
+          "translation_mae_mm": 5090.104664537273
         },
         "gelslam_online": {
-          "rotation_mae_deg": 38.2691760388281,
-          "translation_mae_mm": 6.4369278742045415
+          "rotation_mae_deg": 11.993929771763968,
+          "translation_mae_mm": 149.75952405355414
         }
       }
     },
@@ -30,7 +30,7 @@
           "keyframes": 96
         },
         "gelslam_online": {
-          "keyframes": 26
+          "keyframes": 37
         }
       }
     }
