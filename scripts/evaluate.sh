@@ -15,8 +15,8 @@
 # This file is read by the system for automated comparison.
 #
 # Example usage:
-#   ./evaluate.sh <method_and_run_name>                             # evaluate with defaults
-#   ./evaluate.sh <method_and_run_name> checkpoints/epoch_10.pt     # evaluate a specific checkpoint
+#   ./scripts/evaluate.sh <method_and_run_name> checkpoints/epoch_10
+#   DATASET=data/synthetic_tracking/loop_patch.npz ./scripts/evaluate.sh
 #
 # Called from run.sh after training, or independently.
 
@@ -26,6 +26,7 @@ cd /home/user
 export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 
 mkdir -p scoring
+DATASET="${DATASET:-data/synthetic_tracking/loop_patch.npz}"
 
 ARGS=()
 if [ "$#" -gt 0 ]; then
@@ -51,4 +52,4 @@ if [ ${#ARGS[@]} -eq 0 ]; then
   exit 1
 fi
 
-python eval/evaluate_tracking.py "${ARGS[@]}" --output scoring/scores.json
+python eval/evaluate_tracking.py "${ARGS[@]}" --dataset "$DATASET" --output scoring/scores.json

@@ -50,9 +50,17 @@ def relative_error(pred: np.ndarray, gt: np.ndarray) -> np.ndarray:
     return pose_from_matrix(np.linalg.inv(matrix_from_pose(gt)) @ matrix_from_pose(pred))
 
 
-def metrics(run_dir: Path) -> dict[str, float]:
+def load_ground_truth(dataset: Path) -> np.ndarray:
+    data = np.load(dataset)
+    if "poses" not in data:
+        raise KeyError(f"{dataset} does not contain required 'poses' ground-truth array")
+    return np.asarray([as_se3(p) for p in data["poses"]], dtype=np.float64)
+
+
+def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     pred = np.load(run_dir / "pred_poses.npy")
-    gt = np.load(run_dir / "gt_poses.npy")
+    if len(pred) != len(gt):
+        raise ValueError(f"{run_dir} has {len(pred)} predictions but dataset has {len(gt)} ground-truth poses")
     pred = origin_relative(pred)
     gt = origin_relative(gt)
     errors = np.asarray([relative_error(p, g) for p, g in zip(pred, gt)], dtype=np.float64)
@@ -60,10 +68,11 @@ def metrics(run_dir: Path) -> dict[str, float]:
     rot_err = np.linalg.norm(errors[:, 3:], axis=1)
     summary_path = run_dir / "summary.json"
     summary = json.loads(summary_path.read_text()) if summary_path.exists() else {}
-    accepted = int(summary.get("accepted_loops", 0))
+    loop_edges = summary.get("loop_edges", [])
+    accepted = len(loop_edges)
     false_loops = 0
     keyframe_indices = summary.get("keyframe_indices", [])
-    for edge in summary.get("loop_edges", []):
+    for edge in loop_edges:
         if len(edge) < 3 or not keyframe_indices:
             continue
         key_i, key_j, measurement = int(edge[0]), int(edge[1]), as_se3(np.asarray(edge[2], dtype=float))
@@ -75,23 +84,27 @@ def metrics(run_dir: Path) -> dict[str, float]:
         rerr = float(np.linalg.norm(loop_err[3:]))
         if terr > 10.0 or np.degrees(rerr) > 20.0:
             false_loops += 1
+    keyframe_pose_path = run_dir / "keyframe_poses.npy"
+    keyframes = int(len(np.load(keyframe_pose_path))) if keyframe_pose_path.exists() else int(len(pred))
     return {
         "rotation_mae_deg": float(np.degrees(rot_err).mean()),
         "translation_mae_mm": float(pos_err.mean() * GELSIGHT_MM_PER_PIXEL),
         "accepted_loops": accepted,
         "false_loop_rate": float(false_loops / max(accepted, 1)),
-        "keyframes": int(summary.get("keyframes", len(pred))),
+        "keyframes": keyframes,
     }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--method-run", action="append", nargs=2, metavar=("NAME", "DIR"), required=True)
+    parser.add_argument("--dataset", default="data/synthetic_tracking/loop_patch.npz")
     parser.add_argument("--output", default="scoring/scores.json")
     args = parser.parse_args()
+    gt = load_ground_truth(Path(args.dataset))
     flat_results = {}
     for name, directory in args.method_run:
-        flat_results[name] = metrics(Path(directory))
+        flat_results[name] = metrics(Path(directory), gt)
     scores = {
         "experiments": {
             "synthetic_long_horizon_tracking": {
