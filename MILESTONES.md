@@ -79,6 +79,11 @@
 - Tracking still failed because the single loop was over-weighted, degrading GelSLAM to 14.66 deg / 1.69 mm versus NormalFlow at 9.20 deg / 1.21 mm.
 - Reduced the verified-loop edge weight from 12 to 2 for the next run while keeping the stricter verifier unchanged.
 
+### [2026-05-31 21:15] - method_runs
+- Reducing loop weight to 2 kept one valid loop with 0.0 false-loop rate but did not fix tracking: GelSLAM scored 14.57 deg / 1.68 mm.
+- Diagnosed the remaining issue as overly sparse keyframes on the 144-frame sequence rather than loop acceptance.
+- Raised keyframe promotion thresholds to `ccs=0.85` and `scr=0.35`, and reduced loop-edge weight to 1 for the next run.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.

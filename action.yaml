@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU smoke job on the 144-frame benchmark with strict loop verification retained and verified loop-edge weight reduced from 12 to 2 to avoid over-correcting from one closure."
+notes: "CPU smoke job with denser GelSLAM keyframes on the 144-frame benchmark: ccs=0.85, scr=0.35, strict loop verification retained, loop weight 1."

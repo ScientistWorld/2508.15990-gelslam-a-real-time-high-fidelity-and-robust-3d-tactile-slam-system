@@ -289,14 +289,14 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", default="data/synthetic_tracking/loop_patch.npz")
     parser.add_argument("--output-dir", default="checkpoints/scaled_gelslam")
-    parser.add_argument("--ccs-threshold", type=float, default=0.72)
-    parser.add_argument("--scr-threshold", type=float, default=0.25)
+    parser.add_argument("--ccs-threshold", type=float, default=0.85)
+    parser.add_argument("--scr-threshold", type=float, default=0.35)
     parser.add_argument("--loop-ccs-threshold", type=float, default=0.75)
     parser.add_argument("--loop-scr-threshold", type=float, default=0.12)
     parser.add_argument("--loop-odom-translation-gate", type=float, default=18.0)
     parser.add_argument("--loop-odom-yaw-gate", type=float, default=0.70)
     parser.add_argument("--final-anchor-translation-gate", type=float, default=32.0)
-    parser.add_argument("--loop-edge-weight", type=int, default=2)
+    parser.add_argument("--loop-edge-weight", type=int, default=1)
     args = parser.parse_args()
     run(
         Path(args.dataset),
