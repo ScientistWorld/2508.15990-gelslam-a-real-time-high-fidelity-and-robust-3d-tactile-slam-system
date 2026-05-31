@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "Retry CPU smoke job after fixing PYTHONPATH for direct Python script execution; runs scripts/reproduce.sh to regenerate data, run NormalFlow and SE(3) scaled GelSLAM, and write scoring/scores.json."
+notes: "Retry CPU smoke job after fixing the SE(3) NormalFlow transform convention; runs scripts/reproduce.sh to regenerate data, run NormalFlow and scaled GelSLAM, and write scoring/scores.json."

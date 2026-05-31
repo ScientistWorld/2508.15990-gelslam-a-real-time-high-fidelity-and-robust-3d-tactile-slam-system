@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 from scipy.optimize import least_squares
 
-from method.scaled_gelslam.geometry import as_se3, between, compose, matrix_from_pose, se3_error, transform_points
+from method.scaled_gelslam.geometry import as_se3, between, compose, invert, matrix_from_pose, se3_error, transform_points
 from method.scaled_gelslam.normalflow import estimate_relative, geometric_properties
 
 MM_PER_PIXEL = 20.0 / 320.0
@@ -48,7 +48,7 @@ def feature_candidate(ref: dict, tgt: dict) -> np.ndarray | None:
     theta = float(np.arctan2(mat[1, 0], mat[0, 0]))
     tx = float(mat[0, 2])
     ty = float(mat[1, 2])
-    return np.array([tx, ty, 0.0, 0.0, 0.0, theta], dtype=np.float64)
+    return invert(np.array([tx, ty, 0.0, 0.0, 0.0, theta], dtype=np.float64))
 
 
 def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initial: np.ndarray) -> np.ndarray:

@@ -29,6 +29,8 @@ The current reproduction intentionally uses a synthetic benchmark because the fu
 
 The first compute-container smoke job after the SE(3) rewrite failed before running the method because direct execution of `baseline/normalflow_baseline.py` did not include `/home/user` on Python's import path. The shell entrypoints now export `PYTHONPATH=/home/user:$PYTHONPATH` before invoking baseline, method, or evaluator scripts.
 
+The second CPU smoke job completed but did not support the claim: NormalFlow scored 38.03 deg / 6.10 mm and scaled GelSLAM scored 38.27 deg / 6.44 mm. The failure was traced to a transform-convention mismatch: NormalFlow's image warp needs the inverse local-coordinate transform of the pose-graph measurement. The method now optimizes the pose-graph measurement but applies its inverse when warping reference tactile samples into target frames.
+
 ## Deviations From Paper
 
 The reproduction target is a scaled synthetic substitute for the real GelSight long-horizon tracking dataset. The paper used physical GelSight Mini tactile videos with MoCap ground truth; this workspace evaluates generated tactile sequences with known synthetic ground truth and converts image-grid translation errors to millimeters using the GelSight Mini pixel pitch from the paper. The method is still expected to follow GelSLAM's computational procedure: tactile geometry extraction, NormalFlow tracking, keyframe selection, loop proposal, loop verification, and pose graph optimization.

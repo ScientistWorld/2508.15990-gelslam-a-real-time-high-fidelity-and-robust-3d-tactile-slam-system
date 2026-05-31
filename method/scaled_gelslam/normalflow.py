@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from scipy.optimize import least_squares
 
-from .geometry import as_se3, bilinear_image, rotate_vectors, transform_points
+from .geometry import as_se3, bilinear_image, invert, rotate_vectors, transform_points
 
 
 def geometric_properties(height: np.ndarray, mask: np.ndarray | None = None) -> dict:
@@ -49,7 +49,10 @@ def _project(points: np.ndarray, shape: tuple[int, int]) -> tuple[np.ndarray, np
 def quality(ref_curv: np.ndarray, tgt_curv: np.ndarray, ref_mask: np.ndarray, tgt_mask: np.ndarray, transform: np.ndarray) -> tuple[float, float]:
     ys, xs = np.nonzero(ref_mask)
     points = _surface_points(np.zeros_like(ref_curv), xs, ys)
-    warped = transform_points(points, transform)
+    # The optimized measurement composes keyframe poses as T_target = T_ref * T.
+    # Warping reference-frame samples into the target image needs the inverse
+    # local-coordinate transform: p_target = T_target^-1 T_ref p_ref.
+    warped = transform_points(points, invert(transform))
     sample_x, sample_y = _project(warped, ref_curv.shape)
     warped_curv, valid = bilinear_image(tgt_curv, sample_x, sample_y)
     warped_mask_f, _ = bilinear_image(tgt_mask.astype(float), sample_x, sample_y)
@@ -88,12 +91,13 @@ def estimate_relative(ref: dict, tgt: dict, init: np.ndarray | None = None, max_
 
     def residual(delta: np.ndarray) -> np.ndarray:
         pose = as_se3(delta)
-        warped_points = transform_points(ref_points, pose)
+        warp_pose = invert(pose)
+        warped_points = transform_points(ref_points, warp_pose)
         sample_x, sample_y = _project(warped_points, ref_curv.shape)
         target_normals, valid = bilinear_image(tgt["normal"], sample_x, sample_y)
         mask_values, _ = bilinear_image(tgt["mask"].astype(float), sample_x, sample_y)
         ok = valid & (mask_values > 0.5)
-        rotated_ref = rotate_vectors(ref_normals, pose)
+        rotated_ref = rotate_vectors(ref_normals, warp_pose)
         res = np.zeros((len(xs), 3), dtype=np.float64)
         res[ok] = target_normals[ok] - rotated_ref[ok]
         res[~ok] = 0.35
@@ -102,7 +106,7 @@ def estimate_relative(ref: dict, tgt: dict, init: np.ndarray | None = None, max_
     guesses = [init]
     try:
         shift, _ = cv2.phaseCorrelate(ref_curv.astype(np.float32), tgt["curvature"].astype(np.float32))
-        guesses.append(np.array([shift[0], shift[1], init[2], init[3], init[4], init[5]], dtype=np.float64))
+        guesses.append(invert(np.array([shift[0], shift[1], init[2], init[3], init[4], init[5]], dtype=np.float64)))
     except cv2.error:
         pass
     try:
@@ -118,7 +122,7 @@ def estimate_relative(ref: dict, tgt: dict, init: np.ndarray | None = None, max_
             (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 80, 1e-5),
         )
         rz = float(np.arctan2(warp[1, 0], warp[0, 0]))
-        guesses.append(np.array([warp[0, 2], warp[1, 2], init[2], init[3], init[4], rz], dtype=np.float64))
+        guesses.append(invert(np.array([warp[0, 2], warp[1, 2], init[2], init[3], init[4], rz], dtype=np.float64)))
     except cv2.error:
         pass
 

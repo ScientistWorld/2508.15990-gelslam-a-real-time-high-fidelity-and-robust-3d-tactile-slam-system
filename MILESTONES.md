@@ -13,6 +13,10 @@
 - The first CPU container smoke job failed at import time before method execution: direct script execution could not import the workspace `method` package.
 - Updated all shell entrypoints to export `/home/user` on `PYTHONPATH` before running Python scripts.
 
+### [2026-05-31 17:48] - none
+- The next CPU job ran end-to-end but GelSLAM did not beat NormalFlow, so no milestone was advanced.
+- Fixed a pose-convention bug: NormalFlow now uses the inverse of the optimized pose-graph measurement for tactile image/normal warping, and SIFT loop initializations are converted into the same measurement convention.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.
