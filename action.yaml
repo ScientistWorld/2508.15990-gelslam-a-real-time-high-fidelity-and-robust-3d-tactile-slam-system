@@ -1,4 +1,4 @@
 action: submit
 gpus: 0
 test: false
-notes: "Run train/test split evaluators on existing checkpoint artifacts and validate generated scores."
+notes: "Rerun train/test split evaluators after adding valid_loop_rate to avoid no-loop shortcut saturation."
