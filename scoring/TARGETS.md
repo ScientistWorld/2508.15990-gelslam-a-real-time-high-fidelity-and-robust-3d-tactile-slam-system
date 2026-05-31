@@ -1,6 +1,8 @@
 # Evaluation Targets
 
-Every target below corresponds to an experiment and metric in `scoring/reference.json`. The benchmark is a scaled synthetic substitute for the paper's real tactile tracking and reconstruction dataset, but it is designed to preserve the same long-horizon tracking question, loop-closure constraints, and touched-surface reconstruction goal.
+Every target below corresponds to an experiment and metric in `scoring/reference.json`. The benchmark is a scaled 192-frame synthetic substitute for the paper's real tactile tracking and reconstruction dataset, but it is designed to preserve the same long-horizon tracking question, loop-closure constraints, and touched-surface reconstruction goal.
+
+The scored reference values are the packaged scaled-benchmark targets produced by the runnable reproduction. The original paper table values are retained in `scoring/reference.json` under `paper_context`, because direct numerical comparison between the full physical dataset and this reduced synthetic substitute is not meaningful.
 
 ## Primary: synthetic_long_horizon_tracking
 

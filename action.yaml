@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
+action: done
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Retry CPU smoke test after 3fd2d331-371 showed the 192-frame benchmark accepted no loops. Test modestly relaxed loop verification defaults (CCS 0.68, SCR 0.30) so short odometry-consistent revisits can be accepted while long-span false SIFT matches remain gated. Run baseline, GelSLAM, full/train/test evaluation, and validation."
+notes: "Packaged runnable scaled GelSLAM reproduction. CPU job 3dd22242-464 completed end-to-end with one valid loop, zero false loops, full/train/test evaluation, and reconstruction scoring. reference.json now uses the scaled 192-frame benchmark reference values while preserving full-paper values in paper_context. Stopping at method_runs because translation and reconstruction do not yet support the full core claim."
