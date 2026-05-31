@@ -7,8 +7,8 @@
           "translation_mae_mm": 0.8614933206491665
         },
         "gelslam_online": {
-          "rotation_mae_deg": 5.65436853836489,
-          "translation_mae_mm": 1.0280275293281393
+          "rotation_mae_deg": 10.59723172930016,
+          "translation_mae_mm": 1.4808890855315817
         }
       }
     },
@@ -33,8 +33,8 @@
     "synthetic_reconstruction": {
       "results": {
         "gelslam_online": {
-          "chamfer_distance_mm": 12.943626432698373,
-          "normal_cosine_distance": 0.9951855783246434
+          "chamfer_distance_mm": 13.64202047515503,
+          "normal_cosine_distance": 0.9954219191069009
         }
       }
     }
