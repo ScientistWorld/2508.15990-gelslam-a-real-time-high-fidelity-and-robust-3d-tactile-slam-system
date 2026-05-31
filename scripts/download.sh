@@ -27,6 +27,12 @@ python data/generate_synthetic_tracking.py \
   --frames 144 \
   --surface-size 300
 
+mkdir -p method/gelslam/src/gelslam/resources/example_calibration/model
+if [ ! -e method/gelslam/src/gelslam/resources/example_calibration/model/nnmodel.pth ]; then
+  wget -O method/gelslam/src/gelslam/resources/example_calibration/model/nnmodel.pth \
+    https://raw.githubusercontent.com/rpl-cmu/gelslam/main/src/gelslam/resources/example_calibration/model/nnmodel.pth
+fi
+
 # The full released GelSLAM dataset is not required for the packaged CPU core
 # experiment, but this verified optional path lets a future agent fetch it for
 # higher-milestone real-data work without guessing a URL.
