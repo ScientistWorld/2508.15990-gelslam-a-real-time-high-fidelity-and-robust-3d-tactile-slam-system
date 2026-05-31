@@ -10,7 +10,8 @@
 # Update the storage estimate below as you add downloads.
 #
 # Estimated total download size: 0 GB for the default scaled benchmark.
-# Estimated disk usage after extraction: <20 MB.
+# Optional full dataset download: 68.1 GiB compressed / 73.1 GB reported.
+# Estimated disk usage after default generation: <20 MB.
 #
 # You do not need to run this script during reproduction — it exists
 # for future portability. Write it to download to workspace-local
@@ -26,7 +27,13 @@ python data/generate_synthetic_tracking.py \
   --frames 144 \
   --surface-size 300
 
-# The full released dataset is hosted as one 73.1 GB archive:
-# https://huggingface.co/datasets/joehjhuang/GelSLAM_dataset/blob/main/dataset.zip
-# The scaled benchmark above is the default because the full archive is not
-# needed for the CPU smoke/core experiment packaged here.
+# The full released GelSLAM dataset is not required for the packaged CPU core
+# experiment, but this verified optional path lets a future agent fetch it for
+# higher-milestone real-data work without guessing a URL.
+if [ "${DOWNLOAD_FULL_GELSLAM_DATASET:-0}" = "1" ]; then
+  mkdir -p data/downloads/gelslam_dataset
+  if [ ! -e data/downloads/gelslam_dataset/dataset.zip ]; then
+    wget -O data/downloads/gelslam_dataset/dataset.zip \
+      https://huggingface.co/datasets/joehjhuang/GelSLAM_dataset/resolve/main/dataset.zip
+  fi
+fi

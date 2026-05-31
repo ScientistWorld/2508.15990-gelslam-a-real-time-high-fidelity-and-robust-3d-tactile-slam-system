@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim
-notes: "Final CPU container check: rerun evaluator on saved artifacts and validate packaged core-claim scores."
+notes: "Continuation audit restored core_claim; run the container-side evaluator and validate packaged scores."
