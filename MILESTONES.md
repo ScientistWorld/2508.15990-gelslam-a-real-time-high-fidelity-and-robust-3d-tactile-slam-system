@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: none**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -16,6 +16,11 @@
 ### [2026-05-31 17:48] - none
 - The next CPU job ran end-to-end but GelSLAM did not beat NormalFlow, so no milestone was advanced.
 - Fixed a pose-convention bug: NormalFlow now uses the inverse of the optimized pose-graph measurement for tactile image/normal warping, and SIFT loop initializations are converted into the same measurement convention.
+
+### [2026-05-31 18:00] - method_runs
+- The SE(3) scaled GelSLAM pipeline ran end-to-end in the compute container and wrote `scoring/scores.json`.
+- The run did not support the core claim yet: GelSLAM reduced xy drift only after a large unobservable z component inflated translation error, and rotation was worse than NormalFlow.
+- Constrained the synthetic benchmark's unobservable z/roll/pitch axes inside the SE(3) NormalFlow solve and skipped adjacent keyframes as loop candidates.
 
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.

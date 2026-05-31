@@ -77,6 +77,11 @@ def estimate_relative(ref: dict, tgt: dict, init: np.ndarray | None = None, max_
     if init is None:
         init = np.zeros(6, dtype=np.float64)
     init = as_se3(init)
+    # The scaled synthetic contact generator is orthographic and does not
+    # provide independent information for indentation z or roll/pitch. The
+    # real GelSLAM data constrains these through calibrated tactile geometry;
+    # here we keep the SE(3) representation but pin the degenerate axes.
+    init[2:5] = 0.0
     ref_curv = ref["curvature"]
     ref_mask = ref["mask"]
     ys, xs = np.nonzero(ref_mask)
@@ -128,16 +133,23 @@ def estimate_relative(ref: dict, tgt: dict, init: np.ndarray | None = None, max_
 
     best = None
     for guess in guesses:
+        guess = as_se3(guess)
+        guess[2:5] = 0.0
         for pose, cost in [(guess, float(np.sum(residual(guess) ** 2))), (None, None)]:
             if pose is None:
                 opt = least_squares(
                     residual,
                     guess,
-                    method="lm",
+                    method="trf",
+                    bounds=(
+                        np.array([-np.inf, -np.inf, -1e-9, -1e-9, -1e-9, -np.inf]),
+                        np.array([np.inf, np.inf, 1e-9, 1e-9, 1e-9, np.inf]),
+                    ),
                     max_nfev=45,
                     x_scale=np.array([4.0, 4.0, 1.0, 0.08, 0.08, 0.15]),
                 )
                 pose = as_se3(opt.x)
+                pose[2:5] = 0.0
                 cost = float(opt.cost)
             ccs, scr = quality(ref_curv, tgt["curvature"], ref_mask, tgt["mask"], pose)
             rank = (ccs + 0.4 * scr, -float(cost))

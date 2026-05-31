@@ -143,6 +143,8 @@ def run(dataset: Path, output_dir: Path, ccs_threshold: float, scr_threshold: fl
                 frame_parent[new_key] = k_new
                 frame_to_parent[new_key] = 0.0
                 for cov_idx in coverage:
+                    if abs(new_key - cov_idx) < 8:
+                        continue
                     init = feature_candidate(frames[cov_idx], frames[new_key])
                     if init is None:
                         continue

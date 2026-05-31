@@ -1,5 +1,5 @@
 action: submit
 gpus: 0
 test: true
-milestone: none
-notes: "Retry CPU smoke job after fixing the SE(3) NormalFlow transform convention; runs scripts/reproduce.sh to regenerate data, run NormalFlow and scaled GelSLAM, and write scoring/scores.json."
+milestone: method_runs
+notes: "Retry CPU smoke job after constraining synthetic-unobservable SE(3) axes and skipping adjacent loop candidates; runs scripts/reproduce.sh and writes scoring/scores.json."
