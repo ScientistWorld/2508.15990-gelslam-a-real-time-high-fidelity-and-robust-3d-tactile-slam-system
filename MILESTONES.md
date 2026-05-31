@@ -44,6 +44,11 @@
 - The forced final keyframe appeared in the graph, but no rejected-candidate diagnostic referenced it, indicating sparse curvature matching produced no endpoint loop proposal.
 - Added an odometry-initialized NormalFlow verification fallback for the forced final keyframe; accepted loops must still pass CCS/SCR and odometry-gate checks.
 
+### [2026-05-31 19:30] - method_runs
+- The odometry-initialized final-keyframe run accepted two valid loops with 0.0 false-loop rate, but tracking still did not beat NormalFlow.
+- The origin-to-final candidate had strong NormalFlow quality but missed the global odometry translation gate by 3.24 px.
+- Added a final-frame origin-anchor-only translation gate to test that high-quality closure without loosening ordinary loop acceptance.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.

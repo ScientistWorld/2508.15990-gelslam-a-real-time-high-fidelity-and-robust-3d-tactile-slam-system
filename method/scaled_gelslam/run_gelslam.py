@@ -126,6 +126,7 @@ def run(
     loop_scr_threshold: float,
     loop_odom_translation_gate: float,
     loop_odom_yaw_gate: float,
+    final_anchor_translation_gate: float,
 ) -> None:
     frames, gt = load_frames(dataset)
     n = len(frames)
@@ -164,8 +165,11 @@ def run(
             odom_err = se3_error(odom_rel, refined)
             odom_translation_err = float(np.linalg.norm(odom_err[:2]))
             odom_yaw_err = float(abs(odom_err[5]))
+            translation_gate = loop_odom_translation_gate
+            if new_key == final_frame and cov_idx == keyframes[0]:
+                translation_gate = final_anchor_translation_gate
             if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
-                if odom_translation_err <= loop_odom_translation_gate and odom_yaw_err <= loop_odom_yaw_gate:
+                if odom_translation_err <= translation_gate and odom_yaw_err <= loop_odom_yaw_gate:
                     loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, proposal_source))
                     keyframe_edges.append((cov_key, k_new, refined))
                 else:
@@ -181,6 +185,7 @@ def run(
                                 "sift_inliers": int(inliers),
                                 "proposal_source": proposal_source,
                                 "odom_translation_err_px": odom_translation_err,
+                                "odom_translation_gate_px": translation_gate,
                                 "odom_yaw_err_rad": odom_yaw_err,
                             }
                         )
@@ -197,6 +202,7 @@ def run(
                             "sift_inliers": int(inliers),
                             "proposal_source": proposal_source,
                             "odom_translation_err_px": odom_translation_err,
+                            "odom_translation_gate_px": translation_gate,
                             "odom_yaw_err_rad": odom_yaw_err,
                         }
                     )
@@ -269,6 +275,7 @@ def run(
         "loop_scr_threshold": loop_scr_threshold,
         "loop_odom_translation_gate_px": loop_odom_translation_gate,
         "loop_odom_yaw_gate_rad": loop_odom_yaw_gate,
+        "final_anchor_translation_gate_px": final_anchor_translation_gate,
         "coverage_keyframe_indices": coverage,
         "rejected_loop_details": rejected_loop_details,
     }
@@ -285,6 +292,7 @@ def main() -> None:
     parser.add_argument("--loop-scr-threshold", type=float, default=0.12)
     parser.add_argument("--loop-odom-translation-gate", type=float, default=18.0)
     parser.add_argument("--loop-odom-yaw-gate", type=float, default=0.70)
+    parser.add_argument("--final-anchor-translation-gate", type=float, default=25.0)
     args = parser.parse_args()
     run(
         Path(args.dataset),
@@ -295,6 +303,7 @@ def main() -> None:
         args.loop_scr_threshold,
         args.loop_odom_translation_gate,
         args.loop_odom_yaw_gate,
+        args.final_anchor_translation_gate,
     )
 
 

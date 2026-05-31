@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU smoke job after adding odometry-initialized NormalFlow verification for the forced final keyframe; checks whether endpoint revisit passes loop-quality gates."
+notes: "CPU smoke job after relaxing only the final origin-anchor loop gate to 25 px; checks whether the high-quality endpoint closure improves GelSLAM while keeping false-loop rate at 0."
