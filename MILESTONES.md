@@ -9,6 +9,10 @@
 - Reworked the scaled method toward the paper's actual SE(3) computation: geometry is recomputed from height maps, NormalFlow now warps 3D tactile surface points and compares rotated normals, loop candidate gating requires more than 8 RANSAC inliers, and pose graph residuals use SE(3) errors.
 - Removed stale scores pending a fresh compute-container run.
 
+### [2026-05-31 17:35] - none
+- The first CPU container smoke job failed at import time before method execution: direct script execution could not import the workspace `method` package.
+- Updated all shell entrypoints to export `/home/user` on `PYTHONPATH` before running Python scripts.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.

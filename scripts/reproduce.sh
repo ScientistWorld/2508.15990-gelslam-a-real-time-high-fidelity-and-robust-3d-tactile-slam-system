@@ -17,6 +17,7 @@
 set -e
 
 cd /home/user
+export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 
 bash scripts/download.sh
 python baseline/normalflow_baseline.py --dataset data/synthetic_tracking/loop_patch.npz --output-dir checkpoints/normalflow_baseline

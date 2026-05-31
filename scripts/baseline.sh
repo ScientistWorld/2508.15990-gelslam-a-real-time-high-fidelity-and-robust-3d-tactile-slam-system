@@ -16,6 +16,7 @@
 set -e
 
 cd /home/user
+export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 
 DATASET="${1:-data/synthetic_tracking/loop_patch.npz}"
 OUT="${2:-checkpoints/normalflow_baseline}"
