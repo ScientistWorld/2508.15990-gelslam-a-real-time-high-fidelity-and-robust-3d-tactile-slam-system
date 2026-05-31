@@ -48,6 +48,16 @@ The latest packaged 144-frame synthetic benchmark supports a tracking-only GelSL
 
 ## Issues
 
+Continuation audit on 2026-05-31 after the milestone reset found that the
+checked-in `scoring/scores.json` still reflects the older 144-frame
+tracking-only artifacts. The current checkpoint directories also lack
+`reconstructed_points.npy` and `reconstructed_normals.npy`, so the reconstruction
+target cannot be honestly scored from the saved artifacts. The runnable
+`scripts/reproduce.sh` path already regenerates a 192-frame 6DoF benchmark and
+emits reconstruction artifacts through both the baseline and scaled GelSLAM
+paths; a CPU test job is submitted to regenerate real scores inside the
+container instead of fabricating reconstruction values locally.
+
 The current reproduction intentionally uses a synthetic benchmark because the full real GelSLAM dataset is a 73 GB archive and the official release depends on ROS2/GTSAM reconstruction infrastructure. This is a data/scale substitution. The newest submitted benchmark removes the previous planar-motion limitation by rendering 6DoF tactile contacts and scoring fused reconstruction, but its validity depends on the pending container run.
 
 The NormalFlow baseline reuses the same NormalFlow primitive implementation as the proposed method to keep the registration operator identical across the comparison. This keeps the paper's intended ablation comparison but means future agents should avoid changing shared NormalFlow behavior without rerunning both baseline and method.
