@@ -127,6 +127,7 @@ def run(
     loop_odom_translation_gate: float,
     loop_odom_yaw_gate: float,
     final_anchor_translation_gate: float,
+    loop_edge_weight: int,
 ) -> None:
     frames, gt = load_frames(dataset)
     n = len(frames)
@@ -171,7 +172,8 @@ def run(
             if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
                 if odom_translation_err <= translation_gate and odom_yaw_err <= loop_odom_yaw_gate:
                     loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, proposal_source))
-                    keyframe_edges.append((cov_key, k_new, refined))
+                    for _ in range(loop_edge_weight):
+                        keyframe_edges.append((cov_key, k_new, refined))
                 else:
                     rejected_loops += 1
                     if len(rejected_loop_details) < 50:
@@ -276,6 +278,7 @@ def run(
         "loop_odom_translation_gate_px": loop_odom_translation_gate,
         "loop_odom_yaw_gate_rad": loop_odom_yaw_gate,
         "final_anchor_translation_gate_px": final_anchor_translation_gate,
+        "loop_edge_weight": loop_edge_weight,
         "coverage_keyframe_indices": coverage,
         "rejected_loop_details": rejected_loop_details,
     }
@@ -293,6 +296,7 @@ def main() -> None:
     parser.add_argument("--loop-odom-translation-gate", type=float, default=18.0)
     parser.add_argument("--loop-odom-yaw-gate", type=float, default=0.70)
     parser.add_argument("--final-anchor-translation-gate", type=float, default=25.0)
+    parser.add_argument("--loop-edge-weight", type=int, default=4)
     args = parser.parse_args()
     run(
         Path(args.dataset),
@@ -304,6 +308,7 @@ def main() -> None:
         args.loop_odom_translation_gate,
         args.loop_odom_yaw_gate,
         args.final_anchor_translation_gate,
+        args.loop_edge_weight,
     )
 
 

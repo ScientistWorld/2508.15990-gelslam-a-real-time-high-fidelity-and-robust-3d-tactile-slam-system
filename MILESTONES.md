@@ -49,6 +49,11 @@
 - The origin-to-final candidate had strong NormalFlow quality but missed the global odometry translation gate by 3.24 px.
 - Added a final-frame origin-anchor-only translation gate to test that high-quality closure without loosening ordinary loop acceptance.
 
+### [2026-05-31 19:45] - method_runs
+- The relaxed final-anchor run accepted three valid loops with 0.0 false-loop rate and improved GelSLAM to 5.10 deg / 0.52 mm.
+- The method still trailed the NormalFlow baseline, so `core_claim` is not yet reached.
+- Added a loop-edge pose-graph weight so verified loop closures have enough influence against the sequential odometry chain.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.
