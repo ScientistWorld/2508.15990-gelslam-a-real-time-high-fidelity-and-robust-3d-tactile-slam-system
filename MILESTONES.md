@@ -27,6 +27,10 @@
 - Latest scores: NormalFlow 4.93 deg / 0.45 mm, GelSLAM 5.29 deg / 0.74 mm, and zero accepted loops.
 - Loosened curvature-feature loop proposals and separated loop-closure acceptance thresholds from keyframe-tracking thresholds for the next smoke job.
 
+### [2026-05-31 18:30] - method_runs
+- The loop-threshold smoke job accepted 13 loops, but all were false by the evaluator and degraded GelSLAM to 33.67 deg / 3.09 mm.
+- Added an odometry-consistency gate for loop closures and retained rejected-candidate diagnostics in `summary.json`.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.

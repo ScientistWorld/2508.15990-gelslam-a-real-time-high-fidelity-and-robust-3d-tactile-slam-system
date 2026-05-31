@@ -123,6 +123,8 @@ def run(
     scr_threshold: float,
     loop_ccs_threshold: float,
     loop_scr_threshold: float,
+    loop_odom_translation_gate: float,
+    loop_odom_yaw_gate: float,
 ) -> None:
     frames, gt = load_frames(dataset)
     n = len(frames)
@@ -137,6 +139,7 @@ def run(
     predicted = np.zeros((n, 6), dtype=np.float64)
     loops = []
     rejected_loops = 0
+    rejected_loop_details = []
 
     for t in range(1, n):
         rel, ccs, scr, _ = estimate_relative(frames[latest_key], frames[t], prev_rel)
@@ -158,11 +161,48 @@ def run(
                         continue
                     init, inliers = proposal
                     refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
+                    cov_key = keyframes.index(cov_idx)
+                    odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])
+                    odom_err = se3_error(odom_rel, refined)
+                    odom_translation_err = float(np.linalg.norm(odom_err[:2]))
+                    odom_yaw_err = float(abs(odom_err[5]))
                     if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
-                        loops.append((keyframes.index(cov_idx), k_new, refined.tolist(), qccs, qscr, inliers))
-                        keyframe_edges.append((keyframes.index(cov_idx), k_new, refined))
+                        if (
+                            odom_translation_err <= loop_odom_translation_gate
+                            and odom_yaw_err <= loop_odom_yaw_gate
+                        ):
+                            loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers))
+                            keyframe_edges.append((cov_key, k_new, refined))
+                        else:
+                            rejected_loops += 1
+                            if len(rejected_loop_details) < 50:
+                                rejected_loop_details.append(
+                                    {
+                                        "coverage_frame": int(cov_idx),
+                                        "new_keyframe": int(new_key),
+                                        "reason": "odometry_gate",
+                                        "ccs": float(qccs),
+                                        "scr": float(qscr),
+                                        "sift_inliers": int(inliers),
+                                        "odom_translation_err_px": odom_translation_err,
+                                        "odom_yaw_err_rad": odom_yaw_err,
+                                    }
+                                )
                     else:
                         rejected_loops += 1
+                        if len(rejected_loop_details) < 50:
+                            rejected_loop_details.append(
+                                {
+                                    "coverage_frame": int(cov_idx),
+                                    "new_keyframe": int(new_key),
+                                    "reason": "normalflow_quality",
+                                    "ccs": float(qccs),
+                                    "scr": float(qscr),
+                                    "sift_inliers": int(inliers),
+                                    "odom_translation_err_px": odom_translation_err,
+                                    "odom_yaw_err_rad": odom_yaw_err,
+                                }
+                            )
                 coverage = update_coverage_set(coverage, new_key, keyframes, frames, keyframe_abs_est)
                 latest_key = new_key
                 prev_rel = np.zeros(6, dtype=np.float64)
@@ -204,6 +244,10 @@ def run(
         "scr_threshold": scr_threshold,
         "loop_ccs_threshold": loop_ccs_threshold,
         "loop_scr_threshold": loop_scr_threshold,
+        "loop_odom_translation_gate_px": loop_odom_translation_gate,
+        "loop_odom_yaw_gate_rad": loop_odom_yaw_gate,
+        "coverage_keyframe_indices": coverage,
+        "rejected_loop_details": rejected_loop_details,
     }
     (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
 
@@ -216,6 +260,8 @@ def main() -> None:
     parser.add_argument("--scr-threshold", type=float, default=0.25)
     parser.add_argument("--loop-ccs-threshold", type=float, default=0.58)
     parser.add_argument("--loop-scr-threshold", type=float, default=0.12)
+    parser.add_argument("--loop-odom-translation-gate", type=float, default=18.0)
+    parser.add_argument("--loop-odom-yaw-gate", type=float, default=0.70)
     args = parser.parse_args()
     run(
         Path(args.dataset),
@@ -224,6 +270,8 @@ def main() -> None:
         args.scr_threshold,
         args.loop_ccs_threshold,
         args.loop_scr_threshold,
+        args.loop_odom_translation_gate,
+        args.loop_odom_yaw_gate,
     )
 
 
