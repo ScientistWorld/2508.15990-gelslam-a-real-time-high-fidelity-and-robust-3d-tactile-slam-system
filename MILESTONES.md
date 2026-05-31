@@ -95,5 +95,4 @@
 - Reference values are anchored to the paper's Table II tracking statistics, Table IV tracking MAE, and Table VI reconstruction quality context.
 
 ## Stop Justification
-
-No stop condition. Higher milestones would require more objects/settings or the full released dataset.
+- Completed at milestone `core_claim`.
