@@ -2,4 +2,4 @@ action: done
 gpus: 0
 milestone: core_claim
 test: false
-notes: "Core claim validated: GelSLAM beats NormalFlow on scaled long-horizon tracking, accepts valid loop closures with zero false-loop rate, and split scores pass validation with valid_loop_recall as the loop primary metric."
+notes: "Packaged download.sh now fetches the ignored upstream GelSLAM calibration model from its public source; validation passes."
