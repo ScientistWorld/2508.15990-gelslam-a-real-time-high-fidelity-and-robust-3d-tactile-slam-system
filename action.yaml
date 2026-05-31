@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Retry CPU smoke test after job afa5af0e-b28 showed false long-span SIFT loops. Test the tightened verifier: high-confidence texture bypass only for short revisits, conservative odometry/final-anchor gates for long loops. Regenerate the 144-frame benchmark, run baseline and GelSLAM, evaluate full/train/test scores, and validate."
+notes: "Retry CPU smoke test after f0fa7928-c98 produced one valid loop and improved rotation but worsened translation. Test pose-graph residual weighting that downweights loop translation while keeping loop yaw correction strong. Regenerate the 144-frame benchmark, run baseline and GelSLAM, evaluate full/train/test scores, and validate."

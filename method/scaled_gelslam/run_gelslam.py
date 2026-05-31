@@ -78,7 +78,10 @@ def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initia
         for i, j, meas in edges:
             pred = between(poses[i], poses[j])
             err = se3_error(meas, pred)
-            terms.extend([err[0] / 2.0, err[1] / 2.0, err[5] / 0.08])
+            is_loop = j != i + 1
+            trans_sigma = 8.0 if is_loop else 2.0
+            yaw_sigma = 0.06 if is_loop else 0.08
+            terms.extend([err[0] / trans_sigma, err[1] / trans_sigma, err[5] / yaw_sigma])
         return np.asarray(terms)
 
     x0 = pack(initial)

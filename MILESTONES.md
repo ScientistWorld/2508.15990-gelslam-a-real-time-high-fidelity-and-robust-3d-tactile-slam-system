@@ -38,5 +38,10 @@
 - The false loop edges degraded GelSLAM tracking to 33.51 deg / 9.18 mm versus NormalFlow at 8.52 deg / 0.86 mm, so this does not support `core_claim`.
 - Tightened loop verification so the odometry-translation bypass applies only to short high-confidence revisits; long loops must satisfy the conservative odometry gate or the explicit final-anchor path.
 
+### [2026-05-31 19:43] - method_runs
+- CPU job `f0fa7928-c98` produced a scientifically useful run: GelSLAM accepted one loop, that loop was valid, false-loop rate was 0.0, and rotation MAE improved from NormalFlow's 8.52 deg to 5.65 deg.
+- The run still fell short of `core_claim` because translation MAE was worse than NormalFlow, 1.03 mm versus 0.86 mm.
+- Adjusted the pose graph residual weighting so loop closures provide stronger yaw correction while their noisier translational component is downweighted relative to sequential odometry.
+
 ## Stop Justification
 - Active reproduction; no stop justification yet.
