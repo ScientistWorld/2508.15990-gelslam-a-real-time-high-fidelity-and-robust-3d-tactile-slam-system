@@ -40,5 +40,10 @@
 ### [2026-05-31 18:24] - method_runs
 - Fixed packaging issues found by the runnable-path audit: standalone method and baseline scripts now evaluate only their own fresh artifacts, loop-closure target docs list every scored metric, and the submitted run prints final scores after validation.
 
+### [2026-05-31 18:28] - method_runs
+- Final verification found the `core_claim` milestone was not justified by the runnable scaled benchmark.
+- Wrote `VERIFICATION.md`, confirmed the download URLs resolve, and checked shell/Python syntax for the packaged scripts.
+- Set the final action to `done` at `method_runs`.
+
 ## Stop Justification
-- Not stopped. The next submitted job validates the current offline `method_runs` package before expanding toward a defensible `core_claim`.
+- Final verification stops at `method_runs`. The workspace is packaged and internally consistent as a scaled tracking gym, but the runnable reproduction does not yet support the paper's full `core_claim`.
