@@ -43,5 +43,10 @@
 - The run still fell short of `core_claim` because translation MAE was worse than NormalFlow, 1.03 mm versus 0.86 mm.
 - Adjusted the pose graph residual weighting so loop closures provide stronger yaw correction while their noisier translational component is downweighted relative to sequential odometry.
 
+### [2026-05-31 19:49] - method_runs
+- CPU job `29df8353-28c` showed the loop residual reweighting was harmful: GelSLAM degraded to 10.60 deg / 1.48 mm while retaining one valid loop and 0.0 false-loop rate.
+- Reverted the residual weighting to the previous stable pose graph formulation.
+- Increased the default planar benchmark from 144 to 192 frames so frame-to-frame NormalFlow has a longer horizon for drift accumulation while preserving the same algorithm and synthetic observation model.
+
 ## Stop Justification
 - Active reproduction; no stop justification yet.
