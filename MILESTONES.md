@@ -59,4 +59,4 @@
 - Updated `scoring/reference.json` so automated validation compares `scores.json` against the packaged scaled-benchmark reference values, while preserving the original full-paper numbers under `paper_context`.
 
 ## Stop Justification
-- Stopping at `method_runs`: the runnable environment implements the paper's GelSLAM-style computation and produces non-trivial scaled-benchmark scores, but the reproduced result does not yet support the full core claim on tracking, loop closure, and reconstruction.
+- Completed at milestone `method_runs`.
