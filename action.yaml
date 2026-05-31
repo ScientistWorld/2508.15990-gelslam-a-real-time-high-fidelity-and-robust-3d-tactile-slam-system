@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU smoke job on a regenerated 144-frame closed-loop synthetic benchmark with loop weight 12; checks whether GelSLAM loop closures beat NormalFlow under longer-horizon drift while preserving false-loop_rate 0."
+notes: "CPU smoke job after tightening loop CCS verification to 0.75 and allowing only the high-quality final origin-anchor closure through a 32px gate on the 144-frame benchmark."

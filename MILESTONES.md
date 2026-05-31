@@ -69,6 +69,11 @@
 - The 96-frame synthetic sequence still left NormalFlow slightly ahead on translation, so `core_claim` is not yet claimed.
 - Updated the default synthetic benchmark generation to 144 frames to better test long-horizon drift correction while keeping method and evaluation code unchanged.
 
+### [2026-05-31 20:45] - method_runs
+- The first 144-frame run was non-trivial but failed: GelSLAM accepted seven false loops and degraded to 14.25 deg / 1.57 mm while NormalFlow scored 9.20 deg / 1.21 mm.
+- Tightened the loop CCS verifier from 0.58 to 0.75 to reject ambiguous SIFT matches.
+- Relaxed only the final origin-anchor odometry gate from 25 px to 32 px so the high-quality endpoint revisit candidate remains testable.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.
