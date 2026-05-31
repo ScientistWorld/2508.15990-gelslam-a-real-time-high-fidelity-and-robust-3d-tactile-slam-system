@@ -10,5 +10,8 @@ set -e
 
 cd /home/user
 
-# TODO: run the paper's method
-# TODO: call scripts/evaluate.sh to score
+DATASET="${1:-data/synthetic_tracking/loop_patch.npz}"
+OUT="${2:-checkpoints/scaled_gelslam}"
+
+python method/scaled_gelslam/run_gelslam.py --dataset "$DATASET" --output-dir "$OUT"
+bash scripts/evaluate.sh

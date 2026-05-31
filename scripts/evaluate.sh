@@ -26,5 +26,17 @@ cd /home/user
 
 mkdir -p scoring
 
-# TODO: implement evaluation using code in eval/
-# Must write scoring/scores.json at the end
+ARGS=()
+if [ -f checkpoints/normalflow_baseline/pred_poses.npy ]; then
+  ARGS+=(--method-run normalflow checkpoints/normalflow_baseline)
+fi
+if [ -f checkpoints/scaled_gelslam/pred_poses.npy ]; then
+  ARGS+=(--method-run gelslam_online checkpoints/scaled_gelslam)
+fi
+
+if [ ${#ARGS[@]} -eq 0 ]; then
+  echo "No prediction artifacts found under checkpoints/." >&2
+  exit 1
+fi
+
+python eval/evaluate_tracking.py "${ARGS[@]}" --output scoring/scores.json

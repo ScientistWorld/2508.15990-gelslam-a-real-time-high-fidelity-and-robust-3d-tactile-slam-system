@@ -14,14 +14,14 @@
 - [x] `scoring/CONSTRAINTS.md` lists benchmark constraints for future scientists
 - [x] `scoring/DIRECTION.md` scopes future research directions
 - [x] `scoring/EXPERIMENTS.md` explains experiment purpose without method details
-- [ ] `scoring/scores.json` records reproduced run outputs
+- [x] `scoring/scores.json` records reproduced run outputs
 
 ## Code And Scripts
 
-- [ ] Method code implements GelSLAM computational steps
-- [ ] NormalFlow baseline is available for the same synthetic benchmark
-- [ ] Evaluation code reports all required metrics
-- [ ] `scripts/run.sh` submits the reproduction job
+- [x] Method code implements GelSLAM computational steps
+- [x] NormalFlow baseline is available for the same synthetic benchmark
+- [x] Evaluation code reports all required metrics
+- [x] `scripts/run.sh` submits the reproduction job
 
 ## Documentation Integrity
 

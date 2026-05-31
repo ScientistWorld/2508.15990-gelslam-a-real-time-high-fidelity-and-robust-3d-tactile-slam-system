@@ -1,0 +1,38 @@
+{
+  "experiments": {
+    "synthetic_long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 13.46865652154474,
+          "translation_mae_px": 19.75135618978125
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 7.195291460518324,
+          "translation_mae_px": 12.551172575979564
+        }
+      }
+    },
+    "loop_closure_quality": {
+      "results": {
+        "normalflow": {
+          "accepted_loops": 0,
+          "false_loop_rate": 0.0
+        },
+        "gelslam_online": {
+          "accepted_loops": 7,
+          "false_loop_rate": 0.0
+        }
+      }
+    },
+    "keyframe_budget": {
+      "results": {
+        "normalflow": {
+          "keyframes": 96
+        },
+        "gelslam_online": {
+          "keyframes": 50
+        }
+      }
+    }
+  }
+}

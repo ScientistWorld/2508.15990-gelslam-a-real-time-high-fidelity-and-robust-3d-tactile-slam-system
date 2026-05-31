@@ -18,7 +18,7 @@ set -e
 
 cd /home/user
 
-# TODO: implement full reproduction pipeline
-# e.g.:
-#   bash scripts/baseline.sh
-#   bash scripts/method.sh
+bash scripts/download.sh
+python baseline/normalflow_baseline.py --dataset data/synthetic_tracking/loop_patch.npz --output-dir checkpoints/normalflow_baseline
+python method/scaled_gelslam/run_gelslam.py --dataset data/synthetic_tracking/loop_patch.npz --output-dir checkpoints/scaled_gelslam
+bash scripts/evaluate.sh

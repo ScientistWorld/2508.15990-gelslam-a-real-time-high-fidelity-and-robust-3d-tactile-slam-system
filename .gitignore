@@ -7,6 +7,7 @@ checkpoints/
 *.bin
 *.npy
 *.npz
+!data/synthetic_tracking/*.npz
 *.h5
 *.hdf5
 *.pkl
@@ -84,6 +85,7 @@ shared/
 .envrc
 .claude/
 .codex/
+.git-shims/
 
 # Agent-generated scaffolding files
 codex/
