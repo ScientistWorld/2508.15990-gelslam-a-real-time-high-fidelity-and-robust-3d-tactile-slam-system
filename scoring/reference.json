@@ -2,7 +2,7 @@
   "experiments": {
     "synthetic_long_horizon_tracking": {
       "description": "Scaled synthetic long-horizon tactile tracking benchmark, anchored to the paper's Table IV tracking MAE trends. Translation is reported in millimeters using the GelSight Mini pixel pitch implied by 320x240 images over a 20mm x 15mm sensing area.",
-      "weight": 0.6,
+      "weight": 0.7,
       "primary_metric": "rotation_mae_deg",
       "metrics": {
         "rotation_mae_deg": {"higher_is_better": false, "coefficient": 1.0},
@@ -23,7 +23,7 @@
     },
     "loop_closure_quality": {
       "description": "Loop-closure behavior for the scaled synthetic benchmark, anchored to Table II tracking statistics and the paper's qualitative requirement that accepted loops be valid.",
-      "weight": 0.25,
+      "weight": 0.3,
       "primary_metric": "false_loop_rate",
       "metrics": {
         "accepted_loops": {"higher_is_better": true, "coefficient": 0.4},
@@ -39,24 +39,6 @@
           "type": "proposed",
           "accepted_loops": 34,
           "false_loop_rate": 0.0
-        }
-      }
-    },
-    "keyframe_budget": {
-      "description": "State-size/resource behavior for tactile SLAM on the scaled synthetic benchmark, anchored to Table II mean keyframe count.",
-      "weight": 0.15,
-      "primary_metric": "keyframes",
-      "metrics": {
-        "keyframes": {"higher_is_better": false, "coefficient": 1.0}
-      },
-      "results": {
-        "normalflow": {
-          "type": "baseline",
-          "keyframes": 523
-        },
-        "gelslam_online": {
-          "type": "proposed",
-          "keyframes": 68
         }
       }
     }

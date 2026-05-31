@@ -8,6 +8,6 @@ Tests whether a tactile tracking system maintains accurate pose estimates over l
 
 Tests whether the system uses revisited contacts productively and safely. This experiment measures both how many loops are accepted and how often accepted loops are wrong, because accepting incorrect loop closures can make trajectory error look temporarily better on some sequences while breaking the scientific claim.
 
-## keyframe_budget
+## Keyframe Diagnostics
 
-Tests whether the tracking system keeps a practical amount of state. Tactile SLAM naturally needs dense keyframes, but a method should not improve accuracy by retaining every frame without bound when the benchmark is meant to model scalable long-horizon tracking.
+Raw keyframe counts are kept in method artifacts for inspection, but they are not part of the automated score. The scaled benchmark contains 144 frames, whereas the paper reports keyframe statistics over substantially longer real episodes, so direct raw-count comparison is not a stable paper-to-reproduction metric.

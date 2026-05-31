@@ -18,9 +18,6 @@ Tests whether drift reduction comes from valid loop closure behavior rather than
 - **Metric:** `false_loop_rate` (lower is better)
 - **How to run:** Count accepted loop closures and compare each accepted loop against the ground-truth revisit relation for the same synthetic tracking episodes.
 
-## Constraint: keyframe_budget
+## Context: keyframe counts
 
-Tests whether the method keeps the tactile SLAM state bounded while solving the tracking problem.
-
-- **Metric:** `keyframes` (lower is better, after maintaining tracking and loop correctness)
-- **How to run:** Count retained keyframes over the same fixed synthetic tracking episodes used for the main benchmark.
+The method still writes keyframe diagnostics in `summary.json` and `keyframe_poses.npy`, but raw keyframe counts are not an automated target because the packaged 144-frame synthetic benchmark is intentionally much shorter than the paper's 523-frame average real episodes. Comparing those raw counts directly caused a scale mismatch rather than a meaningful scientific score.

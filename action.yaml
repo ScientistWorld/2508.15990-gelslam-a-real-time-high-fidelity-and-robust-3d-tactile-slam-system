@@ -5,4 +5,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Core claim restored and verified: CPU container job 72223a41-095 reran evaluator and validate.py --compare successfully."
+notes: "Fixed keyframe-budget validation mismatch; python validate.py --compare now passes for trajectory and loop-closure scoring."

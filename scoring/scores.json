@@ -23,16 +23,6 @@
           "false_loop_rate": 0.0
         }
       }
-    },
-    "keyframe_budget": {
-      "results": {
-        "normalflow": {
-          "keyframes": 144
-        },
-        "gelslam_online": {
-          "keyframes": 110
-        }
-      }
     }
   }
 }

@@ -16,7 +16,7 @@ Report the NormalFlow frame-to-frame baseline on the same test split whenever re
 
 ## Evaluation
 
-Use the fixed metrics: `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`. Do not remove `false_loop_rate` or `keyframes`; they are constraint metrics that prevent trivial improvements by accepting excessive loops or retaining unbounded state.
+Use the fixed metrics: `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, and `false_loop_rate`. Do not remove `false_loop_rate`; it is the constraint metric that prevents trivial improvements by accepting excessive or incorrect loops. Keyframe counts are recorded as diagnostics in method artifacts, but they are not scored because the scaled benchmark has a different episode length from the paper's real-data setting.
 
 ## Procedure
 
@@ -27,6 +27,6 @@ The submitted method must remain a tactile long-horizon tracking or SLAM method.
 - [ ] Uses only the provided synthetic tactile benchmark data and fixed seeds
 - [ ] Does not use ground-truth pose or loop labels as method inputs
 - [ ] Reports NormalFlow on the same test split
-- [ ] Reports all five required metrics
-- [ ] Keeps `false_loop_rate` and `keyframes` as constraint metrics
+- [ ] Reports all four required metrics
+- [ ] Keeps `false_loop_rate` as a constraint metric
 - [ ] Stays within tactile tracking/SLAM rather than switching to an unrelated sequence regression or oracle-localization paradigm

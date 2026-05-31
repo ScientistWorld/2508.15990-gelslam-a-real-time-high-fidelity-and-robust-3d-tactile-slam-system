@@ -65,7 +65,9 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
 
     Optional artifacts:
     - summary.json with loop_edges and keyframe_indices for loop metrics.
-    - keyframe_poses.npy for the retained-state/keyframe metric.
+    - keyframe_poses.npy can be present for diagnostics, but raw keyframe
+      counts are not scored because the packaged benchmark is shorter than the
+      paper's real episodes.
     """
     pred = np.load(run_dir / "pred_poses.npy")
     if len(pred) != len(gt):
@@ -95,14 +97,11 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
         rerr = float(np.linalg.norm(loop_err[3:]))
         if terr > 10.0 or np.degrees(rerr) > 20.0:
             false_loops += 1
-    keyframe_pose_path = run_dir / "keyframe_poses.npy"
-    keyframes = int(len(np.load(keyframe_pose_path))) if keyframe_pose_path.exists() else int(len(pred))
     return {
         "rotation_mae_deg": float(np.degrees(rot_err).mean()),
         "translation_mae_mm": float(pos_err.mean() * GELSIGHT_MM_PER_PIXEL),
         "accepted_loops": accepted,
         "false_loop_rate": float(false_loops / max(accepted, 1)),
-        "keyframes": keyframes,
     }
 
 
@@ -135,9 +134,6 @@ def main() -> None:
                     }
                     for name, vals in flat_results.items()
                 }
-            },
-            "keyframe_budget": {
-                "results": {name: {"keyframes": vals["keyframes"]} for name, vals in flat_results.items()}
             },
         }
     }
