@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU smoke job after increasing verified loop-closure pose-graph weight from 4 to 6; checks whether valid loops close the remaining translation gap while preserving false-loop_rate 0."
+notes: "CPU smoke job after increasing verified loop-closure pose-graph weight from 6 to 12; checks whether stronger valid loop constraints close the translation gap while preserving false-loop_rate 0."

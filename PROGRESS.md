@@ -49,6 +49,8 @@ The final-anchor gate accepted the origin-to-final loop and improved GelSLAM to 
 
 The first weighted-loop run improved GelSLAM past NormalFlow on the primary rotation metric, 4.83 deg versus 4.93 deg, with three valid loops and zero false-loop rate. Translation remained slightly worse, 0.49 mm versus 0.45 mm, so the next run increases the verified-loop edge weight from 4 to 6 to test whether the same valid closures can also reduce translational drift without changing loop acceptance.
 
+Increasing the verified-loop edge weight to 6 continued the same trend: GelSLAM rotation improved to 4.81 deg, accepted loops stayed at three with 0.0 false-loop rate, and translation improved slightly to 0.48 mm but remained worse than the 0.45 mm NormalFlow baseline. The next run raises only the pose-graph influence of already-verified loop edges from 6 to 12; loop proposal and verification gates stay unchanged.
+
 ## Deviations From Paper
 
 The reproduction target is a scaled synthetic substitute for the real GelSight long-horizon tracking dataset. The paper used physical GelSight Mini tactile videos with MoCap ground truth; this workspace evaluates generated tactile sequences with known synthetic ground truth and converts image-grid translation errors to millimeters using the GelSight Mini pixel pitch from the paper. Because the synthetic generator is orthographic and does not model calibrated indentation depth/tilt observability, z/roll/pitch are pinned during scaled NormalFlow optimization. The method is still expected to follow GelSLAM's computational procedure: tactile geometry extraction, NormalFlow tracking, keyframe selection, loop proposal, loop verification, and pose graph optimization.
