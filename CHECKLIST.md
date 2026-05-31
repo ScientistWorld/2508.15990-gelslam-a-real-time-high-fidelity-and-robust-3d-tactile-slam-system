@@ -21,7 +21,7 @@
 - [x] Method code implements GelSLAM computational steps
 - [x] NormalFlow baseline is available for the same synthetic benchmark
 - [x] Evaluation code reports all required metrics
-- [x] `scripts/run.sh` submits the reproduction job
+- [x] `scripts/run.sh` regenerates the benchmark, baseline, method outputs, and scores before validation
 
 ## Documentation Integrity
 

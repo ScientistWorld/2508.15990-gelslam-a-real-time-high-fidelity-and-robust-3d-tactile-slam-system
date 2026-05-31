@@ -16,15 +16,12 @@ MM_PER_PIXEL = 20.0 / 320.0
 COVERAGE_AREA_THRESHOLD_MM2 = 0.2
 
 
-def load_frames(path: Path) -> tuple[list[dict], np.ndarray]:
+def load_tactile_frames(path: Path) -> list[dict]:
     data = np.load(path)
     frames = []
-    for i in range(len(data["poses"])):
+    for i in range(len(data["heights"])):
         frames.append(geometric_properties(data["heights"][i].astype(np.float64), data["masks"][i].astype(bool)))
-    poses = data["poses"].astype(np.float64)
-    if poses.shape[1] == 3:
-        poses = np.asarray([as_se3(p) for p in poses], dtype=np.float64)
-    return frames, poses
+    return frames
 
 
 def feature_candidate(ref: dict, tgt: dict) -> tuple[np.ndarray, int] | None:
@@ -129,7 +126,7 @@ def run(
     final_anchor_translation_gate: float,
     loop_edge_weight: int,
 ) -> None:
-    frames, gt = load_frames(dataset)
+    frames = load_tactile_frames(dataset)
     n = len(frames)
     final_frame = n - 1
     keyframes = [0]
@@ -259,7 +256,6 @@ def run(
 
     output_dir.mkdir(parents=True, exist_ok=True)
     np.save(output_dir / "pred_poses.npy", predicted)
-    np.save(output_dir / "gt_poses.npy", gt)
     np.save(output_dir / "keyframe_poses.npy", optimized_keys)
     np.save(output_dir / "pred_matrices.npy", np.asarray([matrix_from_pose(p) for p in predicted]))
     summary = {

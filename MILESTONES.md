@@ -21,5 +21,11 @@
 - Fixed validator failure caused by comparing raw keyframe counts across different sequence lengths.
 - Removed `keyframe_budget` from automated scoring and kept keyframe counts as diagnostics; `python validate.py --compare` now passes with trajectory and loop-closure experiments.
 
+### [2026-05-31 18:14] - core_claim
+- Audited final packaging after subagent review.
+- Updated `scripts/run.sh` to regenerate data, baseline outputs, method outputs, and scores through `scripts/reproduce.sh` before validation.
+- Removed method-side ground-truth output artifacts and aligned train/test score files with the paper-reported metric contract.
+- Local structural validation passes; a CPU container test is submitted to prove the clean end-to-end path.
+
 ## Stop Justification
 - Completed at milestone `core_claim`.

@@ -8,19 +8,11 @@
       "results": {
         "gelslam_online": {
           "rotation_mae_deg": 5.62842543843333,
-          "translation_mae_mm": 0.8830508131443984,
-          "rotation_p95_deg": 13.248665902068055,
-          "translation_p95_mm": 1.5356643988640535,
-          "terminal_rotation_error_deg": 0.18846758083301204,
-          "terminal_translation_error_mm": 0.013113789168801479
+          "translation_mae_mm": 0.8830508131443984
         },
         "normalflow": {
           "rotation_mae_deg": 9.639520958800755,
-          "translation_mae_mm": 1.2950346584284178,
-          "rotation_p95_deg": 26.12426787922063,
-          "translation_p95_mm": 2.6995540091782777,
-          "terminal_rotation_error_deg": 20.767193331085206,
-          "terminal_translation_error_mm": 2.7793428835205756
+          "translation_mae_mm": 1.2950346584284178
         }
       }
     },

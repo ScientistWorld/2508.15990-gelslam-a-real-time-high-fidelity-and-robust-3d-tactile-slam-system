@@ -221,10 +221,6 @@ def main() -> None:
                     name: {
                         "rotation_mae_deg": vals["rotation_mae_deg"],
                         "translation_mae_mm": vals["translation_mae_mm"],
-                        "rotation_p95_deg": vals["rotation_p95_deg"],
-                        "translation_p95_mm": vals["translation_p95_mm"],
-                        "terminal_rotation_error_deg": vals["terminal_rotation_error_deg"],
-                        "terminal_translation_error_mm": vals["terminal_translation_error_mm"],
                     }
                     for name, vals in flat_results.items()
                 }
