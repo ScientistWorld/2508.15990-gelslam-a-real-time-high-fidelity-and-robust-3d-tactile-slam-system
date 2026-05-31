@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "CPU container smoke test for clean end-to-end reproduction: regenerate 192-frame 6DoF synthetic data, run NormalFlow baseline and scaled GelSLAM, evaluate tracking/loop/reconstruction scores, then validate train/test slices."
+notes: "Retry CPU container smoke test after resetting the default benchmark to the stable 144-frame closed-loop planar sequence with reconstruction artifacts. Regenerate data, rerun NormalFlow and scaled GelSLAM, evaluate tracking/loop/reconstruction, and validate train/test slices."

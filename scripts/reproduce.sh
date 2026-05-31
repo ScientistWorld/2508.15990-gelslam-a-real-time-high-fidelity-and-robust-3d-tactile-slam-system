@@ -21,9 +21,9 @@ export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 
 python data/generate_synthetic_tracking.py \
   --output data/synthetic_tracking/loop_patch.npz \
-  --frames 192 \
+  --frames 144 \
   --surface-size 340 \
-  --trajectory sixdof
+  --trajectory planar
 python baseline/normalflow_baseline.py --dataset data/synthetic_tracking/loop_patch.npz --output-dir checkpoints/normalflow_baseline
 python method/scaled_gelslam/run_gelslam.py --dataset data/synthetic_tracking/loop_patch.npz --output-dir checkpoints/scaled_gelslam
 bash scripts/evaluate.sh
