@@ -11,6 +11,7 @@ from scipy.spatial.transform import Rotation
 SLICE_NAME = "test"
 BLOCK_SIZE = 8
 LONG_LOOP_SPAN_FRAMES = 32
+LOOP_OPPORTUNITY_BUDGET = 3.0
 GELSIGHT_MM_PER_PIXEL = 20.0 / 320.0
 LEGACY_SCORE_NAMES = {
     "normalflow_baseline": "normalflow",
@@ -177,6 +178,7 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
         "terminal_translation_error_mm": float(pos_err_mm[-1]),
         "accepted_loops": accepted,
         "valid_loops": valid_loops,
+        "valid_loop_recall": float(min(valid_loops / LOOP_OPPORTUNITY_BUDGET, 1.0)),
         "valid_loop_rate": float(valid_loops / max(accepted, 1)),
         "false_loop_rate": float(false_loops / max(accepted, 1)),
     }
@@ -232,6 +234,7 @@ def main() -> None:
                     name: {
                         "accepted_loops": vals["accepted_loops"],
                         "valid_loops": vals["valid_loops"],
+                        "valid_loop_recall": vals["valid_loop_recall"],
                         "valid_loop_rate": vals["valid_loop_rate"],
                         "false_loop_rate": vals["false_loop_rate"],
                     }

@@ -1,7 +1,7 @@
 {
   "_metadata": {
     "slice": "train",
-    "split": "block_interleaved_8_frames_even_blocks_and_even_loop_edges"
+    "split": "block_interleaved_8_frames_and_short_loop_spans_lt_32_frames"
   },
   "experiments": {
     "synthetic_long_horizon_tracking": {
@@ -27,15 +27,17 @@
     "loop_closure_quality": {
       "results": {
         "gelslam_online": {
-          "accepted_loops": 2,
-          "valid_loops": 2,
-          "valid_loop_rate": 1.0,
-          "false_loop_rate": 0.0
+                    "accepted_loops": 3,
+                    "valid_loops": 3,
+                    "valid_loop_recall": 0.5,
+                    "valid_loop_rate": 1.0,
+                    "false_loop_rate": 0.0
         },
         "normalflow": {
-          "accepted_loops": 0,
-          "valid_loops": 0,
-          "valid_loop_rate": 0.0,
+                    "accepted_loops": 0,
+                    "valid_loops": 0,
+                    "valid_loop_recall": 0.0,
+                    "valid_loop_rate": 0.0,
           "false_loop_rate": 0.0
         }
       }

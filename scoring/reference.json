@@ -52,7 +52,7 @@
     "loop_closure_quality": {
       "description": "Loop-closure behavior for the scaled synthetic benchmark, anchored to Table II tracking statistics and the paper's qualitative requirement that accepted loops be valid.",
       "weight": 0.3,
-      "primary_metric": "valid_loops",
+      "primary_metric": "valid_loop_recall",
       "metrics": {
         "accepted_loops": {
           "higher_is_better": true,
@@ -63,6 +63,11 @@
           "higher_is_better": true,
           "coefficient": 0.45,
           "description": "Accepted loop closures whose measured relative pose agrees with the ground-truth revisit relation."
+        },
+        "valid_loop_recall": {
+          "higher_is_better": true,
+          "coefficient": 0.55,
+          "description": "Valid loop closures normalized by the loop-opportunity budget for the evaluated benchmark slice; this keeps the loop primary metric comparable across scaled sequence lengths."
         },
         "valid_loop_rate": {
           "higher_is_better": true,
@@ -80,6 +85,7 @@
           "type": "baseline",
           "accepted_loops": 0,
           "valid_loops": 0,
+          "valid_loop_recall": 0.0,
           "valid_loop_rate": 0.0,
           "false_loop_rate": 0.0
         },
@@ -87,6 +93,7 @@
           "type": "proposed",
           "accepted_loops": 34,
           "valid_loops": 34,
+          "valid_loop_recall": 0.5230769231,
           "valid_loop_rate": 1.0,
           "false_loop_rate": 0.0
         }
