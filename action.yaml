@@ -1,5 +1,5 @@
-action: done
+action: submit
 gpus: 0
 milestone: core_claim
-test: false
-notes: "Packaged download.sh now fetches the ignored upstream GelSLAM calibration model from its public source; validation passes."
+test: true
+notes: "CPU test to verify scripts/run.sh now regenerates the benchmark, baseline, method outputs, scores, train/test slices, and validation from a clean path."
