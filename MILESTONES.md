@@ -31,6 +31,11 @@
 - The loop-threshold smoke job accepted 13 loops, but all were false by the evaluator and degraded GelSLAM to 33.67 deg / 3.09 mm.
 - Added an odometry-consistency gate for loop closures and retained rejected-candidate diagnostics in `summary.json`.
 
+### [2026-05-31 18:45] - method_runs
+- The odometry-gated run rejected all false loops but still accepted no valid loops, returning to the no-loop score.
+- Diagnostics showed the origin keyframe was pruned from coverage, so the final revisit could not be proposed as a loop closure.
+- Updated coverage pruning to retain the initial anchor keyframe as a loop target.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.

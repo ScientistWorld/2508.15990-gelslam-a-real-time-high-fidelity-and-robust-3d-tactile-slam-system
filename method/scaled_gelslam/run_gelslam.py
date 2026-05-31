@@ -99,6 +99,7 @@ def update_coverage_set(
     frames: list[dict],
     keyframe_abs: list[np.ndarray],
 ) -> list[int]:
+    anchor_frame = keyframes[0]
     footprints = {frame_idx: contact_footprint(frames[frame_idx], keyframe_abs[keyframes.index(frame_idx)]) for frame_idx in coverage}
     candidate_fp = contact_footprint(frames[candidate_frame], keyframe_abs[keyframes.index(candidate_frame)])
     covered = set().union(*footprints.values()) if footprints else set()
@@ -111,7 +112,7 @@ def update_coverage_set(
         others = [footprints[o] for o in updated if o != frame_idx]
         other_union = set().union(*others) if others else set()
         unique_area = len(footprints[frame_idx] - other_union) * (MM_PER_PIXEL**2)
-        if unique_area > COVERAGE_AREA_THRESHOLD_MM2 or frame_idx == candidate_frame:
+        if unique_area > COVERAGE_AREA_THRESHOLD_MM2 or frame_idx == candidate_frame or frame_idx == anchor_frame:
             pruned.append(frame_idx)
     return pruned
 

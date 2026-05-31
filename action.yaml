@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU smoke job after adding odometry-consistency gating for loop closures; verifies false loops are rejected and checks whether any valid revisits improve scaled GelSLAM over NormalFlow."
+notes: "CPU smoke job after retaining the origin coverage keyframe so final revisits can be proposed as loop closures; checks valid-loop acceptance and GelSLAM tracking improvement."
