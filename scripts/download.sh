@@ -10,7 +10,7 @@
 # Update the storage estimate below as you add downloads.
 #
 # Estimated total download size: 0 GB for the default scaled benchmark.
-# Estimated disk usage after extraction: <10 MB.
+# Estimated disk usage after extraction: <20 MB.
 #
 # You do not need to run this script during reproduction — it exists
 # for future portability. Write it to download to workspace-local
@@ -21,7 +21,10 @@ set -e
 
 cd /home/user
 
-python data/generate_synthetic_tracking.py --output data/synthetic_tracking/loop_patch.npz
+python data/generate_synthetic_tracking.py \
+  --output data/synthetic_tracking/loop_patch.npz \
+  --frames 144 \
+  --surface-size 300
 
 # The full released dataset is hosted as one 73.1 GB archive:
 # https://huggingface.co/datasets/joehjhuang/GelSLAM_dataset/blob/main/dataset.zip

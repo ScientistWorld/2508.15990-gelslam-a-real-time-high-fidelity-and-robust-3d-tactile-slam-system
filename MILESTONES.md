@@ -64,6 +64,11 @@
 - Translation still trails the 0.45 mm NormalFlow baseline, so `core_claim` remains pending.
 - Increased only the verified-loop edge weight from 6 to 12 for the next smoke run while keeping loop acceptance gates unchanged.
 
+### [2026-05-31 20:30] - method_runs
+- The weight-12 run improved rotation to 4.79 deg and translation to 0.48 mm, with three accepted loops and 0.0 false-loop rate.
+- The 96-frame synthetic sequence still left NormalFlow slightly ahead on translation, so `core_claim` is not yet claimed.
+- Updated the default synthetic benchmark generation to 144 frames to better test long-horizon drift correction while keeping method and evaluation code unchanged.
+
 - Documentation and scoring metadata were created for a scaled synthetic GelSLAM reproduction.
 - The benchmark target is synthetic long-horizon tactile tracking with GelSLAM versus NormalFlow.
 - Required metrics are `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `false_loop_rate`, and `keyframes`.
