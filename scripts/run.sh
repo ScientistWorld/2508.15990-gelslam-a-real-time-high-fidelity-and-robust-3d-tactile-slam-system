@@ -13,5 +13,20 @@ set -e
 
 cd /home/user
 
-bash scripts/evaluate.sh
-python validate.py --compare
+bash scripts/evaluate_train.sh
+bash scripts/evaluate_test.sh
+
+python - <<'PY'
+import json
+from pathlib import Path
+
+from validate import validate_reference, validate_scores
+
+reference = json.loads(Path("scoring/reference.json").read_text())
+errors = validate_reference(reference)
+for score_path in ("scoring/scores_train.json", "scoring/scores_test.json"):
+    scores = json.loads(Path(score_path).read_text())
+    errors.extend(f"{score_path}: {err}" for err in validate_scores(scores, reference))
+if errors:
+    raise SystemExit("\n".join(errors))
+PY
