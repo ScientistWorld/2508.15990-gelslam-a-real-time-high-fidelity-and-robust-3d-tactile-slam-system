@@ -10,4 +10,4 @@ Robots often manipulate objects under occlusion or close contact, where cameras 
 
 ## Success Criteria
 
-A successful system should produce low long-horizon rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false loop closures, and keep the number of retained keyframes within a practical range. In this scaled synthetic benchmark, success means outperforming the NormalFlow frame-to-frame baseline on trajectory error while maintaining low false loop rate.
+A successful system should produce low long-horizon rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false loop closures, and keep its retained state within a practical range. In this scaled synthetic benchmark, success means outperforming the fixed frame-to-frame tactile registration baseline on trajectory error while maintaining low false loop rate.

@@ -27,5 +27,10 @@
 - Removed method-side ground-truth output artifacts and aligned train/test score files with the paper-reported metric contract.
 - Local structural validation passes; a CPU container test is submitted to prove the clean end-to-end path.
 
+### [2026-05-31 18:18] - core_claim
+- Final verification confirmed the latest CPU container job completed successfully and `python validate.py --compare` passes.
+- Tightened method-agnostic problem, evaluation, target, and experiment documentation for gym use.
+- Verified `scripts/download.sh` URLs and confirmed committed code does not reference `shared/`.
+
 ## Stop Justification
 - Completed at milestone `core_claim`.

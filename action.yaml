@@ -1,5 +1,3 @@
-action: submit
-gpus: 0
+action: done
 milestone: core_claim
-test: true
-notes: "CPU test to verify scripts/run.sh now regenerates the benchmark, baseline, method outputs, scores, train/test slices, and validation from a clean path."
+notes: "Final verification passed: clean CPU reproduction job and validator pass; docs tightened for method-agnostic gym use."

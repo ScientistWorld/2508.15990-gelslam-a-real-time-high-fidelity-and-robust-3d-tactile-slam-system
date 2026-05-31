@@ -11,15 +11,15 @@ This file describes the benchmark task and metrics without exposing implementati
 
 ## Baselines and Targets
 
-The required comparison is between the reproduced GelSLAM procedure and a NormalFlow frame-to-frame baseline. The paper's Table IV reports NormalFlow at about 7.42 degrees average rotation MAE and 1.09 mm average translation MAE, while GelSLAM Online reports about 4.00 degrees and 0.89 mm. The synthetic benchmark should preserve the same qualitative target: GelSLAM should reduce long-horizon drift relative to NormalFlow.
+The required comparison is between a candidate long-horizon tactile tracking system and the fixed frame-to-frame tactile registration baseline shipped in `baseline/`. The paper's Table IV reports the baseline at about 7.42 degrees average rotation MAE and 1.09 mm average translation MAE, while the proposed system reports about 4.00 degrees and 0.89 mm. The synthetic benchmark should preserve the same qualitative target: a successful long-horizon tracker should reduce drift relative to the frame-to-frame baseline.
 
-For loop behavior, Table II reports GelSLAM tracking episodes with an average of 34 accepted loops. The scaled benchmark should not require matching this count exactly, but it should measure whether loop closure is actually used and whether false loops remain rare. Table II also reports keyframe counts; those are retained as diagnostics only because raw counts are not directly comparable between the paper's 523-frame average real episodes and this 144-frame scaled benchmark.
+For loop behavior, Table II reports an average of 34 accepted revisits per real tracking episode. The scaled benchmark should not require matching this count exactly, but it should measure whether revisits are actually used and whether false loops remain rare. Table II also reports retained-state counts; those are retained as diagnostics only because raw counts are not directly comparable between the paper's 523-frame average real episodes and this 144-frame scaled benchmark.
 
 ## Evaluation Protocol
 
-Evaluate all methods on the same generated long-horizon tactile sequences, with fixed seeds and identical preprocessing. Each sequence should include local contact observations, ground-truth pose over time, and repeated contacts that make loop closure meaningful. Continuous contact and long enough horizons are important: the benchmark must not collapse into a short-range registration task where NormalFlow already solves the problem.
+Evaluate all methods on the same generated long-horizon tactile sequences, with fixed seeds and identical preprocessing. Each sequence should include local contact observations, ground-truth pose over time, and repeated contacts that make loop closure meaningful. Continuous contact and long enough horizons are important: the benchmark must not collapse into a short-range registration task where the frame-to-frame baseline already solves the problem.
 
-Report the metrics for both GelSLAM and NormalFlow on the same test split. NormalFlow should be evaluated as a frame-to-frame baseline without global loop correction. GelSLAM should be evaluated with its full SLAM procedure enabled. The comparison is valid only if both methods consume the same synthetic tactile stream and the same pose ground truth.
+Report the metrics for both the candidate method and the fixed frame-to-frame baseline on the same test split. The baseline should be evaluated without global revisit correction. A long-horizon method may use revisits and global consistency mechanisms, but the comparison is valid only if all methods consume the same synthetic tactile stream and the same pose ground truth.
 
 ## Method Output Contract
 
