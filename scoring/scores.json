@@ -3,12 +3,12 @@
     "synthetic_long_horizon_tracking": {
       "results": {
         "normalflow": {
-          "rotation_mae_deg": 3.914762205150545,
-          "translation_mae_mm": 5090.104664537273
+          "rotation_mae_deg": 4.926063510707679,
+          "translation_mae_mm": 0.45232829722469664
         },
         "gelslam_online": {
-          "rotation_mae_deg": 11.993929771763968,
-          "translation_mae_mm": 149.75952405355414
+          "rotation_mae_deg": 5.294354918159139,
+          "translation_mae_mm": 0.7431769087485905
         }
       }
     },
@@ -19,7 +19,7 @@
           "false_loop_rate": 0.0
         },
         "gelslam_online": {
-          "accepted_loops": 1,
+          "accepted_loops": 0,
           "false_loop_rate": 0.0
         }
       }
@@ -30,7 +30,7 @@
           "keyframes": 96
         },
         "gelslam_online": {
-          "keyframes": 37
+          "keyframes": 39
         }
       }
     }
