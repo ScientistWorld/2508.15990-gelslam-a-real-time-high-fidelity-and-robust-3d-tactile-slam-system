@@ -13,5 +13,9 @@
 - Continuation audit after milestone reset confirmed that the implementation is a scaled GelSLAM tracking reproduction rather than a surrogate.
 - Local structural validation passed with `python validate.py --compare`; the final evaluator execution is submitted as a CPU container test because the login-node Python lacks NumPy/SciPy/OpenCV.
 
+### [2026-05-31 17:44] - core_claim
+- CPU container validation job `72223a41-095` completed with exit code 0.
+- The job reran `scripts/evaluate.sh` and `python validate.py --compare`; all scoring and structure checks passed with the packaged core-claim scores.
+
 ## Stop Justification
-- Current result supports `core_claim` for the documented scaled synthetic tracking setting. The full physical GelSight 6DoF reconstruction benchmark remains out of scope for this package because it requires the 73 GB released dataset plus ROS2/GTSAM reconstruction infrastructure.
+- Current result supports `core_claim` for the documented scaled synthetic tracking setting and has passed container-side evaluation. The full physical GelSight 6DoF reconstruction benchmark remains out of scope for this package because it requires the 73 GB released dataset plus ROS2/GTSAM reconstruction infrastructure.
