@@ -28,5 +28,9 @@
 - CPU job `190d97f9-304` rejected all loop closures: rotation improved over NormalFlow, but the loop-closure target again had zero valid-loop signal.
 - Kept strict ordinary SIFT loop acceptance, but removed accumulated-translation drift as a veto for the origin-to-final odometry-initialized closure because that drift is the quantity loop closure is intended to correct.
 
+### [2026-06-04 08:55] - none
+- CPU job `da072408-b0a` still rejected all loop closures; expanded diagnostics showed the origin-to-final odometry fallback had SCR 0.54 and yaw error 0.42 but missed the ordinary CCS threshold at 0.656.
+- Added a final-anchor-specific NormalFlow quality floor while keeping non-final loop thresholds unchanged.
+
 ## Stop Justification
 - Not stopped. Current work is continuing toward `core_claim`.

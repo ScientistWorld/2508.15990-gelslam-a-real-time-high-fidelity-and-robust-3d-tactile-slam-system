@@ -15,6 +15,8 @@ from method.scaled_gelslam.normalflow import estimate_relative, geometric_proper
 MM_PER_PIXEL = 20.0 / 320.0
 COVERAGE_AREA_THRESHOLD_MM2 = 0.2
 MIN_LOOP_SPAN_FRAMES = 32
+FINAL_ANCHOR_CCS_THRESHOLD = 0.65
+FINAL_ANCHOR_SCR_THRESHOLD = 0.25
 
 
 def planarize_pose(pose: np.ndarray) -> np.ndarray:
@@ -256,7 +258,20 @@ def run(
                 if is_final_anchor_candidate:
                     translation_gate = final_anchor_translation_gate
 
-                if qccs < loop_ccs_threshold or qscr < loop_scr_threshold:
+                final_anchor_fallback = (
+                    is_final_anchor_candidate
+                    and proposal_source == "odometry_final_keyframe"
+                )
+                quality_ok = (
+                    (qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold)
+                    or (
+                        final_anchor_fallback
+                        and qccs >= FINAL_ANCHOR_CCS_THRESHOLD
+                        and qscr >= FINAL_ANCHOR_SCR_THRESHOLD
+                    )
+                )
+
+                if not quality_ok:
                     reason = "normalflow_quality"
                     passed = False
                 else:
@@ -271,10 +286,9 @@ def run(
                         and inliers >= 10
                     )
                     final_verified = (
-                        is_final_anchor_candidate
-                        and proposal_source == "odometry_final_keyframe"
-                        and qccs >= 0.70
-                        and qscr >= 0.25
+                        final_anchor_fallback
+                        and qccs >= FINAL_ANCHOR_CCS_THRESHOLD
+                        and qscr >= FINAL_ANCHOR_SCR_THRESHOLD
                         and odom_yaw_err <= 1.0
                     )
                     passed = (
