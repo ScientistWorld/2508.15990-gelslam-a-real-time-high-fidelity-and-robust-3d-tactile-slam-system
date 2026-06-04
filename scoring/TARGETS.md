@@ -10,7 +10,7 @@ Tests whether the method reduces long-horizon tactile tracking drift on generate
 
 - **Metric:** `rotation_mae_deg` (lower is better)
 - **Metric:** `translation_mae_mm` (lower is better)
-- **How to run:** Evaluate the candidate method and the fixed frame-to-frame baseline on the fixed synthetic tracking test split with identical input streams and preprocessing.
+- **How to run:** Evaluate the candidate method and the fixed frame-to-frame baseline on the fixed closed-loop synthetic tracking sequence with identical input streams and preprocessing. The train/test slice files are diagnostics for partitioned error analysis; `scoring/scores.json` is the primary benchmark contract.
 
 ## Constraint: loop_closure_quality
 

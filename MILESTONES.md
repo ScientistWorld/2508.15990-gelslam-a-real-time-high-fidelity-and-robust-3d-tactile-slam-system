@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -13,5 +13,10 @@
 - Reproduced the loop-closure safety constraint on the same benchmark: the accepted GelSLAM loop is valid and the false-loop rate is 0.0.
 - `python validate.py --compare` passes, including train/test split checks and method/evaluation import separation.
 
+### [2026-06-04 08:33] - method_runs
+- Continuation audit reset the milestone to `method_runs` and rechecked method fidelity, evaluator independence, and scoring completeness.
+- Fixed the scoring-contract wording so the primary target matches `scripts/evaluate.sh`: the full fixed closed-loop synthetic sequence, with train/test slice scores treated as diagnostics.
+- Submitting a CPU container job to regenerate artifacts, run the evaluator, and determine whether `core_claim` can be restored from fresh results.
+
 ## Stop Justification
-- Completed at milestone `core_claim` for the packaged scaled benchmark. Higher milestones would require a broader multi-object or real-dataset reproduction beyond the current validated substitute.
+- Pending fresh CPU container validation after continuation audit.

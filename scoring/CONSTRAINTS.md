@@ -4,7 +4,7 @@ These constraints define what future scientist agents must hold fixed when tryin
 
 ## Data
 
-Use only the provided synthetic long-horizon tactile tracking and reconstruction benchmark and its fixed train/test seeds. Do not add real GelSight data, external tactile datasets, rendered CAD assets, or hand-labeled loop annotations beyond what the benchmark generator provides. The benchmark is deliberately scaled down from the paper's real dataset, so adding richer data would change the reproduction target.
+Use only the provided synthetic long-horizon tactile tracking and reconstruction benchmark and its fixed generation seed. Do not add real GelSight data, external tactile datasets, rendered CAD assets, or hand-labeled loop annotations beyond what the benchmark generator provides. The benchmark is deliberately scaled down from the paper's real dataset, so adding richer data would change the reproduction target. Train/test slice scores are diagnostics; the primary benchmark is the full fixed closed-loop sequence in `scoring/scores.json`.
 
 ## Inputs
 
@@ -12,7 +12,7 @@ Use the same synthetic tactile observation stream available to all methods. Do n
 
 ## Baseline Comparison
 
-Report the NormalFlow frame-to-frame baseline on the same test split whenever reporting GelSLAM or an improved method. The paper's central claim is relative to NormalFlow-style tracking drift, so results without that comparison are incomplete.
+Report the NormalFlow frame-to-frame baseline on the same fixed sequence whenever reporting GelSLAM or an improved method. The paper's central claim is relative to NormalFlow-style tracking drift, so results without that comparison are incomplete.
 
 ## Evaluation
 
@@ -26,7 +26,7 @@ The submitted method must remain a tactile long-horizon tracking, SLAM, or recon
 
 - [ ] Uses only the provided synthetic tactile benchmark data and fixed seeds
 - [ ] Does not use ground-truth pose or loop labels as method inputs
-- [ ] Reports NormalFlow on the same test split
+- [ ] Reports NormalFlow on the same fixed sequence
 - [ ] Reports all required metrics
 - [ ] Keeps `false_loop_rate` as a constraint metric
 - [ ] Stays within tactile tracking/SLAM rather than switching to an unrelated sequence regression or oracle-localization paradigm
