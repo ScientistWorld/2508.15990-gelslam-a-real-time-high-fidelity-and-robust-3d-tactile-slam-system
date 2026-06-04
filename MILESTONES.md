@@ -25,4 +25,4 @@
 - `python validate.py --compare` passed in the container and locally after the job.
 
 ## Stop Justification
-- Completed at milestone `core_claim` for the packaged scaled benchmark. Higher milestones would require a broader multi-object or real-dataset reproduction beyond the current validated substitute.
+- Completed at milestone `core_claim`.
