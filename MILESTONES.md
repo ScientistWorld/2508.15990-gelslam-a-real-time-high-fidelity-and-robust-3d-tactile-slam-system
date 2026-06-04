@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -46,5 +46,10 @@
 - GelSLAM tracking remained worse than NormalFlow at 21.62 deg / 2.84 mm versus 8.52 deg / 0.86 mm, so `core_claim` is still not met.
 - Restored the scaled planar benchmark surface size from 340 to 300 pixels, matching the earlier stable long-horizon substitute where the baseline had enough drift for loop closure to matter.
 
+### [2026-06-04 09:35] - core_claim
+- CPU job `2d6204b9-2e6` passed the full reproduction path in the container: data generation, NormalFlow baseline, scaled GelSLAM, full/train/test evaluation, and structural validation all completed.
+- On the scaled 144-frame benchmark, GelSLAM improved over NormalFlow on both tracking metrics: 5.71 deg versus 6.09 deg rotation MAE and 0.70 mm versus 0.95 mm translation MAE.
+- The loop-closure constraint was satisfied: GelSLAM accepted one long-loop closure, it was valid, and the false-loop rate was 0.0.
+
 ## Stop Justification
-- Not stopped. Current work is continuing toward `core_claim`.
+- Reached `core_claim` on the packaged scaled synthetic benchmark. Higher milestones would require a larger multi-setting sweep or the 73 GB released dataset plus ROS2/GTSAM infrastructure, which is outside the current minimum reproducible environment.

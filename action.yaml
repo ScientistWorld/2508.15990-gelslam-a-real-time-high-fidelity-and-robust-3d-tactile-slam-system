@@ -1,8 +1,6 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
-gpus: 0
-test: true
-milestone: method_runs
-notes: "CPU retry on the stable 144-frame planar benchmark with surface-size 300, keeping the validated long-loop scoring and current GelSLAM method unchanged."
+action: done
+milestone: core_claim
+notes: "Reached core_claim on the packaged scaled benchmark: GelSLAM improves rotation and translation over NormalFlow while accepting one valid loop and zero false loops; validation passed end to end."
