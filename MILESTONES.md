@@ -1,8 +1,14 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
+
+### [2026-06-04 08:24] - core_claim
+- CPU job `8ba3d0e8-8c0` completed successfully with exit code 0.
+- The packaged `scripts/run.sh` path regenerated the synthetic benchmark, ran the NormalFlow baseline, ran scaled GelSLAM, wrote full/train/test scores, and passed `python validate.py --compare`.
+- Restored `core_claim`: scaled GelSLAM improved over NormalFlow on both tracking metrics, 5.71 deg vs 6.09 deg rotation MAE and 0.70 mm vs 0.95 mm translation MAE.
+- Loop-closure constraint is satisfied in the regenerated artifacts: GelSLAM accepted one loop, it was valid, and false-loop rate was 0.0.
 
 ### [2026-06-04 08:21] - method_runs
 - CPU job `4b493d0e-95c` regenerated the full benchmark successfully and reproduced the core full-score pattern: GelSLAM improved tracking over NormalFlow and accepted one valid loop with zero false-loop rate.

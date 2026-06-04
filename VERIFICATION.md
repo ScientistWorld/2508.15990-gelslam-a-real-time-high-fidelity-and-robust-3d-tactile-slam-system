@@ -12,7 +12,8 @@ The validated score contract is intentionally narrower than the full paper. It e
 - `scripts/run.sh` calls `scripts/reproduce.sh`, train/test slice evaluation, and `validate.py --compare`.
 - 2026-06-04 audit fix: train/test split evaluators now write `loop_closure_quality` rather than dropping loop-closure constraint metrics.
 - CPU job `4b493d0e-95c` regenerated the full scores successfully but failed because both train/test slices counted the same single long loop.
-- Follow-up fix assigns long-loop edges to a split by their earlier anchor frame; container-side validation is pending in the next CPU test job.
+- Follow-up fix assigns long-loop edges to a split by their earlier anchor frame.
+- CPU job `8ba3d0e8-8c0` passed the full container validation path with exit code 0.
 
 ## Current Scores
 - NormalFlow: 6.09 deg rotation MAE, 0.95 mm translation MAE.
@@ -20,7 +21,7 @@ The validated score contract is intentionally narrower than the full paper. It e
 - Scaled GelSLAM loop constraint: 1 accepted loop, 1 valid loop, 1.0 valid-loop rate, 0.0 false-loop rate.
 
 ## Final Judgment
-- Milestone: method_runs pending container validation of the split-scoring fix
-- Ready for gym use: pending regenerated split scores
+- Milestone: core_claim
+- Ready for gym use: yes, for scaled long-horizon tactile tracking and loop-closure evaluation
 - Confidence: medium
 - Key limitation: synthetic planar benchmark; higher milestones require real GelSight data and full 6DoF reconstruction evaluation.
