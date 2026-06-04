@@ -11,12 +11,12 @@
           "terminal_translation_error_mm": 2.3738367490388543
         },
         "gelslam_online": {
-          "rotation_mae_deg": 19.095776247705437,
-          "translation_mae_mm": 1.496710372147891,
-          "rotation_p95_deg": 37.48109235045133,
-          "translation_p95_mm": 5.095871404125448,
-          "terminal_rotation_error_deg": 31.464164115239573,
-          "terminal_translation_error_mm": 5.440123374695386
+          "rotation_mae_deg": 8.274469708950932,
+          "translation_mae_mm": 0.7487218999828397,
+          "rotation_p95_deg": 12.830106251670912,
+          "translation_p95_mm": 1.2212314949275018,
+          "terminal_rotation_error_deg": 6.005959407669922,
+          "terminal_translation_error_mm": 0.34738288631314246
         }
       }
     },
@@ -33,14 +33,14 @@
           "loop_rotation_error_deg": 20.0
         },
         "gelslam_online": {
-          "loop_span_translation_mae_mm": 1.0940850895245382,
-          "loop_span_rotation_mae_deg": 21.58141937080572,
-          "accepted_loops": 1,
+          "loop_span_translation_mae_mm": 0.7487218999828397,
+          "loop_span_rotation_mae_deg": 8.274469708950932,
+          "accepted_loops": 0,
           "valid_loops": 0,
           "valid_loop_rate": 0.0,
-          "false_loop_rate": 1.0,
-          "loop_translation_error_mm": 3.8642765206083287,
-          "loop_rotation_error_deg": 22.8840485137234
+          "false_loop_rate": 0.0,
+          "loop_translation_error_mm": 0.625,
+          "loop_rotation_error_deg": 20.0
         }
       }
     }
