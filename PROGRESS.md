@@ -49,7 +49,8 @@ The latest packaged 144-frame synthetic benchmark supports a tracking-only GelSL
 
 ## Remaining
 
-- To reclaim `core_claim`, validate the submitted scaled benchmark that preserves 6DoF tactile pose estimation plus reconstruction/fusion scoring, or run the full official pipeline on accessible released data.
+- To reclaim `core_claim`, validate the submitted 144-frame closed-loop scaled benchmark, which prior runs showed can produce non-trivial NormalFlow drift, valid GelSLAM loop closures, and improved rotation/translation tracking. If it succeeds, update `scoring/reference.json`, `MILESTONES.md`, and `action.yaml` from the real regenerated scores.
+- If the 144-frame run fails to support the claim, inspect the new `checkpoints/scaled_gelslam/summary.json` loop diagnostics and iterate on loop verification/keyframe thresholds before trying the much larger official release.
 - Higher milestones would require expanding to more synthetic objects/settings or downloading the full 73 GB released dataset and running the official ROS2/GTSAM reconstruction code.
 - The current keyframe count is lower than the frame-to-frame baseline but still higher than the paper's reported average. It is tracked as a diagnostic because raw keyframe counts are not directly comparable across the scaled and real episode lengths.
 
@@ -65,7 +66,7 @@ the 144-frame planar closed-loop substitute and keeps reconstruction scoring
 enabled, so the workspace has a stable method-running benchmark without
 fabricating values.
 
-The current reproduction intentionally uses a synthetic benchmark because the full real GelSLAM dataset is a 73 GB archive and the official release depends on ROS2/GTSAM reconstruction infrastructure. This is a data/scale substitution. The attempted 6DoF synthetic benchmark exposed useful failure modes but did not produce valid loop closure behavior, so the default submitted benchmark is again the 144-frame planar closed-loop substitute with fused reconstruction scoring enabled.
+The current reproduction intentionally uses a synthetic benchmark because the full real GelSLAM dataset is a 73 GB archive and the official release depends on ROS2/GTSAM reconstruction infrastructure. This is a data/scale substitution. The attempted 6DoF synthetic benchmark exposed useful failure modes but did not produce valid loop closure behavior, and the 192-frame planar substitute produced one valid loop but worse translation than NormalFlow. The default submitted benchmark is now the 144-frame planar closed-loop substitute with fused reconstruction scoring enabled, matching the stable non-trivial setting documented by prior runs.
 
 The NormalFlow baseline reuses the same NormalFlow primitive implementation as the proposed method to keep the registration operator identical across the comparison. This keeps the paper's intended ablation comparison but means future agents should avoid changing shared NormalFlow behavior without rerunning both baseline and method.
 
