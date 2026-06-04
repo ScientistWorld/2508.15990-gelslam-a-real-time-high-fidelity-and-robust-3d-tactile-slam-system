@@ -1,6 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
-milestone: core_claim
-notes: "CPU job 8ba3d0e8-8c0 passed the full packaged reproduction and validation path. Scaled GelSLAM improves over NormalFlow on rotation and translation MAE and satisfies the valid-loop/zero-false-loop constraint on the 144-frame synthetic benchmark."
+action: pending
+gpus: 1
+test: false
+milestone: method_runs
+notes: ""
