@@ -1,14 +1,14 @@
 {
   "_metadata": {
     "slice": "train",
-    "split": "block_interleaved_8_frames_and_short_loop_spans_lt_32_frames"
+    "split": "block_interleaved_8_frames_and_long_loop_spans_ge_32_frames"
   },
   "experiments": {
     "synthetic_long_horizon_tracking": {
       "results": {
         "gelslam_online": {
-          "rotation_mae_deg": 21.900671868692818,
-          "translation_mae_mm": 2.8682593609804172
+          "rotation_mae_deg": 21.90067186869281,
+          "translation_mae_mm": 2.8682593609804163
         },
         "normalflow": {
           "rotation_mae_deg": 7.649075766935646,
@@ -19,10 +19,10 @@
     "loop_closure_quality": {
       "results": {
         "gelslam_online": {
-          "accepted_loops": 0,
-          "valid_loops": 0,
-          "valid_loop_recall": 0.0,
-          "valid_loop_rate": 0.0,
+          "accepted_loops": 1,
+          "valid_loops": 1,
+          "valid_loop_recall": 0.16666666666666666,
+          "valid_loop_rate": 1.0,
           "false_loop_rate": 0.0
         },
         "normalflow": {

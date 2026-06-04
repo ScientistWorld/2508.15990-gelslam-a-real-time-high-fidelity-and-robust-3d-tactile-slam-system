@@ -8,7 +8,7 @@
       "results": {
         "gelslam_online": {
           "rotation_mae_deg": 21.330981819736532,
-          "translation_mae_mm": 2.815518213886875
+          "translation_mae_mm": 2.8155182138868735
         },
         "normalflow": {
           "rotation_mae_deg": 9.396095680362269,
