@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "CPU retry after tightening SIFT loop acceptance and adding a gated origin-to-final odometry fallback candidate; verify valid loop signal without false loops."
+notes: "CPU retry after allowing only the verified origin-to-final odometry fallback to bypass accumulated translation drift; ordinary SIFT loops remain strict."

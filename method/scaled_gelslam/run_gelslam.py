@@ -272,9 +272,9 @@ def run(
                     )
                     final_verified = (
                         is_final_anchor_candidate
+                        and proposal_source == "odometry_final_keyframe"
                         and qccs >= 0.70
                         and qscr >= 0.25
-                        and odom_translation_err <= translation_gate
                         and odom_yaw_err <= 1.0
                     )
                     passed = (
@@ -310,7 +310,7 @@ def run(
                     keyframe_edges.append((cov_key, k_new, refined))
             else:
                 rejected_loops += 1
-                if best_rejection is not None and len(rejected_loop_details) < 50:
+                if best_rejection is not None and len(rejected_loop_details) < 300:
                     rejected_loop_details.append(best_rejection)
 
     for t in range(1, n):

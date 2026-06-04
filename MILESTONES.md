@@ -24,5 +24,9 @@
 - CPU job `d8561e47-a44` improved GelSLAM rotation over NormalFlow but accepted one false long-span SIFT loop and no valid loops, so loop scoring had no train/test signal.
 - Tightened ordinary SIFT loop acceptance with stronger CCS/SCR/inlier requirements and added an explicit origin-to-final odometry fallback candidate that still must pass NormalFlow verification before entering the pose graph.
 
+### [2026-06-04 08:45] - none
+- CPU job `190d97f9-304` rejected all loop closures: rotation improved over NormalFlow, but the loop-closure target again had zero valid-loop signal.
+- Kept strict ordinary SIFT loop acceptance, but removed accumulated-translation drift as a veto for the origin-to-final odometry-initialized closure because that drift is the quantity loop closure is intended to correct.
+
 ## Stop Justification
 - Not stopped. Current work is continuing toward `core_claim`.
