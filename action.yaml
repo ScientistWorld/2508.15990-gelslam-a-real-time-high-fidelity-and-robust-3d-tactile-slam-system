@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "CPU retry after requiring non-final loop candidates to span at least 32 frames; regenerate the 144-frame benchmark and check for valid long-horizon loop closure without the short false loop."
+notes: "CPU retry after restricting final-frame odometry fallback to the origin-anchor closure; verify no adjacent final-frame false loop is accepted."

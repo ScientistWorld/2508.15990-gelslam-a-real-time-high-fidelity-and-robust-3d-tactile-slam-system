@@ -222,13 +222,14 @@ def run(
         nonlocal rejected_loops
         for cov_idx in coverage:
             frame_span = abs(int(new_key) - int(cov_idx))
-            if frame_span < MIN_LOOP_SPAN_FRAMES and new_key != final_frame:
+            is_final_anchor_candidate = new_key == final_frame and cov_idx == keyframes[0]
+            if frame_span < MIN_LOOP_SPAN_FRAMES and not is_final_anchor_candidate:
                 continue
             cov_key = keyframes.index(cov_idx)
             odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])
             proposal = feature_candidate(frames[cov_idx], frames[new_key])
             if proposal is None:
-                if new_key != final_frame:
+                if not is_final_anchor_candidate:
                     continue
                 init = odom_rel
                 inliers = 0
