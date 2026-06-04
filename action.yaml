@@ -1,9 +1,9 @@
-# This iteration writes files only — do NOT submit compute jobs.
-# Once you set action to 'done', STOP immediately.
+# Run split evaluation on the compute node.
+# Once this is submitted, STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: done
+action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Improvements: exposed p95 and terminal drift metrics in train/test scoring; split loop-closure edges by slice parity to remove duplicated train/test loop scoring; updated reference schema and design handoff. Notes: runner should confirm both loop slices have enough long-loop edges."
+notes: "Run evaluate_train.sh and evaluate_test.sh against frozen checkpoint artifacts; populate scores_train/test and check split coverage."

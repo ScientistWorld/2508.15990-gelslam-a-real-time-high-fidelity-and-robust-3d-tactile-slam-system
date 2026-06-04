@@ -13,9 +13,27 @@ set -e
 
 cd /home/user
 
-bash scripts/reproduce.sh
 bash scripts/evaluate_train.sh
 bash scripts/evaluate_test.sh
 
-python validate.py --compare
-cat scoring/scores.json
+python - <<'PY'
+import json
+from pathlib import Path
+
+train = json.loads(Path("scoring/scores_train.json").read_text())
+test = json.loads(Path("scoring/scores_test.json").read_text())
+
+train_exps = set(train["experiments"])
+test_exps = set(test["experiments"])
+if train_exps != test_exps:
+    raise SystemExit(f"experiment mismatch: train={sorted(train_exps)} test={sorted(test_exps)}")
+
+for exp in sorted(train_exps):
+    train_methods = set(train["experiments"][exp]["results"])
+    test_methods = set(test["experiments"][exp]["results"])
+    if train_methods != test_methods:
+        raise SystemExit(
+            f"method mismatch for {exp}: train={sorted(train_methods)} test={sorted(test_methods)}"
+        )
+    print(f"{exp}: {len(train_methods)} methods scored on train and test")
+PY
