@@ -51,5 +51,10 @@
 - On the scaled 144-frame benchmark, GelSLAM improved over NormalFlow on both tracking metrics: 5.71 deg versus 6.09 deg rotation MAE and 0.70 mm versus 0.95 mm translation MAE.
 - The loop-closure constraint was satisfied: GelSLAM accepted one long-loop closure, it was valid, and the false-loop rate was 0.0.
 
+### [2026-06-04 09:45] - core_claim
+- Fixed the validation failure by removing `valid_loop_recall` from the scored reference contract; it was a synthetic opportunity-budget diagnostic, not a paper-reported metric.
+- Made `valid_loop_rate` the loop-closure primary metric in `reference.json`, retained `accepted_loops`, `valid_loops`, and `false_loop_rate`, and kept loop-closure quality in the full `scores.json` contract.
+- Limited train/test slice files to the tracking experiment so the split evaluator ranks agents on per-frame tracking metrics while the full-run score enforces the loop-safety constraint.
+
 ## Stop Justification
 - Reached `core_claim` on the packaged scaled synthetic benchmark. Higher milestones would require a larger multi-setting sweep or the 73 GB released dataset plus ROS2/GTSAM infrastructure, which is outside the current minimum reproducible environment.

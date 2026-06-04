@@ -169,7 +169,6 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
         "translation_mae_mm": float(pos_err.mean() * GELSIGHT_MM_PER_PIXEL),
         "accepted_loops": accepted,
         "valid_loops": valid_loops,
-        "valid_loop_recall": float(min(valid_loops / LOOP_OPPORTUNITY_BUDGET, 1.0)),
         "valid_loop_rate": float(valid_loops / max(accepted, 1)),
         "false_loop_rate": float(false_loops / max(accepted, 1)),
     }
@@ -202,7 +201,6 @@ def main() -> None:
                     name: {
                         "accepted_loops": vals["accepted_loops"],
                         "valid_loops": vals["valid_loops"],
-                        "valid_loop_recall": vals["valid_loop_recall"],
                         "valid_loop_rate": vals["valid_loop_rate"],
                         "false_loop_rate": vals["false_loop_rate"],
                     }

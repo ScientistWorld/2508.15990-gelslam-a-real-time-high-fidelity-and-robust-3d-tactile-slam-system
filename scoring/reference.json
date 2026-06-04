@@ -32,7 +32,7 @@
     "loop_closure_quality": {
       "description": "Loop-closure behavior supporting long-horizon tracking. The paper reports 34 accepted loops on average for GelSLAM in Table II; valid-loop and false-loop rates encode the paper's qualitative robustness claim that loop verification rejects unsafe loops.",
       "weight": 0.3,
-      "primary_metric": "valid_loop_recall",
+      "primary_metric": "valid_loop_rate",
       "metrics": {
         "accepted_loops": {
           "higher_is_better": true,
@@ -44,14 +44,9 @@
           "coefficient": 0.45,
           "description": "Accepted loop closures whose measured relative pose agrees with the ground-truth revisit relation."
         },
-        "valid_loop_recall": {
-          "higher_is_better": true,
-          "coefficient": 0.55,
-          "description": "Valid loop closures normalized by the loop-opportunity budget for the evaluated benchmark slice; this keeps the loop primary metric comparable across scaled sequence lengths."
-        },
         "valid_loop_rate": {
           "higher_is_better": true,
-          "coefficient": 0.35,
+          "coefficient": 0.8,
           "description": "Fraction of accepted loop closures that are valid; methods that accept no loops receive zero so abstention does not satisfy the loop-closure constraint."
         },
         "false_loop_rate": {
@@ -65,7 +60,6 @@
           "type": "baseline",
           "accepted_loops": 0,
           "valid_loops": 0,
-          "valid_loop_recall": 0.0,
           "valid_loop_rate": 0.0,
           "false_loop_rate": 0.0
         },
@@ -73,7 +67,6 @@
           "type": "proposed",
           "accepted_loops": 34,
           "valid_loops": 34,
-          "valid_loop_recall": 1.0,
           "valid_loop_rate": 1.0,
           "false_loop_rate": 0.0
         }

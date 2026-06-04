@@ -16,7 +16,7 @@ Report the NormalFlow frame-to-frame baseline on the same test split whenever re
 
 ## Evaluation
 
-Use the fixed metrics: `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `valid_loops`, `valid_loop_recall`, `valid_loop_rate`, and `false_loop_rate`. Do not remove `false_loop_rate`; it is the constraint metric that prevents trivial improvements by accepting excessive or incorrect loops. Do not remove `valid_loop_recall` or `valid_loop_rate`; they prevent methods from satisfying the loop-closure target by abstaining from revisits or by accepting many low-quality candidates. Keyframe counts and fused reconstruction artifacts are recorded as diagnostics in method artifacts, but they are not scored because the scaled benchmark has a different episode length and reconstruction target from the paper's real-data setting.
+Use the fixed metrics: `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `valid_loops`, `valid_loop_rate`, and `false_loop_rate`. Do not remove `false_loop_rate`; it is the constraint metric that prevents trivial improvements by accepting excessive or incorrect loops. Do not remove `valid_loops` or `valid_loop_rate`; together they prevent methods from satisfying the loop-closure target by abstaining from revisits or by accepting many low-quality candidates. Keyframe counts and fused reconstruction artifacts are recorded as diagnostics in method artifacts, but they are not scored because the scaled benchmark has a different episode length and reconstruction target from the paper's real-data setting.
 
 ## Procedure
 

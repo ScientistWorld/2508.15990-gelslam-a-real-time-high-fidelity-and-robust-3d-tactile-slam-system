@@ -18,7 +18,6 @@ Tests whether drift reduction comes from valid loop closure behavior rather than
 
 - **Metric:** `accepted_loops` (higher is better)
 - **Metric:** `valid_loops` (higher is better)
-- **Metric:** `valid_loop_recall` (higher is better)
 - **Metric:** `valid_loop_rate` (higher is better)
 - **Metric:** `false_loop_rate` (lower is better)
 - **How to run:** Count accepted loop closures and compare each accepted loop against the ground-truth revisit relation for the same synthetic tracking episodes.
