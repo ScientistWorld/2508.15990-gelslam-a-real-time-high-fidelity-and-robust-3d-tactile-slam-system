@@ -69,4 +69,4 @@
 - Re-ran `python validate.py --compare`; all scoring, split, method-separation, and portability checks pass.
 
 ## Stop Justification
-- Stopping at `core_claim`: the packaged scaled SE(3) reproduction runs end to end, improves over the NormalFlow baseline on the primary tracking metrics, accepts valid loop closures, rejects false loop closures, and passes structural validation.
+- Completed at milestone `core_claim`.
