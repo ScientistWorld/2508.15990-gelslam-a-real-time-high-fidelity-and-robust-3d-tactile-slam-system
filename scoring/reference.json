@@ -14,6 +14,26 @@
           "higher_is_better": false,
           "coefficient": 0.8,
           "description": "Mean translational pose error in millimeters over the evaluated slice; lower values indicate better tactile tracking."
+        },
+        "rotation_p95_deg": {
+          "higher_is_better": false,
+          "coefficient": 0.5,
+          "description": "Ninety-fifth percentile rotational pose error over the evaluated slice; this catches methods that optimize average error while leaving severe spikes."
+        },
+        "translation_p95_mm": {
+          "higher_is_better": false,
+          "coefficient": 0.4,
+          "description": "Ninety-fifth percentile translational pose error in millimeters over the evaluated slice; this catches localized tracking failures."
+        },
+        "terminal_rotation_error_deg": {
+          "higher_is_better": false,
+          "coefficient": 0.35,
+          "description": "Rotational error at the last frame assigned to the slice; this probes accumulated drift rather than only per-frame average behavior."
+        },
+        "terminal_translation_error_mm": {
+          "higher_is_better": false,
+          "coefficient": 0.3,
+          "description": "Translational error in millimeters at the last frame assigned to the slice; this probes accumulated drift over the sequence."
         }
       },
       "results": {

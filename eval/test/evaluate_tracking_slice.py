@@ -9,6 +9,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 SLICE_NAME = "test"
+SLICE_BLOCK_PARITY = 1
 BLOCK_SIZE = 8
 LONG_LOOP_SPAN_FRAMES = 32
 GELSIGHT_MM_PER_PIXEL = 20.0 / 320.0
@@ -65,21 +66,22 @@ def load_ground_truth(dataset: Path) -> np.ndarray:
 
 
 def tracking_indices(n_frames: int) -> np.ndarray:
-    return np.asarray([idx for idx in range(n_frames) if (idx // BLOCK_SIZE) % 2 == 1], dtype=np.int64)
+    return np.asarray([idx for idx in range(n_frames) if (idx // BLOCK_SIZE) % 2 == SLICE_BLOCK_PARITY], dtype=np.int64)
 
 
 def long_loop_edges(loop_edges: list, keyframe_indices: list) -> list:
     selected = []
     for edge in loop_edges:
-        is_long = False
+        keep = False
         if len(edge) >= 2 and keyframe_indices:
             key_i, key_j = int(edge[0]), int(edge[1])
             if key_i < len(keyframe_indices) and key_j < len(keyframe_indices):
                 frame_i = int(keyframe_indices[key_i])
                 frame_j = int(keyframe_indices[key_j])
                 span = abs(frame_j - frame_i)
-                is_long = span >= LONG_LOOP_SPAN_FRAMES
-        if is_long:
+                midpoint = (frame_i + frame_j) // 2
+                keep = span >= LONG_LOOP_SPAN_FRAMES and (midpoint // BLOCK_SIZE) % 2 == SLICE_BLOCK_PARITY
+        if keep:
             selected.append(edge)
     return selected
 
@@ -221,6 +223,10 @@ def main() -> None:
                     name: {
                         "rotation_mae_deg": vals["rotation_mae_deg"],
                         "translation_mae_mm": vals["translation_mae_mm"],
+                        "rotation_p95_deg": vals["rotation_p95_deg"],
+                        "translation_p95_mm": vals["translation_p95_mm"],
+                        "terminal_rotation_error_deg": vals["terminal_rotation_error_deg"],
+                        "terminal_translation_error_mm": vals["terminal_translation_error_mm"],
                     }
                     for name, vals in flat_results.items()
                 }
