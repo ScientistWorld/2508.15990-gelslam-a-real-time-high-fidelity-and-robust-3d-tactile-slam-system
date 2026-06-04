@@ -22,7 +22,7 @@ export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 echo "[reproduce] generating synthetic tactile benchmark"
 python data/generate_synthetic_tracking.py \
   --output data/synthetic_tracking/loop_patch.npz \
-  --frames 144 \
+  --frames 192 \
   --surface-size 340 \
   --trajectory planar
 echo "[reproduce] running NormalFlow baseline"
