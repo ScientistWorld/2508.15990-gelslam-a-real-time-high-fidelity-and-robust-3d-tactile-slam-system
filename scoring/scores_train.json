@@ -1,7 +1,7 @@
 {
   "_metadata": {
     "slice": "train",
-    "split": "block_interleaved_8_frames_and_long_loop_spans_ge_32_frames"
+    "split": "block_interleaved_8_frame_tracking_and_anchor_assigned_long_loop_spans_ge_32_frames"
   },
   "experiments": {
     "synthetic_long_horizon_tracking": {
