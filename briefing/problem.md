@@ -10,4 +10,4 @@ Robots often manipulate objects under occlusion or close contact, where cameras 
 
 ## Success Criteria
 
-A successful system should produce low long-horizon 6DoF rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false loop closures, and reconstruct a geometrically faithful fused touched surface. In this scaled synthetic benchmark, success means outperforming the fixed frame-to-frame tactile registration baseline on trajectory error, maintaining low false loop rate, and producing a fused surface close to the known touched target surface.
+A successful system should produce low long-horizon 6DoF rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false revisit links, and reconstruct a geometrically faithful fused touched surface. In this scaled synthetic benchmark, success means outperforming the fixed frame-to-frame tactile registration baseline on trajectory error, maintaining low false revisit rate, and producing a fused surface close to the known touched target surface.

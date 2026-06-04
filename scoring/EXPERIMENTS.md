@@ -6,4 +6,4 @@ Tests whether a tactile tracking system maintains accurate pose estimates over a
 
 ## loop_closure_quality
 
-Tests whether the system uses revisited contacts productively and safely on the scaled 144-frame sequence. This experiment measures both how many loops are accepted and how often accepted loops are wrong, because accepting incorrect loop closures can make trajectory error look temporarily better on some sequences while breaking the scientific claim.
+Tests whether the system uses revisited contacts productively and safely on the scaled 144-frame sequence. This experiment measures both how many revisit links are accepted and how often accepted links are wrong, because accepting incorrect long-range associations can make trajectory error look temporarily better on some sequences while breaking the scientific claim.

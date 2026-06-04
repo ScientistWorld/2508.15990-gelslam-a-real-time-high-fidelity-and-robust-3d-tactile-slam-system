@@ -2,21 +2,21 @@
 
 ## Research Problem
 
-This benchmark asks how to perform long-horizon tactile object tracking and touched-surface reconstruction when each observation is a small local contact patch. The central difficulty is accumulated drift: local frame-to-frame registration can be accurate over short ranges but loses global consistency over long sequences unless revisits are detected and used safely. Reconstruction quality then depends on the same global consistency.
+This benchmark asks how to perform long-horizon tactile object tracking and touched-surface reconstruction when each observation is a small local contact patch. The central difficulty is accumulated drift: short-range estimates can be accurate locally but lose global consistency over long sequences unless revisited regions are recognized and used safely. Reconstruction quality then depends on the same global consistency.
 
-## Core Contribution
+## Core Problem to Preserve
 
-The paper's contribution is a tactile SLAM formulation for local tactile streams. Future improvements should target the same family of ideas: robust local tactile registration, keyframe management, loop proposal, loop verification, robust pose graph correction, surface fusion, and the interaction between these pieces.
+Future improvements should target the same problem family: tactile-only long-horizon tracking and touched-surface reconstruction from local contact streams, with explicit attention to drift, repeated contacts, and false-revisit risk.
 
 ## Approach Scope
 
-Scientists may modify the local alignment objective, feature representation, keyframe policy, loop candidate search, loop acceptance criteria, pose graph optimizer, robust loss, surface fusion rule, or scheduling. They may also add ablations or diagnostics that clarify which part improves tracking or reconstruction, provided the method still operates on the same tactile observation stream and solves the same long-horizon task.
+Scientists may use alternative representations, uncertainty models, optimization strategies, temporal policies, or reconstruction procedures, provided the method still operates on the same tactile observation stream, satisfies the no-oracle constraints, and produces the standard output artifacts.
 
 ## Out of Bounds
 
-- Replacing the SLAM problem with direct supervised full-trajectory prediction from the complete sequence.
+- Replacing the tactile tracking problem with direct supervised full-trajectory prediction from the complete sequence.
 - Using ground-truth poses, ground-truth loop labels, or hidden synthetic generator state at inference time.
 - Changing the benchmark data, seeds, sequence distribution, or metric definitions to make the task easier.
-- Omitting NormalFlow as the frame-to-frame baseline comparison.
-- Optimizing only trajectory error while allowing high false loop rate or unbounded keyframe growth.
+- Omitting the packaged frame-to-frame baseline comparison.
+- Optimizing only trajectory error while allowing high false-revisit rate or unbounded retained-state growth.
 - Generating reconstruction outputs from hidden target surfaces or ground-truth poses rather than from the method's estimated poses and tactile observations.
