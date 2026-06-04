@@ -3,28 +3,28 @@
     "synthetic_long_horizon_tracking": {
       "results": {
         "normalflow": {
-          "rotation_mae_deg": 6.086118342598353,
-          "translation_mae_mm": 0.9483573393734189,
-          "rotation_p95_deg": 14.34758344440398,
-          "translation_p95_mm": 1.4004508973348295,
-          "terminal_rotation_error_deg": 8.137463968866202,
-          "terminal_translation_error_mm": 1.1968149613047019
+          "rotation_mae_deg": 12.930931734188865,
+          "translation_mae_mm": 881.0876800644004,
+          "rotation_p95_deg": 21.130994975426674,
+          "translation_p95_mm": 3382.7896566977297,
+          "terminal_rotation_error_deg": 9.39552795049799,
+          "terminal_translation_error_mm": 1547.583458490236
         },
         "gelslam_online": {
-          "rotation_mae_deg": 5.712743827186547,
-          "translation_mae_mm": 0.7029772531067261,
-          "rotation_p95_deg": 16.01671355996682,
-          "translation_p95_mm": 1.0508954356314795,
-          "terminal_rotation_error_deg": 5.662266085887137,
-          "terminal_translation_error_mm": 0.8298218304258383
+          "rotation_mae_deg": 73.97978662348925,
+          "translation_mae_mm": 151.16049698460347,
+          "rotation_p95_deg": 152.1955758675772,
+          "translation_p95_mm": 199.2008870162083,
+          "terminal_rotation_error_deg": 100.94552321309688,
+          "terminal_translation_error_mm": 172.75275701831325
         }
       }
     },
     "loop_closure_quality": {
       "results": {
         "normalflow": {
-          "loop_span_translation_mae_mm": 0.9483573393734189,
-          "loop_span_rotation_mae_deg": 6.086118342598353,
+          "loop_span_translation_mae_mm": 881.0876800644004,
+          "loop_span_rotation_mae_deg": 12.930931734188865,
           "accepted_loops": 0,
           "valid_loops": 0,
           "valid_loop_rate": 0.0,
@@ -33,14 +33,14 @@
           "loop_rotation_error_deg": 20.0
         },
         "gelslam_online": {
-          "loop_span_translation_mae_mm": 0.7029772531067261,
-          "loop_span_rotation_mae_deg": 5.712743827186547,
-          "accepted_loops": 1,
-          "valid_loops": 1,
-          "valid_loop_rate": 1.0,
-          "false_loop_rate": 0.0,
-          "loop_translation_error_mm": 0.1179658417536601,
-          "loop_rotation_error_deg": 5.501042521922737
+          "loop_span_translation_mae_mm": 176.10398464896832,
+          "loop_span_rotation_mae_deg": 90.32342862130959,
+          "accepted_loops": 3,
+          "valid_loops": 0,
+          "valid_loop_rate": 0.0,
+          "false_loop_rate": 1.0,
+          "loop_translation_error_mm": 6.8604033184741935,
+          "loop_rotation_error_deg": 65.13272393924028
         }
       }
     }
