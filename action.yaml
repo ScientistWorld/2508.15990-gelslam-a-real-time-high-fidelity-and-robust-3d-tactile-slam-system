@@ -1,8 +1,5 @@
-# IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends. Sleeping blocks the entire pipeline.
-action: pending
-gpus: 1
-test: false
+action: submit
+gpus: 0
+test: true
 milestone: method_runs
-notes: ""
+notes: "Continuation audit fixed a primary-score wording mismatch; rerun scripts/reproduce.sh, split diagnostics, and validate.py --compare in the container to verify whether core_claim can be restored from fresh artifacts."
