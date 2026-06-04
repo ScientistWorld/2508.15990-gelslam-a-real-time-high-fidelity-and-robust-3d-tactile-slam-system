@@ -41,5 +41,10 @@
 - The method accepted one valid long-loop closure with zero false loops, but tracking remained worse than NormalFlow, so this does not yet support the core claim.
 - Reduced the weak final-anchor loop residual weight further to test whether the valid closure can remain scored without destabilizing pose-graph tracking.
 
+### [2026-06-04 09:25] - method_runs
+- CPU job `2aebdcab-f4c` passed end-to-end validation with one valid long-loop closure and zero false loops, preserving the loop-closure constraint signal.
+- GelSLAM tracking remained worse than NormalFlow at 21.62 deg / 2.84 mm versus 8.52 deg / 0.86 mm, so `core_claim` is still not met.
+- Restored the scaled planar benchmark surface size from 340 to 300 pixels, matching the earlier stable long-horizon substitute where the baseline had enough drift for loop closure to matter.
+
 ## Stop Justification
 - Not stopped. Current work is continuing toward `core_claim`.

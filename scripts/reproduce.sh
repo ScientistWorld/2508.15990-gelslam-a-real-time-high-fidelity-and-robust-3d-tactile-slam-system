@@ -23,7 +23,7 @@ echo "[reproduce] generating synthetic tactile benchmark"
 python data/generate_synthetic_tracking.py \
   --output data/synthetic_tracking/loop_patch.npz \
   --frames 144 \
-  --surface-size 340 \
+  --surface-size 300 \
   --trajectory planar
 echo "[reproduce] running NormalFlow baseline"
 bash scripts/baseline.sh data/synthetic_tracking/loop_patch.npz checkpoints/normalflow_baseline

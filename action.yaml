@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU retry after reducing weak final-anchor loop residual weight to preserve valid loop scoring while testing whether tracking recovers over NormalFlow."
+notes: "CPU retry on the stable 144-frame planar benchmark with surface-size 300, keeping the validated long-loop scoring and current GelSLAM method unchanged."

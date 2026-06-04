@@ -26,7 +26,7 @@ cd /home/user
 python data/generate_synthetic_tracking.py \
   --output data/synthetic_tracking/loop_patch.npz \
   --frames 144 \
-  --surface-size 340 \
+  --surface-size 300 \
   --trajectory planar
 
 if [ "${DOWNLOAD_OFFICIAL_GELSLAM_CALIBRATION:-0}" = "1" ]; then
