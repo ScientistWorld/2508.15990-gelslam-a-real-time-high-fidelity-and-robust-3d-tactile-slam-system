@@ -1,5 +1,9 @@
-action: done
+# This iteration writes files only — do NOT submit compute jobs.
+# Once you set action to 'done', STOP immediately.
+# Do NOT sleep, poll, or wait. The system reads this file
+# only after your turn ends.
+action: pending
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Continuation validation job 6a7582cb-f64 passed the full reproduction path. The scaled GelSLAM method improves tracking over NormalFlow on the 144-frame benchmark and satisfies the valid-loop/zero-false-loop constraint."
+notes: ""
