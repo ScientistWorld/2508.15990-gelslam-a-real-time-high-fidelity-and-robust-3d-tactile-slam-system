@@ -32,5 +32,9 @@
 - CPU job `da072408-b0a` still rejected all loop closures; expanded diagnostics showed the origin-to-final odometry fallback had SCR 0.54 and yaw error 0.42 but missed the ordinary CCS threshold at 0.656.
 - Added a final-anchor-specific NormalFlow quality floor while keeping non-final loop thresholds unchanged.
 
+### [2026-06-04 09:05] - none
+- CPU job `04ab9363-406` accepted one valid origin-to-final loop with zero false loops, but the equal-weight loop edge over-corrected the trajectory and train-slice loop scoring still looked only at short loops.
+- Added weighted pose-graph residuals for weak final-anchor closures and aligned train loop scoring with the long-loop target used by the method and test split.
+
 ## Stop Justification
 - Not stopped. Current work is continuing toward `core_claim`.

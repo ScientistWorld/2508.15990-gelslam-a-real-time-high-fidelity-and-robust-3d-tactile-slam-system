@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "CPU retry after adding a final-anchor-specific NormalFlow quality floor for the origin-to-final fallback; non-final SIFT loop gates remain strict."
+notes: "CPU retry after adding weighted pose-graph loop residuals and aligning train loop scoring with long-span loop closures."

@@ -17,6 +17,7 @@ COVERAGE_AREA_THRESHOLD_MM2 = 0.2
 MIN_LOOP_SPAN_FRAMES = 32
 FINAL_ANCHOR_CCS_THRESHOLD = 0.65
 FINAL_ANCHOR_SCR_THRESHOLD = 0.25
+FINAL_ANCHOR_LOOP_WEIGHT = 0.03
 
 
 def planarize_pose(pose: np.ndarray) -> np.ndarray:
@@ -59,7 +60,7 @@ def feature_candidate(ref: dict, tgt: dict) -> tuple[np.ndarray, int] | None:
     return invert(np.array([tx, ty, 0.0, 0.0, 0.0, theta], dtype=np.float64)), inlier_count
 
 
-def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initial: np.ndarray) -> np.ndarray:
+def optimize_pose_graph(n: int, edges: list[tuple], initial: np.ndarray) -> np.ndarray:
     if n <= 1:
         return initial.copy()
 
@@ -78,10 +79,13 @@ def optimize_pose_graph(n: int, edges: list[tuple[int, int, np.ndarray]], initia
     def residual(vec: np.ndarray) -> np.ndarray:
         poses = unpack(vec)
         terms = []
-        for i, j, meas in edges:
+        for edge in edges:
+            i, j, meas = int(edge[0]), int(edge[1]), edge[2]
+            weight = float(edge[3]) if len(edge) >= 4 else 1.0
+            scale = np.sqrt(max(weight, 1e-6))
             pred = between(poses[i], poses[j])
             err = se3_error(meas, pred)
-            terms.extend([err[0] / 2.0, err[1] / 2.0, err[5] / 0.08])
+            terms.extend((scale * np.array([err[0] / 2.0, err[1] / 2.0, err[5] / 0.08])).tolist())
         return np.asarray(terms)
 
     x0 = pack(initial)
@@ -210,7 +214,7 @@ def run(
     keyframes = [0]
     frame_parent = np.zeros(n, dtype=int)
     frame_to_parent = np.zeros((n, 6), dtype=np.float64)
-    keyframe_edges: list[tuple[int, int, np.ndarray]] = []
+    keyframe_edges: list[tuple] = []
     coverage = [0]
     keyframe_abs_est = [np.zeros(6, dtype=np.float64)]
     latest_key = 0
@@ -320,8 +324,11 @@ def run(
             if accepted_candidate is not None:
                 refined, qccs, qscr, inliers, proposal_source = accepted_candidate
                 loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, proposal_source))
-                for _ in range(loop_edge_weight):
-                    keyframe_edges.append((cov_key, k_new, refined))
+                if proposal_source == "odometry_final_keyframe":
+                    loop_weight = FINAL_ANCHOR_LOOP_WEIGHT
+                else:
+                    loop_weight = float(loop_edge_weight)
+                keyframe_edges.append((cov_key, k_new, refined, loop_weight))
             else:
                 rejected_loops += 1
                 if best_rejection is not None and len(rejected_loop_details) < 300:
@@ -338,7 +345,7 @@ def run(
                 keyframes.append(new_key)
                 k_new = len(keyframes) - 1
                 edge_measurement = frame_to_parent[new_key].copy()
-                keyframe_edges.append((k_new - 1, k_new, edge_measurement))
+                keyframe_edges.append((k_new - 1, k_new, edge_measurement, 1.0))
                 keyframe_abs_est.append(compose(keyframe_abs_est[-1], edge_measurement))
                 frame_parent[new_key] = k_new
                 frame_to_parent[new_key] = 0.0
@@ -363,7 +370,7 @@ def run(
         edge_measurement = frame_to_parent[final_frame].copy()
         keyframes.append(final_frame)
         k_new = len(keyframes) - 1
-        keyframe_edges.append((k_new - 1, k_new, edge_measurement))
+        keyframe_edges.append((k_new - 1, k_new, edge_measurement, 1.0))
         keyframe_abs_est.append(compose(keyframe_abs_est[-1], edge_measurement))
         frame_parent[final_frame] = k_new
         frame_to_parent[final_frame] = 0.0
@@ -372,7 +379,8 @@ def run(
         latest_key = final_frame
 
     initial_keys = np.zeros((len(keyframes), 6), dtype=np.float64)
-    for i, j, meas in keyframe_edges:
+    for edge in keyframe_edges:
+        i, j, meas = int(edge[0]), int(edge[1]), edge[2]
         if j == i + 1:
             initial_keys[j] = compose(initial_keys[i], meas)
     print(
@@ -410,6 +418,7 @@ def run(
         "loop_odom_yaw_gate_rad": loop_odom_yaw_gate,
         "final_anchor_translation_gate_px": final_anchor_translation_gate,
         "loop_edge_weight": loop_edge_weight,
+        "final_anchor_loop_weight": FINAL_ANCHOR_LOOP_WEIGHT,
         "coverage_keyframe_indices": coverage,
         "reconstruction_frame_indices": reconstruction_frames,
         "reconstructed_points": int(len(recon_points)),

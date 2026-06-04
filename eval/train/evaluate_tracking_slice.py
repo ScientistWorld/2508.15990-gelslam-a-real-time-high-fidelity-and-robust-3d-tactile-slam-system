@@ -78,7 +78,7 @@ def loop_edges_for_slice(loop_edges: list, keyframe_indices: list) -> list:
             if key_i < len(keyframe_indices) and key_j < len(keyframe_indices):
                 span = abs(int(keyframe_indices[key_j]) - int(keyframe_indices[key_i]))
                 is_long = span >= LONG_LOOP_SPAN_FRAMES
-        if not is_long:
+        if is_long:
             selected.append(edge)
     return selected
 
@@ -213,7 +213,7 @@ def main() -> None:
     scores = {
         "_metadata": {
             "slice": SLICE_NAME,
-            "split": f"block_interleaved_{BLOCK_SIZE}_frames_and_short_loop_spans_lt_{LONG_LOOP_SPAN_FRAMES}_frames",
+            "split": f"block_interleaved_{BLOCK_SIZE}_frames_and_long_loop_spans_ge_{LONG_LOOP_SPAN_FRAMES}_frames",
         },
         "experiments": {
             "synthetic_long_horizon_tracking": {
