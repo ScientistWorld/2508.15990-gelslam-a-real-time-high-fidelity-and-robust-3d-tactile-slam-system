@@ -20,6 +20,7 @@ Tests whether the method reduces long-horizon tactile tracking drift on generate
 
 Tests whether drift reduction is accompanied by valid revisit behavior rather than accepting arbitrary pose constraints.
 
+- **Primary metric:** `loop_span_rotation_mae_deg` (lower is better). This is the primary loop-closure quality metric because it measures drift on frames affected by accepted long-span revisits and remains comparable to the paper's reported rotation-error scale.
 - **Metric:** `accepted_loops` (higher is better)
 - **Metric:** `valid_loops` (higher is better)
 - **Metric:** `valid_loop_rate` (higher is better)

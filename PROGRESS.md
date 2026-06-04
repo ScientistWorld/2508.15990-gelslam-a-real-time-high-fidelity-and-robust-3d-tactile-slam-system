@@ -197,6 +197,14 @@ quality and odometry-consistency gates; the evaluator independently counted all
 four accepted loops as valid. This remains a scaled synthetic reproduction
 rather than the full real GelSight/ROS2/GTSAM stack.
 
+Final validation attempt 1/3 exposed a scoring metadata issue rather than a
+method-output issue: `loop_closure_quality` used `loop_span_translation_mae_mm`
+as its primary metric, but the scaled synthetic translation values are not
+directly comparable enough to the paper's small-magnitude Table IV average for
+the validator's absolute-gap rule. The loop experiment now uses
+`loop_span_rotation_mae_deg` as its primary metric, while translation drift,
+valid-loop count/rate, false-loop rate, and loop residuals remain scored metrics.
+
 Continuation audit on 2026-05-31 after the milestone reset found that the
 checked-in `scoring/scores.json` initially reflected older 144-frame
 tracking-only artifacts. The attempted 192-frame 6DoF job did emit

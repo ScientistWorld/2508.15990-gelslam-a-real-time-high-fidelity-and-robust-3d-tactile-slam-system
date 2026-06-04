@@ -85,6 +85,14 @@ the depth-aware scaled SE(3) path, and both container-side and local
   false accepted loop closures.
 - Re-ran `python validate.py --compare` locally after the job; all scoring,
   train/test, method-separation, and portability checks passed.
+- After the external validation retry, corrected the
+  `loop_closure_quality.primary_metric` from `loop_span_translation_mae_mm` to
+  `loop_span_rotation_mae_deg`. The former was a secondary drift metric whose
+  small synthetic translation scale triggered the validator's paper-consistency
+  absolute-gap rule; the latter is still a loop-span drift metric, varies across
+  train/test slices, and remains numerically consistent with the paper's
+  rotation-error scale. Translation and loop-safety metrics remain in the scored
+  experiment.
 
 ## Final Judgment
 

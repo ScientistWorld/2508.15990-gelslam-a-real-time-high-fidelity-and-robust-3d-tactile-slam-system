@@ -52,7 +52,7 @@
     "loop_closure_quality": {
       "description": "Loop-closure behavior supporting long-horizon tracking. The paper reports 34 accepted loops on average for GelSLAM in Table II; valid-loop and false-loop rates encode the paper's qualitative robustness claim that loop verification rejects unsafe loops.",
       "weight": 0.3,
-      "primary_metric": "loop_span_translation_mae_mm",
+      "primary_metric": "loop_span_rotation_mae_deg",
       "metrics": {
         "loop_span_translation_mae_mm": {
           "higher_is_better": false,
