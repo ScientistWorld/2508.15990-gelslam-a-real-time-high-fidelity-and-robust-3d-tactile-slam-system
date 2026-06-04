@@ -4,6 +4,12 @@
 
 ## Progress Log
 
+### [2026-06-04 08:21] - method_runs
+- CPU job `4b493d0e-95c` regenerated the full benchmark successfully and reproduced the core full-score pattern: GelSLAM improved tracking over NormalFlow and accepted one valid loop with zero false-loop rate.
+- The job failed validation because the train/test split counted the same single long-loop edge in both slices, making the loop primary metric identical between `scores_train.json` and `scores_test.json`.
+- Updated split loop scoring to assign long-loop edges by their earlier anchor frame, so train/test loop metrics are distinct without changing full benchmark scoring or duplicating loop evidence.
+- Submitting another CPU container validation job.
+
 ### [2026-06-04 08:16] - method_runs
 - Continued from a reset milestone and audited the existing scaled GelSLAM reproduction.
 - Confirmed the main method path implements GelSLAM-style tactile geometry extraction, NormalFlow tracking, loop verification, pose-graph optimization, and reconstruction diagnostics rather than a surrogate.

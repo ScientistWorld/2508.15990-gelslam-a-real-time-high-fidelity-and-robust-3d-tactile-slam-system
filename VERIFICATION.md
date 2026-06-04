@@ -11,7 +11,8 @@ The validated score contract is intentionally narrower than the full paper. It e
 - `eval/` and `data/` do not import from `method/`.
 - `scripts/run.sh` calls `scripts/reproduce.sh`, train/test slice evaluation, and `validate.py --compare`.
 - 2026-06-04 audit fix: train/test split evaluators now write `loop_closure_quality` rather than dropping loop-closure constraint metrics.
-- Container-side regeneration of full/train/test scores is pending in the submitted CPU test job.
+- CPU job `4b493d0e-95c` regenerated the full scores successfully but failed because both train/test slices counted the same single long loop.
+- Follow-up fix assigns long-loop edges to a split by their earlier anchor frame; container-side validation is pending in the next CPU test job.
 
 ## Current Scores
 - NormalFlow: 6.09 deg rotation MAE, 0.95 mm translation MAE.

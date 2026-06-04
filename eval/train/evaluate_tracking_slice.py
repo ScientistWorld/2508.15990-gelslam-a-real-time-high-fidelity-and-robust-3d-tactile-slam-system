@@ -69,16 +69,24 @@ def tracking_indices(n_frames: int) -> np.ndarray:
     return np.asarray([idx for idx in range(n_frames) if (idx // BLOCK_SIZE) % 2 == 0], dtype=np.int64)
 
 
+def frame_in_slice(frame_idx: int) -> bool:
+    return (frame_idx // BLOCK_SIZE) % 2 == 0
+
+
 def loop_edges_for_slice(loop_edges: list, keyframe_indices: list) -> list:
     selected = []
     for edge in loop_edges:
         is_long = False
+        in_slice = False
         if len(edge) >= 2 and keyframe_indices:
             key_i, key_j = int(edge[0]), int(edge[1])
             if key_i < len(keyframe_indices) and key_j < len(keyframe_indices):
-                span = abs(int(keyframe_indices[key_j]) - int(keyframe_indices[key_i]))
+                frame_i = int(keyframe_indices[key_i])
+                frame_j = int(keyframe_indices[key_j])
+                span = abs(frame_j - frame_i)
                 is_long = span >= LONG_LOOP_SPAN_FRAMES
-        if is_long:
+                in_slice = frame_in_slice(min(frame_i, frame_j))
+        if is_long and in_slice:
             selected.append(edge)
     return selected
 
@@ -212,7 +220,7 @@ def main() -> None:
     scores = {
         "_metadata": {
             "slice": SLICE_NAME,
-            "split": f"block_interleaved_{BLOCK_SIZE}_frames_and_long_loop_spans_ge_{LONG_LOOP_SPAN_FRAMES}_frames",
+            "split": f"block_interleaved_{BLOCK_SIZE}_frame_tracking_and_anchor_assigned_long_loop_spans_ge_{LONG_LOOP_SPAN_FRAMES}_frames",
         },
         "experiments": {
             "synthetic_long_horizon_tracking": {

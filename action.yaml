@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU container validation after fixing train/test split scoring to emit loop_closure_quality. This reruns reproduce, full eval, split eval, and validate.py --compare; if scores remain stable it should restore core_claim."
+notes: "CPU container validation after assigning long-loop edges to train/test by anchor frame. Previous job reproduced full core scores but failed because the split loop primary metric was identical across train/test."
