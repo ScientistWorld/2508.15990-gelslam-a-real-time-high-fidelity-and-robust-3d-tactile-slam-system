@@ -4,27 +4,43 @@
       "results": {
         "normalflow": {
           "rotation_mae_deg": 6.086118342598353,
-          "translation_mae_mm": 0.9483573393734189
+          "translation_mae_mm": 0.9483573393734189,
+          "rotation_p95_deg": 14.34758344440398,
+          "translation_p95_mm": 1.4004508973348295,
+          "terminal_rotation_error_deg": 8.137463968866202,
+          "terminal_translation_error_mm": 1.1968149613047019
         },
         "gelslam_online": {
           "rotation_mae_deg": 5.712743827186547,
-          "translation_mae_mm": 0.7029772531067261
+          "translation_mae_mm": 0.7029772531067261,
+          "rotation_p95_deg": 16.01671355996682,
+          "translation_p95_mm": 1.0508954356314795,
+          "terminal_rotation_error_deg": 5.662266085887137,
+          "terminal_translation_error_mm": 0.8298218304258383
         }
       }
     },
     "loop_closure_quality": {
       "results": {
         "normalflow": {
+          "loop_span_translation_mae_mm": 0.9483573393734189,
+          "loop_span_rotation_mae_deg": 6.086118342598353,
           "accepted_loops": 0,
           "valid_loops": 0,
           "valid_loop_rate": 0.0,
-          "false_loop_rate": 0.0
+          "false_loop_rate": 0.0,
+          "loop_translation_error_mm": 0.625,
+          "loop_rotation_error_deg": 20.0
         },
         "gelslam_online": {
+          "loop_span_translation_mae_mm": 0.7029772531067261,
+          "loop_span_rotation_mae_deg": 5.712743827186547,
           "accepted_loops": 1,
           "valid_loops": 1,
           "valid_loop_rate": 1.0,
-          "false_loop_rate": 0.0
+          "false_loop_rate": 0.0,
+          "loop_translation_error_mm": 0.1179658417536601,
+          "loop_rotation_error_deg": 5.501042521922737
         }
       }
     }
