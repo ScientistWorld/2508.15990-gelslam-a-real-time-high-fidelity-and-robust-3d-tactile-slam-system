@@ -54,5 +54,10 @@
 - The method accepted one loop and it was false by the evaluator's ground-truth loop check, leaving valid-loop rate 0.0 and false-loop rate 1.0.
 - Tightened loop insertion by requiring stronger SIFT support and consistency with accumulated odometry before a loop edge can enter the pose graph.
 
+### [2026-06-04 10:03] - method_runs
+- CPU job `27442669-8d0` completed the stricter loop-verification path and passed structural validation, but it did not restore `core_claim`.
+- GelSLAM improved rotation and terminal drift over NormalFlow, but translation MAE was slightly worse and no loop closures were accepted, leaving no loop-constraint signal.
+- Added a conservative NormalFlow-only loop-candidate fallback for long-span coverage pairs when sparse curvature features miss a revisit; fallback candidates still must pass CCS/SCR and odometry-consistency gates before entering the pose graph.
+
 ## Stop Justification
-- Not stopped. A CPU retry job is being submitted for the depth-aware scaled SE(3) path with stricter loop verification before any higher milestone is claimed.
+- Not stopped. A CPU retry job is being submitted for the depth-aware scaled SE(3) path with NormalFlow fallback loop candidates before any higher milestone is claimed.

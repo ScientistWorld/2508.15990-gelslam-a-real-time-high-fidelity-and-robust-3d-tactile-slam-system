@@ -31,6 +31,15 @@ frame-to-frame baseline. Loop insertion is now tightened with a minimum
 feature-inlier count and an odometry-consistency gate before a loop edge can be
 added to the pose graph.
 
+CPU job `27442669-8d0` confirmed that the stricter loop insertion removes false
+closures and improves long-horizon rotation behavior, but it does not yet
+support the core claim. GelSLAM accepted zero loops, so the loop-closure
+constraint has no positive signal, and translation MAE remained slightly worse
+than the frame-to-frame NormalFlow baseline. The next retry adds a conservative
+NormalFlow-only candidate fallback for long-span coverage pairs that SIFT does
+not propose; fallback edges still require NormalFlow CCS/SCR verification and
+odometry consistency before they can enter the pose graph.
+
 Documentation, scoring metadata, and a scaled GelSLAM reproduction are in place. Before the fidelity reset, the packaged benchmark had reached `core_claim` on a 144-frame planar synthetic substitute: the method improved long-horizon tracking over the NormalFlow baseline while maintaining a valid-loop, zero-false-loop closure constraint. That result is now treated as historical only. The current runnable path keeps the SE(3) pose representation, NormalFlow-style tactile registration objective, pose-graph residuals, loop verification, and fused-surface reconstruction artifacts, and the next validation job will test the patched 6DoF benchmark.
 
 A continuation audit on 2026-05-31 rechecked method fidelity, evaluator independence, scripts, and deliverables. The method remains a scaled partial reproduction rather than the full physical GelSight/ROS2/GTSAM system, but it implements the recognizable GelSLAM tracking computation rather than a surrogate. The audit found one evaluation hardening issue: `eval/evaluate_tracking.py` loaded `gt_poses.npy` from each method run directory. This is now fixed so evaluation loads ground truth from the fixed dataset and counts accepted loops from actual loop-edge records. The documented shell entrypoints were also made executable.
@@ -77,6 +86,20 @@ the core claim:
 
 The next job tests stricter loop verification rather than changing the score
 contract.
+
+CPU job `27442669-8d0` regenerated scores after stricter loop insertion. The
+container and evaluator passed, but the result still did not support the core
+claim:
+
+- NormalFlow baseline: 10.40 deg rotation MAE, 0.69 mm translation MAE.
+- Scaled GelSLAM Online: 8.27 deg rotation MAE, 0.75 mm translation MAE.
+- Scaled GelSLAM Online accepted zero loop closures, so valid-loop recall and
+  valid-loop rate stayed at 0.0 while the loop penalty defaulted to the
+  evaluator's no-loop values.
+
+These values are retained as a failure diagnosis rather than a claimed
+reproduction. The next job reruns after adding the NormalFlow-only fallback for
+missed long-span loop proposals.
 
 Final verification on 2026-06-04 confirmed the stale-artifact mismatch: the
 tracked synthetic benchmark metadata still records a planar trajectory and the
@@ -141,6 +164,14 @@ now rejects loop proposals with fewer than 12 SIFT inliers and rejects proposals
 whose refined SE(3) transform disagrees too strongly with the accumulated
 odometry estimate. Rejected-loop diagnostics record the specific gate and
 odometry disagreement so a future failure is easier to diagnose.
+
+CPU job `27442669-8d0` showed the tightened verifier became too conservative:
+false loops were removed, but SIFT did not propose an endpoint revisit and no
+accepted loop edges were available for the pose graph. The method now tries an
+odometry-initialized NormalFlow refinement fallback for long-span coverage
+pairs after SIFT fails or is rejected. This does not bypass the method's loop
+verification: fallback candidates are rejected unless they pass stricter
+NormalFlow CCS/SCR thresholds and the same SE(3) odometry-consistency gate.
 
 Continuation audit on 2026-05-31 after the milestone reset found that the
 checked-in `scoring/scores.json` initially reflected older 144-frame
