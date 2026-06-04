@@ -52,6 +52,7 @@ The latest packaged 144-frame synthetic benchmark supports a tracking-only GelSL
 - Higher milestones would require expanding to more synthetic objects/settings or downloading the full 73 GB released dataset and running the official ROS2/GTSAM reconstruction code.
 - The current keyframe count is lower than the frame-to-frame baseline but still higher than the paper's reported average. It is tracked as a diagnostic because raw keyframe counts are not directly comparable across the scaled and real episode lengths.
 - Full 6DoF tracking and reconstruction artifacts are implemented as diagnostics, but the validated score contract remains the planar long-horizon tracking and loop-closure substitute.
+- Final audit on 2026-06-04 reran `python validate.py --compare` locally; all structural checks passed and the current score contract supports `core_claim` for the scaled tracking reproduction.
 
 ## Issues
 
