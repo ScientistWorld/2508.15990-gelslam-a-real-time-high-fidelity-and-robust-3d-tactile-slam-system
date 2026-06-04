@@ -6,4 +6,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Block-interleaved frame split plus global long-loop safety constraint; 28 train metrics, 28 test metrics; tracking gaps small and loop primary differs by slice; caveat: accepted-loop counts are global because the frozen artifact has one accepted long loop."
+notes: "Packaging audit passed: default data is generated/tracked locally, optional public GelSLAM URLs resolve, and no shared paths remain."
