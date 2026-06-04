@@ -102,13 +102,20 @@ def estimate_relative(ref: dict, tgt: dict, init: np.ndarray | None = None, max_
         warped_points = transform_points(ref_points, warp_pose)
         sample_x, sample_y = _project(warped_points, ref_curv.shape)
         target_normals, valid = bilinear_image(tgt["normal"], sample_x, sample_y)
+        target_heights, height_valid = bilinear_image(tgt["height"], sample_x, sample_y)
         mask_values, _ = bilinear_image(tgt["mask"].astype(float), sample_x, sample_y)
-        ok = valid & (mask_values > 0.5)
+        ok = valid & height_valid & (mask_values > 0.5)
         rotated_ref = rotate_vectors(ref_normals, warp_pose)
-        res = np.zeros((len(xs), 3), dtype=np.float64)
-        res[ok] = target_normals[ok] - rotated_ref[ok]
-        res[~ok] = 0.35
-        return res.reshape(-1)
+        normal_res = np.zeros((len(xs), 3), dtype=np.float64)
+        normal_res[ok] = target_normals[ok] - rotated_ref[ok]
+        normal_res[~ok] = 0.35
+        height_res = np.zeros(len(xs), dtype=np.float64)
+        # Keep the baseline objective matched to the method objective: the
+        # warped reference surface should agree with both target normals and
+        # target height values in the local tactile frame.
+        height_res[ok] = (warped_points[ok, 2] - target_heights[ok]) / 0.5
+        height_res[~ok] = 0.35
+        return np.concatenate([normal_res.reshape(-1), height_res])
 
     guesses = [init]
     try:

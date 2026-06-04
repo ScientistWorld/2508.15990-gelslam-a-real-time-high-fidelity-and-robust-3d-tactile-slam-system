@@ -44,5 +44,10 @@
 - Local structural validation passes on the existing artifacts, and optional download URLs were verified, but `core_claim` cannot be restored without a fresh container run from the current code.
 - Keeping `action: submit` for a CPU validation job to regenerate the benchmark, baseline, method outputs, full/train/test scores, and validator comparison.
 
+### [2026-06-04 09:50] - method_runs
+- CPU job `1d21151c-831` completed the current 6DoF path end to end and passed structural validation, confirming the packaged environment still runs.
+- The regenerated scores do not support `core_claim`: GelSLAM reduced translation drift versus NormalFlow but had much worse rotation error and accepted three false loop closures.
+- Patched the NormalFlow registration objective used by both the method and baseline with a target-height consistency residual so the scaled 6DoF renderer constrains z, roll, and pitch instead of relying on normal direction alone.
+
 ## Stop Justification
-- Not stopped. A CPU validation job is being submitted for the more faithful scaled SE(3) path before any higher milestone is claimed.
+- Not stopped. A CPU retry job is being submitted for the depth-aware scaled SE(3) path before any higher milestone is claimed.

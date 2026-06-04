@@ -12,6 +12,17 @@ use full SE(3) pose-graph variables, remove planar projection from both method
 and NormalFlow baseline, remove final-anchor/odometry loop shortcuts, and
 generate the default benchmark in 6DoF mode.
 
+CPU job `1d21151c-831` confirmed that this current 6DoF runnable path executes
+inside the packaged container: data generation, NormalFlow baseline, scaled
+GelSLAM, full scoring, train/test scoring, and `python validate.py --compare`
+all completed with exit code 0. That job restores only `method_runs`; the
+scientific result failed because loop verification accepted false revisits and
+rotation drift grew. The front-end registration objective has now been patched
+so both method and baseline compare warped reference surface points against the
+target height field as well as target normals, which preserves the SE(3)
+registration computation while making depth-related motion observable in the
+scaled synthetic renderer.
+
 Documentation, scoring metadata, and a scaled GelSLAM reproduction are in place. Before the fidelity reset, the packaged benchmark had reached `core_claim` on a 144-frame planar synthetic substitute: the method improved long-horizon tracking over the NormalFlow baseline while maintaining a valid-loop, zero-false-loop closure constraint. That result is now treated as historical only. The current runnable path keeps the SE(3) pose representation, NormalFlow-style tactile registration objective, pose-graph residuals, loop verification, and fused-surface reconstruction artifacts, and the next validation job will test the patched 6DoF benchmark.
 
 A continuation audit on 2026-05-31 rechecked method fidelity, evaluator independence, scripts, and deliverables. The method remains a scaled partial reproduction rather than the full physical GelSight/ROS2/GTSAM system, but it implements the recognizable GelSLAM tracking computation rather than a surrogate. The audit found one evaluation hardening issue: `eval/evaluate_tracking.py` loaded `gt_poses.npy` from each method run directory. This is now fixed so evaluation loads ground truth from the fixed dataset and counts accepted loops from actual loop-edge records. The documented shell entrypoints were also made executable.
@@ -34,6 +45,18 @@ The latest checked-in scores are from the prior planar benchmark and should be
 treated as stale for milestone purposes after the fidelity reset. A new CPU job
 is being submitted to regenerate scores with the full SE(3) method path and
 6DoF synthetic benchmark.
+
+CPU job `1d21151c-831` regenerated scores with the current 6DoF path. The
+container and evaluator passed, but the result did not support the core claim:
+
+- NormalFlow baseline: 12.93 deg rotation MAE, 881.09 mm translation MAE.
+- Scaled GelSLAM Online: 73.98 deg rotation MAE, 151.16 mm translation MAE.
+- Scaled GelSLAM Online accepted 3 loop closures, all false, for a 1.0
+  false-loop rate.
+
+These values are retained as a failure diagnosis rather than a claimed
+reproduction. The next job reruns after adding the depth-consistency residual
+to the NormalFlow objective.
 
 Final verification on 2026-06-04 confirmed the stale-artifact mismatch: the
 tracked synthetic benchmark metadata still records a planar trajectory and the
@@ -80,6 +103,16 @@ The latest packaged 144-frame synthetic benchmark supports a tracking-only GelSL
 - Final audit on 2026-06-04 reran `python validate.py --compare` locally; all structural checks passed and the current score contract supports `core_claim` for the scaled tracking reproduction.
 
 ## Issues
+
+CPU job `1d21151c-831` exposed a 6DoF observability bug in the scaled front end:
+the registration residual matched target normal directions after warping but
+did not penalize disagreement between warped reference surface depth and target
+height. On the synthetic orthographic tactile renderer, that leaves z motion
+and some coupled rotation weakly constrained, which produced large trajectory
+errors and unsafe loop acceptances. The objective now includes a matched
+height residual in both `method/scaled_gelslam/normalflow.py` and
+`baseline/normalflow.py` so future scores compare the same registration
+primitive fairly.
 
 Continuation audit on 2026-05-31 after the milestone reset found that the
 checked-in `scoring/scores.json` initially reflected older 144-frame

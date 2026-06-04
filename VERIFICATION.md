@@ -10,21 +10,21 @@ artifacts, the optional download URLs resolve, and the method-agnostic
 documentation is generally suitable for from-scratch agents.
 
 However, the current repository state is not the previously validated
-`core_claim` state. The latest committed change reset `MILESTONES.md` and
-`action.yaml` to `method_runs`, changed the runnable benchmark from planar to
-6DoF, removed planar/final-anchor shortcut code, and submitted a CPU validation
-job. That job has not yet produced checked-in scores in this workspace.
+`core_claim` state. The latest faithful 6DoF runnable path has now been tested
+in CPU job `1d21151c-831`; it executed successfully and passed structural
+validation, but its scores do not support the core claim.
 
 ## Issues Found
 
-- **Critical:** The checked-in `scoring/scores.json` and checkpoint artifacts are
-  stale relative to the current runnable code. `data/synthetic_tracking/loop_patch.json`
-  still records `trajectory: planar`, and `checkpoints/scaled_gelslam/summary.json`
-  still contains an old `odometry_final_keyframe` loop source, while
-  `scripts/reproduce.sh` and `scripts/download.sh` now generate `--trajectory sixdof`
-  and the method code no longer has that loop path. A final `core_claim`
-  judgment cannot be made until the container job regenerates scores from the
-  current code.
+- **Critical:** CPU job `1d21151c-831` regenerated the current 6DoF benchmark and
+  artifacts, but the reproduced method failed the scientific claim: it improved
+  translation drift relative to NormalFlow but had much worse rotation error and
+  accepted three false loop closures. This justifies `method_runs`, not
+  `core_claim`.
+- **Critical:** The failed 6DoF result exposed an observability gap in the
+  registration objective. The existing residual matched target normal
+  directions but did not penalize disagreement with target height, leaving depth
+  motion and coupled SE(3) rotation weakly constrained in the scaled renderer.
 - **Minor:** Generated Python `__pycache__` directories existed under root and
   source directories. These are ignored artifacts and were removed.
 - **Residual:** The workspace has pre-existing unrelated dirty entries
@@ -35,26 +35,31 @@ job. That job has not yet produced checked-in scores in this workspace.
 
 - Removed generated Python cache directories from root, `baseline/`, `data/`,
   `eval/`, and `method/scaled_gelslam/`.
+- Added a height-consistency residual to the NormalFlow registration objective
+  in both the method and baseline implementations. The evaluator remains
+  unchanged; the next CPU job must regenerate scores from method artifacts.
 - Verified `scripts/download.sh` is self-contained for the default generated
   benchmark and has no `shared/` references.
 - Verified both optional external URLs in `scripts/download.sh` using
   `curl -I -L --max-time 15`; the GitHub calibration file returned 200 and the
   Hugging Face dataset redirect resolved to a 200 response with the expected
   68.1 GiB archive size.
-- Ran `python validate.py --compare`; it passes structurally on the existing
-  artifacts, but those artifacts are stale for the current 6DoF code path.
+- CPU job `1d21151c-831` ran `python validate.py --compare` in the container;
+  it passed structurally on regenerated 6DoF artifacts, but the scores were
+  scientifically insufficient.
 
 ## Final Judgment
 
 The workspace is structurally close to gym-ready, but it is not ready to signal
 final `done` at `core_claim` in the current state. The correct next action is to
-run the already prepared CPU container validation job so `scores.json`,
-`scores_train.json`, and `scores_test.json` are regenerated from the current
-6DoF method and benchmark. If that job supports the claim, a later verifier can
-restore `core_claim`; if it fails, the honest milestone remains `method_runs`.
+rerun the CPU container validation job after the depth-aware registration patch
+so `scores.json`, `scores_train.json`, and `scores_test.json` are regenerated
+from the current 6DoF method and benchmark. If that job supports the claim, a
+later verifier can restore `core_claim`; if it fails, the honest milestone
+remains `method_runs`.
 
 - Milestone: method_runs
 - Ready for gym use: partial
 - Confidence: medium
-- Key limitation: current checked-in scores are from the previous planar scaled
-  benchmark, not from the current 6DoF runnable path
+- Key limitation: current 6DoF runnable path executes, but the latest completed
+  scores failed the tracking-plus-loop-closure claim

@@ -1,6 +1,6 @@
-# Validate the fidelity-reset implementation in the packaged container.
+# Validate the depth-aware fidelity-reset implementation in the packaged container.
 action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Run the patched scaled SE(3) path end to end: regenerate the 6DoF benchmark, run NormalFlow and GelSLAM without planar/final-anchor shortcuts, evaluate full/train/test scores, and validate the scoring contract."
+notes: "Retry the scaled SE(3) path after adding target-height consistency to NormalFlow: regenerate the 6DoF benchmark, rerun baseline and GelSLAM, evaluate full/train/test scores, and validate the scoring contract."
