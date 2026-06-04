@@ -1,0 +1,44 @@
+{
+  "_metadata": {
+    "slice": "train",
+    "split": "block_interleaved_8_frame_tracking_with_global_long_loop_constraint_ge_32_frames"
+  },
+  "experiments": {
+    "synthetic_long_horizon_tracking": {
+      "results": {
+        "gelslam_online": {
+          "rotation_mae_deg": 5.63807127653664,
+          "translation_mae_mm": 0.6861727439472004,
+          "rotation_p95_deg": 16.4060814893959,
+          "translation_p95_mm": 1.0547013565350074,
+          "terminal_rotation_error_deg": 11.693419464267057,
+          "terminal_translation_error_mm": 0.7114832943799777
+        },
+        "normalflow": {
+          "rotation_mae_deg": 5.898167874396619,
+          "translation_mae_mm": 0.914206275324264,
+          "rotation_p95_deg": 15.61418728100676,
+          "translation_p95_mm": 1.3300843178502186,
+          "terminal_rotation_error_deg": 6.621324138439793,
+          "terminal_translation_error_mm": 1.1913652563503714
+        }
+      }
+    },
+    "loop_closure_quality": {
+      "results": {
+        "gelslam_online": {
+          "accepted_loops": 1,
+          "valid_loops": 1,
+          "valid_loop_rate": 1.0,
+          "false_loop_rate": 0.0
+        },
+        "normalflow": {
+          "accepted_loops": 0,
+          "valid_loops": 0,
+          "valid_loop_rate": 0.0,
+          "false_loop_rate": 0.0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "_metadata": {
+    "slice": "test",
+    "split": "block_interleaved_8_frame_tracking_with_global_long_loop_constraint_ge_32_frames"
+  },
+  "experiments": {
+    "synthetic_long_horizon_tracking": {
+      "results": {
+        "gelslam_online": {
+          "rotation_mae_deg": 5.787416377836457,
+          "translation_mae_mm": 0.7197817622662518,
+          "rotation_p95_deg": 14.465116318570049,
+          "translation_p95_mm": 1.0492064936736534,
+          "terminal_rotation_error_deg": 5.662266085887137,
+          "terminal_translation_error_mm": 0.8298218304258383
+        },
+        "normalflow": {
+          "rotation_mae_deg": 6.274068810800087,
+          "translation_mae_mm": 0.9825084034225738,
+          "rotation_p95_deg": 12.952530183266788,
+          "translation_p95_mm": 1.476197311820063,
+          "terminal_rotation_error_deg": 8.137463968866202,
+          "terminal_translation_error_mm": 1.1968149613047019
+        }
+      }
+    },
+    "loop_closure_quality": {
+      "results": {
+        "gelslam_online": {
+          "accepted_loops": 0,
+          "valid_loops": 0,
+          "valid_loop_rate": 0.0,
+          "false_loop_rate": 0.0
+        },
+        "normalflow": {
+          "accepted_loops": 0,
+          "valid_loops": 0,
+          "valid_loop_rate": 0.0,
+          "false_loop_rate": 0.0
+        }
+      }
+    }
+  }
+}
