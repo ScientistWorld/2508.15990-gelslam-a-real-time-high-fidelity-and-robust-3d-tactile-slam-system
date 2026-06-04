@@ -1,9 +1,9 @@
-# Run split evaluation on the compute node.
-# Once this is submitted, STOP immediately.
+# Finalize split evaluation design.
+# Once this is done, STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Rerun split scoring after changing loop primary metric to slice-specific loop-span drift; require all reference metrics."
+notes: "Block-interleaved frame split plus global long-loop safety constraint; 28 train metrics, 28 test metrics; tracking gaps small and loop primary differs by slice; caveat: accepted-loop counts are global because the frozen artifact has one accepted long loop."
