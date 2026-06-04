@@ -7,8 +7,8 @@
           "translation_mae_mm": 0.8614933206491665
         },
         "gelslam_online": {
-          "rotation_mae_deg": 15.521700216249368,
-          "translation_mae_mm": 6.146419401667551
+          "rotation_mae_deg": 6.058973756749446,
+          "translation_mae_mm": 4.60948599184427
         }
       }
     },
@@ -22,11 +22,11 @@
           "false_loop_rate": 0.0
         },
         "gelslam_online": {
-          "accepted_loops": 2,
-          "valid_loops": 1,
-          "valid_loop_recall": 0.125,
-          "valid_loop_rate": 0.5,
-          "false_loop_rate": 0.5
+          "accepted_loops": 1,
+          "valid_loops": 0,
+          "valid_loop_recall": 0.0,
+          "valid_loop_rate": 0.0,
+          "false_loop_rate": 1.0
         }
       }
     }
