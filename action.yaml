@@ -6,4 +6,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Run evaluate_train.sh and evaluate_test.sh against frozen checkpoint artifacts; populate scores_train/test and check split coverage."
+notes: "Rerun split scoring after fixing sparse loop-closure test saturation; require every reference metric to be present and non-null."

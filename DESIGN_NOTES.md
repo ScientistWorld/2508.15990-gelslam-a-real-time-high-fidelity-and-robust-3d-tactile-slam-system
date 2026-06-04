@@ -24,7 +24,14 @@
 ## Runtime Concerns For The Runner Iteration
 
 - The new metrics are still lightweight rescoring of existing artifacts. No retraining or expensive inference should be needed.
-- The loop split depends on `summary.json` containing enough long-loop edges with keyframe indices on both midpoint parities. If one slice has very few or zero loop edges for the current reproduction artifacts, revisit the loop partition or use a deterministic alternating split over sorted long loops.
 - `terminal_*` metrics use the final evaluated frame within each slice. The existing length check should catch incomplete trajectories instead of silently padding them.
 - Methods that only output poses and no loop summary will score zero accepted and valid loops. That is acceptable for the loop-closure constraint, but from-scratch agents should know the loop metrics require an optional `summary.json` artifact.
 - I did not run evaluators or generate scores in this pass, per the edit-files-only instruction.
+
+## Runner Iteration Findings
+
+- First split run completed on CPU and produced train/test scores for both `normalflow` and `gelslam_online`.
+- The frame-tracking metrics behaved as intended: train and test were close but not byte-identical, and the proposed method improved mean translation/rotation on both slices while exposing a terminal/p95 tradeoff.
+- The loop midpoint-parity split failed on the frozen method artifact because `gelslam_online` records only one accepted long loop. That assigned the only loop to train and left the held-out loop experiment saturated at zero loops for both methods.
+- To keep the loop-closure experiment meaningful, long-loop acceptance is now scored as a global safety constraint on both slices while frame-level tracking remains block-interleaved. The evaluator also emits continuous `loop_translation_error_mm` and `loop_rotation_error_deg` residuals so loop scoring is not just a saturated pass/fail count. Methods with no accepted long loop receive the loop-validity threshold as a finite abstention penalty for those residual metrics.
+- `scripts/run.sh` now checks every metric declared in `scoring/reference.json` is present and non-null in both split score files.

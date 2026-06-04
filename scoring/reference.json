@@ -73,6 +73,16 @@
           "higher_is_better": false,
           "coefficient": -1.0,
           "description": "Fraction of accepted loop closures that violate the ground-truth revisit relation; this penalizes unsafe loop acceptance."
+        },
+        "loop_translation_error_mm": {
+          "higher_is_better": false,
+          "coefficient": 0.35,
+          "description": "Mean translational residual of accepted long-loop constraints against the ground-truth revisit relation; methods with no accepted long loop receive the validity-threshold penalty."
+        },
+        "loop_rotation_error_deg": {
+          "higher_is_better": false,
+          "coefficient": 0.35,
+          "description": "Mean rotational residual of accepted long-loop constraints against the ground-truth revisit relation; methods with no accepted long loop receive the validity-threshold penalty."
         }
       },
       "results": {

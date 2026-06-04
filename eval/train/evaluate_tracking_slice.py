@@ -13,6 +13,8 @@ SLICE_BLOCK_PARITY = 0
 BLOCK_SIZE = 8
 LONG_LOOP_SPAN_FRAMES = 32
 GELSIGHT_MM_PER_PIXEL = 20.0 / 320.0
+NO_LOOP_TRANSLATION_PENALTY_MM = 10.0 * GELSIGHT_MM_PER_PIXEL
+NO_LOOP_ROTATION_PENALTY_DEG = 20.0
 LEGACY_SCORE_NAMES = {
     "normalflow_baseline": "normalflow",
     "scaled_gelslam": "gelslam_online",
@@ -79,8 +81,7 @@ def long_loop_edges(loop_edges: list, keyframe_indices: list) -> list:
                 frame_i = int(keyframe_indices[key_i])
                 frame_j = int(keyframe_indices[key_j])
                 span = abs(frame_j - frame_i)
-                midpoint = (frame_i + frame_j) // 2
-                keep = span >= LONG_LOOP_SPAN_FRAMES and (midpoint // BLOCK_SIZE) % 2 == SLICE_BLOCK_PARITY
+                keep = span >= LONG_LOOP_SPAN_FRAMES
         if keep:
             selected.append(edge)
     return selected
@@ -157,21 +158,32 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     loop_edges = long_loop_edges(summary.get("loop_edges", []), keyframe_indices)
     accepted = len(loop_edges)
     false_loops = 0
+    loop_translation_errors_mm = []
+    loop_rotation_errors_deg = []
     for edge in loop_edges:
         if len(edge) < 3 or not keyframe_indices:
             false_loops += 1
+            loop_translation_errors_mm.append(NO_LOOP_TRANSLATION_PENALTY_MM)
+            loop_rotation_errors_deg.append(NO_LOOP_ROTATION_PENALTY_DEG)
             continue
         key_i, key_j, measurement = int(edge[0]), int(edge[1]), as_se3(np.asarray(edge[2], dtype=float))
         if key_i >= len(keyframe_indices) or key_j >= len(keyframe_indices):
             false_loops += 1
+            loop_translation_errors_mm.append(NO_LOOP_TRANSLATION_PENALTY_MM)
+            loop_rotation_errors_deg.append(NO_LOOP_ROTATION_PENALTY_DEG)
             continue
         true_rel = compose(invert(gt[int(keyframe_indices[key_i])]), gt[int(keyframe_indices[key_j])])
         loop_err = relative_error(measurement, true_rel)
         terr = float(np.linalg.norm(loop_err[:3]))
         rerr = float(np.linalg.norm(loop_err[3:]))
+        loop_translation_errors_mm.append(terr * GELSIGHT_MM_PER_PIXEL)
+        loop_rotation_errors_deg.append(np.degrees(rerr))
         if terr > 10.0 or np.degrees(rerr) > 20.0:
             false_loops += 1
     valid_loops = accepted - false_loops
+    if not loop_translation_errors_mm:
+        loop_translation_errors_mm.append(NO_LOOP_TRANSLATION_PENALTY_MM)
+        loop_rotation_errors_deg.append(NO_LOOP_ROTATION_PENALTY_DEG)
     return {
         "rotation_mae_deg": float(rot_err_deg.mean()),
         "translation_mae_mm": float(pos_err_mm.mean()),
@@ -183,6 +195,8 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
         "valid_loops": valid_loops,
         "valid_loop_rate": float(valid_loops / max(accepted, 1)),
         "false_loop_rate": float(false_loops / max(accepted, 1)),
+        "loop_translation_error_mm": float(np.mean(loop_translation_errors_mm)),
+        "loop_rotation_error_deg": float(np.mean(loop_rotation_errors_deg)),
     }
 
 
@@ -238,6 +252,8 @@ def main() -> None:
                         "valid_loops": vals["valid_loops"],
                         "valid_loop_rate": vals["valid_loop_rate"],
                         "false_loop_rate": vals["false_loop_rate"],
+                        "loop_translation_error_mm": vals["loop_translation_error_mm"],
+                        "loop_rotation_error_deg": vals["loop_rotation_error_deg"],
                     }
                     for name, vals in flat_results.items()
                 }
