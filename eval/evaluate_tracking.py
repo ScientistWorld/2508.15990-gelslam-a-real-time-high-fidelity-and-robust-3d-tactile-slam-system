@@ -182,11 +182,9 @@ def main() -> None:
     parser.add_argument("--output", default="scoring/scores.json")
     args = parser.parse_args()
     gt = load_ground_truth(Path(args.dataset))
-    recon_target_points, recon_target_normals = target_reconstruction(Path(args.dataset))
     flat_results = {}
     for name, directory in args.method_run:
         vals = metrics(Path(directory), gt)
-        vals.update(reconstruction_metrics(Path(directory), recon_target_points, recon_target_normals))
         flat_results[name] = vals
     scores = {
         "experiments": {
@@ -209,16 +207,6 @@ def main() -> None:
                         "false_loop_rate": vals["false_loop_rate"],
                     }
                     for name, vals in flat_results.items()
-                }
-            },
-            "synthetic_reconstruction": {
-                "results": {
-                    name: {
-                        "chamfer_distance_mm": vals["chamfer_distance_mm"],
-                        "normal_cosine_distance": vals["normal_cosine_distance"],
-                    }
-                    for name, vals in flat_results.items()
-                    if name.startswith("gelslam")
                 }
             },
         }

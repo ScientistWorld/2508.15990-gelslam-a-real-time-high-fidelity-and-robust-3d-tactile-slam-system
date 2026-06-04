@@ -11,7 +11,7 @@
 # You can decide what this baseline script should do yourself.
 #
 # Usage:
-#   bash scripts/baseline.sh <name>
+#   bash scripts/baseline.sh [DATASET] [OUT_DIR]
 
 set -e
 

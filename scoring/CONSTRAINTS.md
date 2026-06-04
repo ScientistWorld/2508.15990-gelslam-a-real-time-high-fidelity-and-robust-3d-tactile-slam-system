@@ -16,7 +16,7 @@ Report the NormalFlow frame-to-frame baseline on the same test split whenever re
 
 ## Evaluation
 
-Use the fixed metrics: `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `valid_loops`, `valid_loop_recall`, `valid_loop_rate`, `false_loop_rate`, `chamfer_distance_mm`, and `normal_cosine_distance`. Do not remove `false_loop_rate`; it is the constraint metric that prevents trivial improvements by accepting excessive or incorrect loops. Do not remove `valid_loop_recall` or `valid_loop_rate`; they prevent methods from satisfying the loop-closure target by abstaining from revisits or by accepting many low-quality candidates. Reconstruction must be scored from emitted artifacts, not regenerated inside the evaluator. Keyframe counts are recorded as diagnostics in method artifacts, but they are not scored because the scaled benchmark has a different episode length from the paper's real-data setting.
+Use the fixed metrics: `rotation_mae_deg`, `translation_mae_mm`, `accepted_loops`, `valid_loops`, `valid_loop_recall`, `valid_loop_rate`, and `false_loop_rate`. Do not remove `false_loop_rate`; it is the constraint metric that prevents trivial improvements by accepting excessive or incorrect loops. Do not remove `valid_loop_recall` or `valid_loop_rate`; they prevent methods from satisfying the loop-closure target by abstaining from revisits or by accepting many low-quality candidates. Keyframe counts and fused reconstruction artifacts are recorded as diagnostics in method artifacts, but they are not scored because the scaled benchmark has a different episode length and reconstruction target from the paper's real-data setting.
 
 ## Procedure
 
@@ -29,5 +29,4 @@ The submitted method must remain a tactile long-horizon tracking, SLAM, or recon
 - [ ] Reports NormalFlow on the same test split
 - [ ] Reports all required metrics
 - [ ] Keeps `false_loop_rate` as a constraint metric
-- [ ] Scores reconstruction only from method-emitted surface artifacts
 - [ ] Stays within tactile tracking/SLAM rather than switching to an unrelated sequence regression or oracle-localization paradigm

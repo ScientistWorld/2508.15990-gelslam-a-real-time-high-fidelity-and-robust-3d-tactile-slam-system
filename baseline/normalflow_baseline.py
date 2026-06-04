@@ -5,11 +5,75 @@ import argparse
 import json
 from pathlib import Path
 
+import cv2
 import numpy as np
 
-from method.scaled_gelslam.geometry import compose, matrix_from_pose
-from method.scaled_gelslam.normalflow import estimate_relative
-from method.scaled_gelslam.run_gelslam import load_tactile_frames, reconstruct_points
+from baseline.geometry import compose, matrix_from_pose, rotate_vectors, transform_points
+from baseline.normalflow import estimate_relative, geometric_properties
+
+
+def load_tactile_frames(path: Path) -> list[dict]:
+    data = np.load(path)
+    return [
+        geometric_properties(data["heights"][i].astype(np.float64), data["masks"][i].astype(bool))
+        for i in range(len(data["heights"]))
+    ]
+
+
+def reconstruct_points(
+    frames: list[dict],
+    frame_indices: list[int],
+    poses: np.ndarray,
+    stride: int = 2,
+    voxel_size: float = 0.8,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Fuse baseline odometry frames for diagnostic artifacts.
+
+    Evaluation does not score reconstruction by default, but the baseline emits
+    the same artifact format as the proposed method so downstream users can
+    inspect comparable outputs.
+    """
+    bins: dict[tuple[int, int, int], tuple[np.ndarray, np.ndarray, float]] = {}
+    for frame_idx in frame_indices:
+        frame = frames[frame_idx]
+        mask = frame["mask"]
+        if mask.sum() == 0:
+            continue
+        boundary_weight = cv2.distanceTransform(mask.astype(np.uint8), cv2.DIST_L2, 3)
+        ys, xs = np.nonzero(mask)
+        keep = (xs % stride == 0) & (ys % stride == 0)
+        ys = ys[keep]
+        xs = xs[keep]
+        if len(xs) == 0:
+            continue
+        h, w = frame["height"].shape
+        local = np.column_stack(
+            [
+                xs.astype(np.float64) - (w - 1) / 2.0,
+                ys.astype(np.float64) - (h - 1) / 2.0,
+                frame["height"][ys, xs],
+            ]
+        )
+        weights = 1.0 / (1.0 + np.exp(-(boundary_weight[ys, xs] - 3.0)))
+        world = transform_points(local, poses[frame_idx])
+        normals = rotate_vectors(frame["normal"][ys, xs], poses[frame_idx])
+        keys = np.rint(world / voxel_size).astype(np.int64)
+        for key_arr, point, normal, weight in zip(keys, world, normals, weights):
+            key = tuple(int(v) for v in key_arr)
+            if key not in bins:
+                bins[key] = (point * weight, normal * weight, float(weight))
+            else:
+                psum, nsum, wsum = bins[key]
+                bins[key] = (psum + point * weight, nsum + normal * weight, wsum + float(weight))
+
+    if not bins:
+        return np.zeros((0, 3), dtype=np.float64), np.zeros((0, 3), dtype=np.float64)
+    points, normals = [], []
+    for psum, nsum, wsum in bins.values():
+        points.append(psum / max(wsum, 1e-9))
+        normal = nsum / max(np.linalg.norm(nsum), 1e-9)
+        normals.append(normal)
+    return np.asarray(points, dtype=np.float64), np.asarray(normals, dtype=np.float64)
 
 
 def planarize_pose(pose: np.ndarray) -> np.ndarray:

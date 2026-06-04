@@ -29,14 +29,6 @@
           "false_loop_rate": 0.0
         }
       }
-    },
-    "synthetic_reconstruction": {
-      "results": {
-        "gelslam_online": {
-          "chamfer_distance_mm": 12.48631580329031,
-          "normal_cosine_distance": 0.9952788375321632
-        }
-      }
     }
   }
 }

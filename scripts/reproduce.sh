@@ -22,12 +22,12 @@ export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 echo "[reproduce] generating synthetic tactile benchmark"
 python data/generate_synthetic_tracking.py \
   --output data/synthetic_tracking/loop_patch.npz \
-  --frames 192 \
+  --frames 144 \
   --surface-size 340 \
   --trajectory planar
 echo "[reproduce] running NormalFlow baseline"
-python baseline/normalflow_baseline.py --dataset data/synthetic_tracking/loop_patch.npz --output-dir checkpoints/normalflow_baseline
+bash scripts/baseline.sh data/synthetic_tracking/loop_patch.npz checkpoints/normalflow_baseline
 echo "[reproduce] running scaled GelSLAM"
-python method/scaled_gelslam/run_gelslam.py --dataset data/synthetic_tracking/loop_patch.npz --output-dir checkpoints/scaled_gelslam
+bash scripts/method.sh data/synthetic_tracking/loop_patch.npz checkpoints/scaled_gelslam
 echo "[reproduce] evaluating full benchmark"
 bash scripts/evaluate.sh

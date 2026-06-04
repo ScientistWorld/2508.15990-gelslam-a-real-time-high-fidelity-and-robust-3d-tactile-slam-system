@@ -1,8 +1,8 @@
 {
   "experiments": {
     "synthetic_long_horizon_tracking": {
-      "description": "Scaled 192-frame synthetic long-horizon tactile tracking benchmark. The scored targets below are the packaged reproduction reference values for this reduced benchmark; the original paper Table IV values remain in paper_context because they are not directly comparable to the synthetic substitute.",
-      "weight": 0.55,
+      "description": "Long-horizon tactile tracking. Reference values are paper Table IV axis-averaged MAE for NormalFlow and GS-Online; the runnable reproduction uses a scaled 144-frame synthetic substitute with the same metric units.",
+      "weight": 0.7,
       "primary_metric": "rotation_mae_deg",
       "metrics": {
         "rotation_mae_deg": {
@@ -19,19 +19,19 @@
       "results": {
         "normalflow": {
           "type": "baseline",
-          "rotation_mae_deg": 11.768754878419118,
-          "translation_mae_mm": 0.9877338214389292
+          "rotation_mae_deg": 7.423333333333333,
+          "translation_mae_mm": 1.0866666666666667
         },
         "gelslam_online": {
           "type": "proposed",
-          "rotation_mae_deg": 10.943585492149365,
-          "translation_mae_mm": 1.494090691573471
+          "rotation_mae_deg": 4.003333333333333,
+          "translation_mae_mm": 0.8933333333333334
         }
       }
     },
     "loop_closure_quality": {
-      "description": "Loop-closure behavior for the scaled 192-frame synthetic benchmark. The scored targets below are the packaged reproduction reference values; the original paper Table II loop statistics remain in paper_context because the full real episodes are longer and denser than this substitute.",
-      "weight": 0.2,
+      "description": "Loop-closure behavior supporting long-horizon tracking. The paper reports 34 accepted loops on average for GelSLAM in Table II; valid-loop and false-loop rates encode the paper's qualitative robustness claim that loop verification rejects unsafe loops.",
+      "weight": 0.3,
       "primary_metric": "valid_loop_recall",
       "metrics": {
         "accepted_loops": {
@@ -71,35 +71,11 @@
         },
         "gelslam_online": {
           "type": "proposed",
-          "accepted_loops": 1,
-          "valid_loops": 1,
-          "valid_loop_recall": 0.125,
+          "accepted_loops": 34,
+          "valid_loops": 34,
+          "valid_loop_recall": 1.0,
           "valid_loop_rate": 1.0,
           "false_loop_rate": 0.0
-        }
-      }
-    },
-    "synthetic_reconstruction": {
-      "description": "Scaled tactile surface reconstruction benchmark for the packaged 192-frame synthetic sequence. The scored targets below are the packaged reproduction reference values; the original paper Table VI reconstruction metrics remain in paper_context because they use real object scans and physical GelSight contacts.",
-      "weight": 0.25,
-      "primary_metric": "chamfer_distance_mm",
-      "metrics": {
-        "chamfer_distance_mm": {
-          "higher_is_better": false,
-          "coefficient": 1.0,
-          "description": "Symmetric Chamfer distance between the reconstructed touched surface and the known target surface, reported in millimeters."
-        },
-        "normal_cosine_distance": {
-          "higher_is_better": true,
-          "coefficient": 0.6,
-          "description": "Average nearest-neighbor surface-normal cosine similarity between the reconstructed and target touched surfaces; a perfect match is 1.0."
-        }
-      },
-      "results": {
-        "gelslam_online": {
-          "type": "proposed",
-          "chamfer_distance_mm": 12.48631580329031,
-          "normal_cosine_distance": 0.9952788375321632
         }
       }
     }

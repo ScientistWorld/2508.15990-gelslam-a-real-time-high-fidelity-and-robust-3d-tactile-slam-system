@@ -4,5 +4,5 @@
 action: submit
 gpus: 0
 test: true
-milestone: method_runs
-notes: "CPU smoke job to regenerate the aligned 192-frame synthetic GelSLAM benchmark, run baseline/method/eval, and validate the packaged scoring contract."
+milestone: none
+notes: "CPU smoke job to regenerate the corrected 144-frame synthetic GelSLAM tracking benchmark, run baseline/method/eval, and validate paper-derived tracking and loop-closure references."
