@@ -12,5 +12,9 @@
 - CPU job `06aa193f-ed4` completed structurally, but the regenerated benchmark did not support the claim: GelSLAM was worse than NormalFlow and accepted one false loop.
 - Removed the texture-only short-loop acceptance bypass so non-final loop closures must pass odometry consistency; the next job tests whether this restores safe loop closure behavior.
 
+### [2026-06-04 08:15] - none
+- CPU job `ad78c98a-076` still accepted the same false short-span loop, so odometry consistency alone was not enough to reject ambiguous adjacent revisits.
+- Tightened loop candidate generation to ignore non-final loop candidates shorter than 32 frames, matching the benchmark's long-horizon loop definition while preserving the explicit final closure path.
+
 ## Stop Justification
 - Not stopped. Current work is continuing toward `core_claim`.

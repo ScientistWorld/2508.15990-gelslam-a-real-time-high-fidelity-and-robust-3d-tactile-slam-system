@@ -14,6 +14,7 @@ from method.scaled_gelslam.normalflow import estimate_relative, geometric_proper
 
 MM_PER_PIXEL = 20.0 / 320.0
 COVERAGE_AREA_THRESHOLD_MM2 = 0.2
+MIN_LOOP_SPAN_FRAMES = 32
 
 
 def planarize_pose(pose: np.ndarray) -> np.ndarray:
@@ -220,7 +221,8 @@ def run(
     def evaluate_loop_candidates(new_key: int, k_new: int) -> None:
         nonlocal rejected_loops
         for cov_idx in coverage:
-            if abs(new_key - cov_idx) < 8:
+            frame_span = abs(int(new_key) - int(cov_idx))
+            if frame_span < MIN_LOOP_SPAN_FRAMES and new_key != final_frame:
                 continue
             cov_key = keyframes.index(cov_idx)
             odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])

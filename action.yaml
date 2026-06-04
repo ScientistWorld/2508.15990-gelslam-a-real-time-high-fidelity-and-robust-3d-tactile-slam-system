@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "CPU retry after removing texture-only non-final loop acceptance; regenerate the 144-frame benchmark and verify whether GelSLAM improves tracking with only valid loop closures."
+notes: "CPU retry after requiring non-final loop candidates to span at least 32 frames; regenerate the 144-frame benchmark and check for valid long-horizon loop closure without the short false loop."
