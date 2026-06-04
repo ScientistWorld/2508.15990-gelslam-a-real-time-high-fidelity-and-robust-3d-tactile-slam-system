@@ -76,20 +76,12 @@ def reconstruct_points(
     return np.asarray(points, dtype=np.float64), np.asarray(normals, dtype=np.float64)
 
 
-def planarize_pose(pose: np.ndarray) -> np.ndarray:
-    """Use the same observable pose subspace as the packaged planar benchmark."""
-    out = np.asarray(pose, dtype=np.float64).copy()
-    out[2:5] = 0.0
-    return out
-
-
 def run(dataset: Path, output_dir: Path) -> None:
     frames = load_tactile_frames(dataset)
     pred = np.zeros((len(frames), 6), dtype=np.float64)
     prev_rel = np.zeros(6, dtype=np.float64)
     for i in range(1, len(frames)):
         rel, _, _, _ = estimate_relative(frames[i - 1], frames[i], prev_rel)
-        rel = planarize_pose(rel)
         pred[i] = compose(pred[i - 1], rel)
         prev_rel = rel
     output_dir.mkdir(parents=True, exist_ok=True)

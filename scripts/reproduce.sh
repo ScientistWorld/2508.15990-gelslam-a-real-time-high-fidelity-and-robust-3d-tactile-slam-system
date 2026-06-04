@@ -24,7 +24,7 @@ python data/generate_synthetic_tracking.py \
   --output data/synthetic_tracking/loop_patch.npz \
   --frames 144 \
   --surface-size 300 \
-  --trajectory planar
+  --trajectory sixdof
 echo "[reproduce] running NormalFlow baseline"
 bash scripts/baseline.sh data/synthetic_tracking/loop_patch.npz checkpoints/normalflow_baseline
 echo "[reproduce] running scaled GelSLAM"

@@ -15,16 +15,6 @@ from method.scaled_gelslam.normalflow import estimate_relative, geometric_proper
 MM_PER_PIXEL = 20.0 / 320.0
 COVERAGE_AREA_THRESHOLD_MM2 = 0.2
 MIN_LOOP_SPAN_FRAMES = 32
-FINAL_ANCHOR_CCS_THRESHOLD = 0.65
-FINAL_ANCHOR_SCR_THRESHOLD = 0.25
-FINAL_ANCHOR_LOOP_WEIGHT = 1e-4
-
-
-def planarize_pose(pose: np.ndarray) -> np.ndarray:
-    """Project a 6D estimate onto the observable axes of the packaged benchmark."""
-    out = as_se3(pose).copy()
-    out[2:5] = 0.0
-    return out
 
 
 def load_tactile_frames(path: Path) -> list[dict]:
@@ -65,15 +55,12 @@ def optimize_pose_graph(n: int, edges: list[tuple], initial: np.ndarray) -> np.n
         return initial.copy()
 
     def pack(poses: np.ndarray) -> np.ndarray:
-        return poses[1:][:, [0, 1, 5]].reshape(-1)
+        return poses[1:].reshape(-1)
 
     def unpack(vec: np.ndarray) -> np.ndarray:
         out = np.zeros((n, 6), dtype=np.float64)
         out[0] = initial[0]
-        planar = vec.reshape(n - 1, 3)
-        out[1:, 0] = planar[:, 0]
-        out[1:, 1] = planar[:, 1]
-        out[1:, 5] = planar[:, 2]
+        out[1:] = vec.reshape(n - 1, 6)
         return out
 
     def residual(vec: np.ndarray) -> np.ndarray:
@@ -81,18 +68,28 @@ def optimize_pose_graph(n: int, edges: list[tuple], initial: np.ndarray) -> np.n
         terms = []
         for edge in edges:
             i, j, meas = int(edge[0]), int(edge[1]), edge[2]
-            weight = float(edge[3]) if len(edge) >= 4 else 1.0
-            scale = np.sqrt(max(weight, 1e-6))
+            scale = 1.0
             pred = between(poses[i], poses[j])
             err = se3_error(meas, pred)
-            terms.extend((scale * np.array([err[0] / 2.0, err[1] / 2.0, err[5] / 0.08])).tolist())
+            terms.extend(
+                (
+                    scale
+                    * np.array(
+                        [
+                            err[0] / 2.0,
+                            err[1] / 2.0,
+                            err[2] / 1.0,
+                            err[3] / 0.08,
+                            err[4] / 0.08,
+                            err[5] / 0.08,
+                        ]
+                    )
+                ).tolist()
+            )
         return np.asarray(terms)
 
     x0 = pack(initial)
     r0 = residual(x0)
-    # The packaged benchmark is planar. Optimizing only x/y/yaw removes
-    # unobservable z/roll/pitch gauge freedom and keeps the CPU smoke test
-    # bounded while preserving GelSLAM's pose-graph correction step.
     method = "lm" if len(r0) >= len(x0) else "trf"
     opt = least_squares(residual, x0, max_nfev=80, method=method)
     return unpack(opt.x)
@@ -202,10 +199,6 @@ def run(
     scr_threshold: float,
     loop_ccs_threshold: float,
     loop_scr_threshold: float,
-    loop_odom_translation_gate: float,
-    loop_odom_yaw_gate: float,
-    final_anchor_translation_gate: float,
-    loop_edge_weight: int,
 ) -> None:
     frames = load_tactile_frames(dataset)
     n = len(frames)
@@ -228,124 +221,45 @@ def run(
         nonlocal rejected_loops
         for cov_idx in coverage:
             frame_span = abs(int(new_key) - int(cov_idx))
-            is_final_anchor_candidate = new_key == final_frame and cov_idx == keyframes[0]
-            if frame_span < MIN_LOOP_SPAN_FRAMES and not is_final_anchor_candidate:
+            if frame_span < MIN_LOOP_SPAN_FRAMES:
                 continue
             cov_key = keyframes.index(cov_idx)
-            odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])
-
-            proposals: list[tuple[np.ndarray, int, str]] = []
             feature_proposal = feature_candidate(frames[cov_idx], frames[new_key])
-            if feature_proposal is not None:
-                init, inliers = feature_proposal
-                proposals.append((init, inliers, "sift_curvature"))
-            # The scaled closed-loop benchmark exposes the endpoint revisit only
-            # at the final keyframe. Try the accumulated odometry estimate as a
-            # second initialization there, but still require NormalFlow quality
-            # and loop-consistency checks before adding a graph edge.
-            if is_final_anchor_candidate:
-                proposals.append((odom_rel, 0, "odometry_final_keyframe"))
-            if not proposals:
+            if feature_proposal is None:
                 continue
-
-            accepted_candidate = None
-            best_rejection = None
-            best_accept_rank = (-np.inf, -np.inf, -np.inf)
-            best_reject_rank = (-np.inf, -np.inf, -np.inf)
-            for init, inliers, proposal_source in proposals:
-                refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
-                refined = planarize_pose(refined)
-                odom_err = se3_error(odom_rel, refined)
-                odom_translation_err = float(np.linalg.norm(odom_err[:3]))
-                odom_yaw_err = float(np.linalg.norm(odom_err[3:]))
-                translation_gate = loop_odom_translation_gate
-                if is_final_anchor_candidate:
-                    translation_gate = final_anchor_translation_gate
-
-                final_anchor_fallback = (
-                    is_final_anchor_candidate
-                    and proposal_source == "odometry_final_keyframe"
-                )
-                quality_ok = (
-                    (qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold)
-                    or (
-                        final_anchor_fallback
-                        and qccs >= FINAL_ANCHOR_CCS_THRESHOLD
-                        and qscr >= FINAL_ANCHOR_SCR_THRESHOLD
-                    )
-                )
-
-                if not quality_ok:
-                    reason = "normalflow_quality"
-                    passed = False
-                else:
-                    odometry_consistent = (
-                        odom_translation_err <= translation_gate
-                        and odom_yaw_err <= loop_odom_yaw_gate
-                    )
-                    strict_sift_loop = (
-                        proposal_source == "sift_curvature"
-                        and qccs >= max(loop_ccs_threshold, 0.74)
-                        and qscr >= max(loop_scr_threshold, 0.40)
-                        and inliers >= 10
-                    )
-                    final_verified = (
-                        final_anchor_fallback
-                        and qccs >= FINAL_ANCHOR_CCS_THRESHOLD
-                        and qscr >= FINAL_ANCHOR_SCR_THRESHOLD
-                        and odom_yaw_err <= 1.0
-                    )
-                    passed = (
-                        (not is_final_anchor_candidate and odometry_consistent and strict_sift_loop)
-                        or final_verified
-                    )
-                    reason = "accepted" if passed else "odometry_or_sift_gate"
-
-                rank = (float(qccs), float(qscr), float(inliers))
-                detail = {
-                    "coverage_frame": int(cov_idx),
-                    "new_keyframe": int(new_key),
-                    "reason": reason,
-                    "ccs": float(qccs),
-                    "scr": float(qscr),
-                    "sift_inliers": int(inliers),
-                    "proposal_source": proposal_source,
-                    "odom_translation_err_px": odom_translation_err,
-                    "odom_translation_gate_px": translation_gate,
-                    "odom_yaw_err_rad": odom_yaw_err,
-                }
-                if passed and rank > best_accept_rank:
-                    accepted_candidate = (refined, qccs, qscr, inliers, proposal_source)
-                    best_accept_rank = rank
-                elif best_rejection is None or rank > best_reject_rank:
-                    best_rejection = detail
-                    best_reject_rank = rank
-
-            if accepted_candidate is not None:
-                refined, qccs, qscr, inliers, proposal_source = accepted_candidate
-                loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, proposal_source))
-                if proposal_source == "odometry_final_keyframe":
-                    loop_weight = FINAL_ANCHOR_LOOP_WEIGHT
-                else:
-                    loop_weight = float(loop_edge_weight)
-                keyframe_edges.append((cov_key, k_new, refined, loop_weight))
+            init, inliers = feature_proposal
+            if inliers <= 8:
+                continue
+            refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
+            if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
+                loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, "sift_curvature"))
+                keyframe_edges.append((cov_key, k_new, refined))
             else:
                 rejected_loops += 1
-                if best_rejection is not None and len(rejected_loop_details) < 300:
-                    rejected_loop_details.append(best_rejection)
+                if len(rejected_loop_details) < 300:
+                    rejected_loop_details.append(
+                        {
+                            "coverage_frame": int(cov_idx),
+                            "new_keyframe": int(new_key),
+                            "reason": "normalflow_quality",
+                            "ccs": float(qccs),
+                            "scr": float(qscr),
+                            "sift_inliers": int(inliers),
+                            "proposal_source": "sift_curvature",
+                        }
+                    )
 
     for t in range(1, n):
         if t % 25 == 0:
             print(f"[scaled_gelslam] tracking frame {t}/{n}", flush=True)
         rel, ccs, scr, _ = estimate_relative(frames[latest_key], frames[t], prev_rel)
-        rel = planarize_pose(rel)
         if ccs < ccs_threshold or scr < scr_threshold:
             new_key = t - 1
             if new_key != latest_key:
                 keyframes.append(new_key)
                 k_new = len(keyframes) - 1
                 edge_measurement = frame_to_parent[new_key].copy()
-                keyframe_edges.append((k_new - 1, k_new, edge_measurement, 1.0))
+                keyframe_edges.append((k_new - 1, k_new, edge_measurement))
                 keyframe_abs_est.append(compose(keyframe_abs_est[-1], edge_measurement))
                 frame_parent[new_key] = k_new
                 frame_to_parent[new_key] = 0.0
@@ -361,7 +275,6 @@ def run(
                 prev_rel = np.zeros(6, dtype=np.float64)
                 continue
             rel, ccs, scr, _ = estimate_relative(frames[latest_key], frames[t], prev_rel)
-            rel = planarize_pose(rel)
         frame_parent[t] = len(keyframes) - 1
         frame_to_parent[t] = rel
         prev_rel = rel
@@ -370,7 +283,7 @@ def run(
         edge_measurement = frame_to_parent[final_frame].copy()
         keyframes.append(final_frame)
         k_new = len(keyframes) - 1
-        keyframe_edges.append((k_new - 1, k_new, edge_measurement, 1.0))
+        keyframe_edges.append((k_new - 1, k_new, edge_measurement))
         keyframe_abs_est.append(compose(keyframe_abs_est[-1], edge_measurement))
         frame_parent[final_frame] = k_new
         frame_to_parent[final_frame] = 0.0
@@ -414,11 +327,6 @@ def run(
         "scr_threshold": scr_threshold,
         "loop_ccs_threshold": loop_ccs_threshold,
         "loop_scr_threshold": loop_scr_threshold,
-        "loop_odom_translation_gate_px": loop_odom_translation_gate,
-        "loop_odom_yaw_gate_rad": loop_odom_yaw_gate,
-        "final_anchor_translation_gate_px": final_anchor_translation_gate,
-        "loop_edge_weight": loop_edge_weight,
-        "final_anchor_loop_weight": FINAL_ANCHOR_LOOP_WEIGHT,
         "coverage_keyframe_indices": coverage,
         "reconstruction_frame_indices": reconstruction_frames,
         "reconstructed_points": int(len(recon_points)),
@@ -433,12 +341,8 @@ def main() -> None:
     parser.add_argument("--output-dir", default="checkpoints/scaled_gelslam")
     parser.add_argument("--ccs-threshold", type=float, default=0.85)
     parser.add_argument("--scr-threshold", type=float, default=0.35)
-    parser.add_argument("--loop-ccs-threshold", type=float, default=0.68)
+    parser.add_argument("--loop-ccs-threshold", type=float, default=0.70)
     parser.add_argument("--loop-scr-threshold", type=float, default=0.30)
-    parser.add_argument("--loop-odom-translation-gate", type=float, default=18.0)
-    parser.add_argument("--loop-odom-yaw-gate", type=float, default=0.70)
-    parser.add_argument("--final-anchor-translation-gate", type=float, default=32.0)
-    parser.add_argument("--loop-edge-weight", type=int, default=1)
     args = parser.parse_args()
     run(
         Path(args.dataset),
@@ -447,10 +351,6 @@ def main() -> None:
         args.scr_threshold,
         args.loop_ccs_threshold,
         args.loop_scr_threshold,
-        args.loop_odom_translation_gate,
-        args.loop_odom_yaw_gate,
-        args.final_anchor_translation_gate,
-        args.loop_edge_weight,
     )
 
 

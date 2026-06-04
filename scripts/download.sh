@@ -27,7 +27,7 @@ python data/generate_synthetic_tracking.py \
   --output data/synthetic_tracking/loop_patch.npz \
   --frames 144 \
   --surface-size 300 \
-  --trajectory planar
+  --trajectory sixdof
 
 if [ "${DOWNLOAD_OFFICIAL_GELSLAM_CALIBRATION:-0}" = "1" ]; then
   mkdir -p data/downloads/gelslam_example_calibration

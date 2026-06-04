@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -34,5 +34,10 @@
 - The job regenerated the benchmark and artifacts, emitted complete full/train/test scores, checked full metric coverage, and passed `python validate.py --compare`.
 - Final verification report written; workspace judged ready for scaled gym use.
 
+### [2026-06-04 09:20] - method_runs
+- Independent method-fidelity audit found that the previous `core_claim` path depended on planarizing poses, special final-anchor loop handling, and non-paper odometry gates.
+- Reset the milestone to `method_runs`: the implementation still runs recognizable GelSLAM components, but a higher milestone needs results from a more faithful scaled SE(3) procedure.
+- Patched the runnable path to use full SE(3) pose graph variables, remove planar projection from method and baseline, remove final-anchor/odometry loop shortcuts, and generate the default synthetic benchmark in 6DoF mode.
+
 ## Stop Justification
-- Completed at milestone `core_claim`.
+- Not stopped. A CPU validation job is being submitted for the more faithful scaled SE(3) path before any higher milestone is claimed.
