@@ -11,6 +11,9 @@ from scipy.spatial.transform import Rotation
 
 GELSIGHT_MM_PER_PIXEL = 20.0 / 320.0
 LOOP_OPPORTUNITY_BUDGET = 8.0
+LONG_LOOP_SPAN_FRAMES = 32
+NO_LOOP_TRANSLATION_PENALTY_MM = 10.0 * GELSIGHT_MM_PER_PIXEL
+NO_LOOP_ROTATION_PENALTY_DEG = 20.0
 
 
 def as_se3(pose: np.ndarray) -> np.ndarray:
@@ -141,36 +144,72 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     pred = origin_relative(pred)
     gt = origin_relative(gt)
     errors = np.asarray([relative_error(p, g) for p, g in zip(pred, gt)], dtype=np.float64)
-    pos_err = np.linalg.norm(errors[:, :3], axis=1)
-    rot_err = np.linalg.norm(errors[:, 3:], axis=1)
+    pos_err_mm = np.linalg.norm(errors[:, :3], axis=1) * GELSIGHT_MM_PER_PIXEL
+    rot_err_deg = np.degrees(np.linalg.norm(errors[:, 3:], axis=1))
     summary_path = run_dir / "summary.json"
     summary = json.loads(summary_path.read_text()) if summary_path.exists() else {}
-    loop_edges = summary.get("loop_edges", [])
-    accepted = len(loop_edges)
+    raw_loop_edges = summary.get("loop_edges", [])
     false_loops = 0
     keyframe_indices = summary.get("keyframe_indices", [])
+    loop_translation_errors_mm = []
+    loop_rotation_errors_deg = []
+    loop_span_mask = np.zeros(len(gt), dtype=bool)
+    loop_edges = []
+    for edge in raw_loop_edges:
+        if len(edge) < 2 or not keyframe_indices:
+            continue
+        key_i, key_j = int(edge[0]), int(edge[1])
+        if key_i >= len(keyframe_indices) or key_j >= len(keyframe_indices):
+            continue
+        frame_i = int(keyframe_indices[key_i])
+        frame_j = int(keyframe_indices[key_j])
+        if abs(frame_j - frame_i) >= LONG_LOOP_SPAN_FRAMES:
+            loop_edges.append(edge)
+            lo, hi = sorted((frame_i, frame_j))
+            loop_span_mask[lo : hi + 1] = True
+    accepted = len(loop_edges)
     for edge in loop_edges:
         if len(edge) < 3 or not keyframe_indices:
             false_loops += 1
+            loop_translation_errors_mm.append(NO_LOOP_TRANSLATION_PENALTY_MM)
+            loop_rotation_errors_deg.append(NO_LOOP_ROTATION_PENALTY_DEG)
             continue
         key_i, key_j, measurement = int(edge[0]), int(edge[1]), as_se3(np.asarray(edge[2], dtype=float))
         if key_i >= len(keyframe_indices) or key_j >= len(keyframe_indices):
             false_loops += 1
+            loop_translation_errors_mm.append(NO_LOOP_TRANSLATION_PENALTY_MM)
+            loop_rotation_errors_deg.append(NO_LOOP_ROTATION_PENALTY_DEG)
             continue
         true_rel = compose(invert(gt[int(keyframe_indices[key_i])]), gt[int(keyframe_indices[key_j])])
         loop_err = relative_error(measurement, true_rel)
         terr = float(np.linalg.norm(loop_err[:3]))
         rerr = float(np.linalg.norm(loop_err[3:]))
+        loop_translation_errors_mm.append(terr * GELSIGHT_MM_PER_PIXEL)
+        loop_rotation_errors_deg.append(np.degrees(rerr))
         if terr > 10.0 or np.degrees(rerr) > 20.0:
             false_loops += 1
     valid_loops = accepted - false_loops
+    if not loop_translation_errors_mm:
+        loop_translation_errors_mm.append(NO_LOOP_TRANSLATION_PENALTY_MM)
+        loop_rotation_errors_deg.append(NO_LOOP_ROTATION_PENALTY_DEG)
+    loop_span_indices = np.nonzero(loop_span_mask)[0]
+    if len(loop_span_indices) == 0:
+        loop_span_indices = np.arange(len(gt))
     return {
-        "rotation_mae_deg": float(np.degrees(rot_err).mean()),
-        "translation_mae_mm": float(pos_err.mean() * GELSIGHT_MM_PER_PIXEL),
+        "rotation_mae_deg": float(rot_err_deg.mean()),
+        "translation_mae_mm": float(pos_err_mm.mean()),
+        "rotation_p95_deg": float(np.percentile(rot_err_deg, 95)),
+        "translation_p95_mm": float(np.percentile(pos_err_mm, 95)),
+        "terminal_rotation_error_deg": float(rot_err_deg[-1]),
+        "terminal_translation_error_mm": float(pos_err_mm[-1]),
         "accepted_loops": accepted,
         "valid_loops": valid_loops,
         "valid_loop_rate": float(valid_loops / max(accepted, 1)),
         "false_loop_rate": float(false_loops / max(accepted, 1)),
+        "loop_translation_error_mm": float(np.mean(loop_translation_errors_mm)),
+        "loop_rotation_error_deg": float(np.mean(loop_rotation_errors_deg)),
+        "loop_span_translation_mae_mm": float(np.mean(pos_err_mm[loop_span_indices])),
+        "loop_span_rotation_mae_deg": float(np.mean(rot_err_deg[loop_span_indices])),
     }
 
 
@@ -192,6 +231,10 @@ def main() -> None:
                     name: {
                         "rotation_mae_deg": vals["rotation_mae_deg"],
                         "translation_mae_mm": vals["translation_mae_mm"],
+                        "rotation_p95_deg": vals["rotation_p95_deg"],
+                        "translation_p95_mm": vals["translation_p95_mm"],
+                        "terminal_rotation_error_deg": vals["terminal_rotation_error_deg"],
+                        "terminal_translation_error_mm": vals["terminal_translation_error_mm"],
                     }
                     for name, vals in flat_results.items()
                 }
@@ -199,10 +242,14 @@ def main() -> None:
             "loop_closure_quality": {
                 "results": {
                     name: {
+                        "loop_span_translation_mae_mm": vals["loop_span_translation_mae_mm"],
+                        "loop_span_rotation_mae_deg": vals["loop_span_rotation_mae_deg"],
                         "accepted_loops": vals["accepted_loops"],
                         "valid_loops": vals["valid_loops"],
                         "valid_loop_rate": vals["valid_loop_rate"],
                         "false_loop_rate": vals["false_loop_rate"],
+                        "loop_translation_error_mm": vals["loop_translation_error_mm"],
+                        "loop_rotation_error_deg": vals["loop_rotation_error_deg"],
                     }
                     for name, vals in flat_results.items()
                 }

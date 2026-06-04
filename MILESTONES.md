@@ -24,5 +24,10 @@
 - Restored the loop-closure safety constraint: GelSLAM accepted one loop, the loop was valid, and the false-loop rate was 0.0.
 - `python validate.py --compare` passed in the container and locally after the job.
 
+### [2026-06-04 09:00] - core_claim
+- Hardened the full-sequence evaluator so `scoring/scores.json` emits every metric declared in `scoring/reference.json`, matching the train/test evaluator contract.
+- Updated `scripts/run.sh` to regenerate the synthetic benchmark, NormalFlow baseline, scaled GelSLAM artifacts, full scores, train/test scores, and validator comparison in one CPU job.
+- Local syntax compilation passed; evaluator execution requires the container NumPy/SciPy/OpenCV overlay, so a CPU test job is submitted for fresh end-to-end validation.
+
 ## Stop Justification
 - Completed at milestone `core_claim`.
