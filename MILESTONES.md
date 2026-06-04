@@ -20,5 +20,9 @@
 - CPU job `64677f87-25d` removed the original false short loop but admitted a new adjacent final-frame false loop between frames 142 and 143.
 - Restricted the final-frame exception and odometry-initialized fallback to the origin-anchor closure only; adjacent final-frame pairs are no longer loop candidates.
 
+### [2026-06-04 08:35] - none
+- CPU job `d8561e47-a44` improved GelSLAM rotation over NormalFlow but accepted one false long-span SIFT loop and no valid loops, so loop scoring had no train/test signal.
+- Tightened ordinary SIFT loop acceptance with stronger CCS/SCR/inlier requirements and added an explicit origin-to-final odometry fallback candidate that still must pass NormalFlow verification before entering the pose graph.
+
 ## Stop Justification
 - Not stopped. Current work is continuing toward `core_claim`.

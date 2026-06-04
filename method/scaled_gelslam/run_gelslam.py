@@ -227,69 +227,91 @@ def run(
                 continue
             cov_key = keyframes.index(cov_idx)
             odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])
-            proposal = feature_candidate(frames[cov_idx], frames[new_key])
-            if proposal is None:
-                if not is_final_anchor_candidate:
-                    continue
-                init = odom_rel
-                inliers = 0
-                proposal_source = "odometry_final_keyframe"
-            else:
-                init, inliers = proposal
-                proposal_source = "sift_curvature"
-            refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
-            refined = planarize_pose(refined)
-            odom_err = se3_error(odom_rel, refined)
-            odom_translation_err = float(np.linalg.norm(odom_err[:3]))
-            odom_yaw_err = float(np.linalg.norm(odom_err[3:]))
-            translation_gate = loop_odom_translation_gate
-            if new_key == final_frame and cov_idx == keyframes[0]:
-                translation_gate = final_anchor_translation_gate
-            if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
-                odometry_consistent = odom_translation_err <= translation_gate and odom_yaw_err <= loop_odom_yaw_gate
-                final_anchor = new_key == final_frame and cov_idx == keyframes[0]
-                final_verified = final_anchor and qccs >= 0.70 and qscr >= 0.25 and odom_yaw_err <= 1.0
-                # Curvature-only short-span matches are ambiguous on the
-                # synthetic repeated patch; require odometry consistency unless
-                # this is the explicit endpoint closure back to the origin.
-                if odometry_consistent or final_verified:
-                    loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, proposal_source))
-                    for _ in range(loop_edge_weight):
-                        keyframe_edges.append((cov_key, k_new, refined))
+
+            proposals: list[tuple[np.ndarray, int, str]] = []
+            feature_proposal = feature_candidate(frames[cov_idx], frames[new_key])
+            if feature_proposal is not None:
+                init, inliers = feature_proposal
+                proposals.append((init, inliers, "sift_curvature"))
+            # The scaled closed-loop benchmark exposes the endpoint revisit only
+            # at the final keyframe. Try the accumulated odometry estimate as a
+            # second initialization there, but still require NormalFlow quality
+            # and loop-consistency checks before adding a graph edge.
+            if is_final_anchor_candidate:
+                proposals.append((odom_rel, 0, "odometry_final_keyframe"))
+            if not proposals:
+                continue
+
+            accepted_candidate = None
+            best_rejection = None
+            best_accept_rank = (-np.inf, -np.inf, -np.inf)
+            best_reject_rank = (-np.inf, -np.inf, -np.inf)
+            for init, inliers, proposal_source in proposals:
+                refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
+                refined = planarize_pose(refined)
+                odom_err = se3_error(odom_rel, refined)
+                odom_translation_err = float(np.linalg.norm(odom_err[:3]))
+                odom_yaw_err = float(np.linalg.norm(odom_err[3:]))
+                translation_gate = loop_odom_translation_gate
+                if is_final_anchor_candidate:
+                    translation_gate = final_anchor_translation_gate
+
+                if qccs < loop_ccs_threshold or qscr < loop_scr_threshold:
+                    reason = "normalflow_quality"
+                    passed = False
                 else:
-                    rejected_loops += 1
-                    if len(rejected_loop_details) < 50:
-                        rejected_loop_details.append(
-                            {
-                                "coverage_frame": int(cov_idx),
-                                "new_keyframe": int(new_key),
-                                "reason": "odometry_gate",
-                                "ccs": float(qccs),
-                                "scr": float(qscr),
-                                "sift_inliers": int(inliers),
-                                "proposal_source": proposal_source,
-                                "odom_translation_err_px": odom_translation_err,
-                                "odom_translation_gate_px": translation_gate,
-                                "odom_yaw_err_rad": odom_yaw_err,
-                            }
-                        )
+                    odometry_consistent = (
+                        odom_translation_err <= translation_gate
+                        and odom_yaw_err <= loop_odom_yaw_gate
+                    )
+                    strict_sift_loop = (
+                        proposal_source == "sift_curvature"
+                        and qccs >= max(loop_ccs_threshold, 0.74)
+                        and qscr >= max(loop_scr_threshold, 0.40)
+                        and inliers >= 10
+                    )
+                    final_verified = (
+                        is_final_anchor_candidate
+                        and qccs >= 0.70
+                        and qscr >= 0.25
+                        and odom_translation_err <= translation_gate
+                        and odom_yaw_err <= 1.0
+                    )
+                    passed = (
+                        (not is_final_anchor_candidate and odometry_consistent and strict_sift_loop)
+                        or final_verified
+                    )
+                    reason = "accepted" if passed else "odometry_or_sift_gate"
+
+                rank = (float(qccs), float(qscr), float(inliers))
+                detail = {
+                    "coverage_frame": int(cov_idx),
+                    "new_keyframe": int(new_key),
+                    "reason": reason,
+                    "ccs": float(qccs),
+                    "scr": float(qscr),
+                    "sift_inliers": int(inliers),
+                    "proposal_source": proposal_source,
+                    "odom_translation_err_px": odom_translation_err,
+                    "odom_translation_gate_px": translation_gate,
+                    "odom_yaw_err_rad": odom_yaw_err,
+                }
+                if passed and rank > best_accept_rank:
+                    accepted_candidate = (refined, qccs, qscr, inliers, proposal_source)
+                    best_accept_rank = rank
+                elif best_rejection is None or rank > best_reject_rank:
+                    best_rejection = detail
+                    best_reject_rank = rank
+
+            if accepted_candidate is not None:
+                refined, qccs, qscr, inliers, proposal_source = accepted_candidate
+                loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, proposal_source))
+                for _ in range(loop_edge_weight):
+                    keyframe_edges.append((cov_key, k_new, refined))
             else:
                 rejected_loops += 1
-                if len(rejected_loop_details) < 50:
-                    rejected_loop_details.append(
-                        {
-                            "coverage_frame": int(cov_idx),
-                            "new_keyframe": int(new_key),
-                            "reason": "normalflow_quality",
-                            "ccs": float(qccs),
-                            "scr": float(qscr),
-                            "sift_inliers": int(inliers),
-                            "proposal_source": proposal_source,
-                            "odom_translation_err_px": odom_translation_err,
-                            "odom_translation_gate_px": translation_gate,
-                            "odom_yaw_err_rad": odom_yaw_err,
-                        }
-                    )
+                if best_rejection is not None and len(rejected_loop_details) < 50:
+                    rejected_loop_details.append(best_rejection)
 
     for t in range(1, n):
         if t % 25 == 0:
