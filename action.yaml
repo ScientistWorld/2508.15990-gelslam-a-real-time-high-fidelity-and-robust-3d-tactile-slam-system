@@ -1,9 +1,9 @@
-# Finalize split evaluation design.
-# Once this is done, STOP immediately.
+# Validate the hardened full/train/test scoring contract.
+# Once this is submitted, STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: done
+action: submit
 gpus: 0
-test: false
+test: true
 milestone: core_claim
-notes: "Packaging audit passed: default data is generated/tracked locally, optional public GelSLAM URLs resolve, and no shared paths remain."
+notes: "CPU container test: regenerate synthetic benchmark, rerun NormalFlow and scaled GelSLAM, emit full/train/test metrics matching reference.json, and run validate.py --compare."
