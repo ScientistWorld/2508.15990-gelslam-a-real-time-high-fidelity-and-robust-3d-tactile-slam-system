@@ -4,5 +4,5 @@
 action: submit
 gpus: 0
 test: true
-milestone: none
-notes: "CPU retry after adding weighted pose-graph loop residuals and aligning train loop scoring with long-span loop closures."
+milestone: method_runs
+notes: "CPU retry after reducing weak final-anchor loop residual weight to preserve valid loop scoring while testing whether tracking recovers over NormalFlow."

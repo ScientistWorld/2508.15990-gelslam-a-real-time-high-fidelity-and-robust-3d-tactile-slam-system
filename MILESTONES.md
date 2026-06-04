@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: none**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -35,6 +35,11 @@
 ### [2026-06-04 09:05] - none
 - CPU job `04ab9363-406` accepted one valid origin-to-final loop with zero false loops, but the equal-weight loop edge over-corrected the trajectory and train-slice loop scoring still looked only at short loops.
 - Added weighted pose-graph residuals for weak final-anchor closures and aligned train loop scoring with the long-loop target used by the method and test split.
+
+### [2026-06-04 09:15] - method_runs
+- CPU job `576eb2e8-1c8` passed end-to-end validation: synthetic data generation, NormalFlow baseline, scaled GelSLAM, full/train/test scoring, and structural checks all completed in the container.
+- The method accepted one valid long-loop closure with zero false loops, but tracking remained worse than NormalFlow, so this does not yet support the core claim.
+- Reduced the weak final-anchor loop residual weight further to test whether the valid closure can remain scored without destabilizing pose-graph tracking.
 
 ## Stop Justification
 - Not stopped. Current work is continuing toward `core_claim`.
