@@ -32,7 +32,9 @@
           "valid_loop_rate": 1.0,
           "false_loop_rate": 0.0,
           "loop_translation_error_mm": 0.1179658417536601,
-          "loop_rotation_error_deg": 5.501042521922737
+          "loop_rotation_error_deg": 5.501042521922737,
+          "loop_span_translation_mae_mm": 0.7197817622662518,
+          "loop_span_rotation_mae_deg": 5.787416377836457
         },
         "normalflow": {
           "accepted_loops": 0,
@@ -40,7 +42,9 @@
           "valid_loop_rate": 0.0,
           "false_loop_rate": 0.0,
           "loop_translation_error_mm": 0.625,
-          "loop_rotation_error_deg": 20.0
+          "loop_rotation_error_deg": 20.0,
+          "loop_span_translation_mae_mm": 0.9825084034225738,
+          "loop_span_rotation_mae_deg": 6.274068810800087
         }
       }
     }
