@@ -49,5 +49,10 @@
 - The regenerated scores do not support `core_claim`: GelSLAM reduced translation drift versus NormalFlow but had much worse rotation error and accepted three false loop closures.
 - Patched the NormalFlow registration objective used by both the method and baseline with a target-height consistency residual so the scaled 6DoF renderer constrains z, roll, and pitch instead of relying on normal direction alone.
 
+### [2026-06-04 09:57] - method_runs
+- CPU job `bf082aab-738` verified the depth-aware 6DoF path in the container, but the result still does not support `core_claim`: NormalFlow scored 10.403 deg / 0.694 mm and GelSLAM scored 19.096 deg / 1.497 mm.
+- The method accepted one loop and it was false by the evaluator's ground-truth loop check, leaving valid-loop rate 0.0 and false-loop rate 1.0.
+- Tightened loop insertion by requiring stronger SIFT support and consistency with accumulated odometry before a loop edge can enter the pose graph.
+
 ## Stop Justification
-- Not stopped. A CPU retry job is being submitted for the depth-aware scaled SE(3) path before any higher milestone is claimed.
+- Not stopped. A CPU retry job is being submitted for the depth-aware scaled SE(3) path with stricter loop verification before any higher milestone is claimed.

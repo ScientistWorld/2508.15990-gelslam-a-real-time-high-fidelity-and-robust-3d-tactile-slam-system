@@ -1,6 +1,6 @@
-# Validate the depth-aware fidelity-reset implementation in the packaged container.
+# Validate stricter loop verification in the depth-aware SE(3) implementation.
 action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "Retry the scaled SE(3) path after adding target-height consistency to NormalFlow: regenerate the 6DoF benchmark, rerun baseline and GelSLAM, evaluate full/train/test scores, and validate the scoring contract."
+notes: "Retry the scaled SE(3) path after tightening SIFT loop support and odometry-consistency gates: regenerate the 6DoF benchmark, rerun baseline and GelSLAM, evaluate full/train/test scores, and validate the scoring contract."

@@ -15,6 +15,9 @@ from method.scaled_gelslam.normalflow import estimate_relative, geometric_proper
 MM_PER_PIXEL = 20.0 / 320.0
 COVERAGE_AREA_THRESHOLD_MM2 = 0.2
 MIN_LOOP_SPAN_FRAMES = 32
+MIN_LOOP_INLIERS = 12
+LOOP_ODOM_TRANSLATION_GATE_PX = 18.0
+LOOP_ODOM_ROTATION_GATE_DEG = 18.0
 
 
 def load_tactile_frames(path: Path) -> list[dict]:
@@ -228,11 +231,55 @@ def run(
             if feature_proposal is None:
                 continue
             init, inliers = feature_proposal
-            if inliers <= 8:
+            if inliers < MIN_LOOP_INLIERS:
+                rejected_loops += 1
+                if len(rejected_loop_details) < 300:
+                    rejected_loop_details.append(
+                        {
+                            "coverage_frame": int(cov_idx),
+                            "new_keyframe": int(new_key),
+                            "reason": "sift_inliers",
+                            "sift_inliers": int(inliers),
+                            "proposal_source": "sift_curvature",
+                        }
+                    )
                 continue
             refined, qccs, qscr, _ = estimate_relative(frames[cov_idx], frames[new_key], init)
+            odom_rel = between(keyframe_abs_est[cov_key], keyframe_abs_est[k_new])
+            odom_err = se3_error(refined, odom_rel)
+            odom_trans_px = float(np.linalg.norm(odom_err[:3]))
+            odom_rot_deg = float(np.degrees(np.linalg.norm(odom_err[3:])))
+            if odom_trans_px > LOOP_ODOM_TRANSLATION_GATE_PX or odom_rot_deg > LOOP_ODOM_ROTATION_GATE_DEG:
+                rejected_loops += 1
+                if len(rejected_loop_details) < 300:
+                    rejected_loop_details.append(
+                        {
+                            "coverage_frame": int(cov_idx),
+                            "new_keyframe": int(new_key),
+                            "reason": "odometry_consistency",
+                            "ccs": float(qccs),
+                            "scr": float(qscr),
+                            "sift_inliers": int(inliers),
+                            "odometry_translation_error_px": odom_trans_px,
+                            "odometry_rotation_error_deg": odom_rot_deg,
+                            "proposal_source": "sift_curvature",
+                        }
+                    )
+                continue
             if qccs >= loop_ccs_threshold and qscr >= loop_scr_threshold:
-                loops.append((cov_key, k_new, refined.tolist(), qccs, qscr, inliers, "sift_curvature"))
+                loops.append(
+                    (
+                        cov_key,
+                        k_new,
+                        refined.tolist(),
+                        qccs,
+                        qscr,
+                        inliers,
+                        "sift_curvature",
+                        odom_trans_px,
+                        odom_rot_deg,
+                    )
+                )
                 keyframe_edges.append((cov_key, k_new, refined))
             else:
                 rejected_loops += 1
@@ -245,6 +292,8 @@ def run(
                             "ccs": float(qccs),
                             "scr": float(qscr),
                             "sift_inliers": int(inliers),
+                            "odometry_translation_error_px": odom_trans_px,
+                            "odometry_rotation_error_deg": odom_rot_deg,
                             "proposal_source": "sift_curvature",
                         }
                     )

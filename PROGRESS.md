@@ -23,6 +23,14 @@ target height field as well as target normals, which preserves the SE(3)
 registration computation while making depth-related motion observable in the
 scaled synthetic renderer.
 
+CPU job `bf082aab-738` verified that the depth-aware 6DoF path is much faster
+and no longer has kilometer-scale translation drift, but it still failed the
+scientific claim. The single accepted loop was a false SIFT-curvature match,
+and the pose graph degraded both rotation and translation relative to the
+frame-to-frame baseline. Loop insertion is now tightened with a minimum
+feature-inlier count and an odometry-consistency gate before a loop edge can be
+added to the pose graph.
+
 Documentation, scoring metadata, and a scaled GelSLAM reproduction are in place. Before the fidelity reset, the packaged benchmark had reached `core_claim` on a 144-frame planar synthetic substitute: the method improved long-horizon tracking over the NormalFlow baseline while maintaining a valid-loop, zero-false-loop closure constraint. That result is now treated as historical only. The current runnable path keeps the SE(3) pose representation, NormalFlow-style tactile registration objective, pose-graph residuals, loop verification, and fused-surface reconstruction artifacts, and the next validation job will test the patched 6DoF benchmark.
 
 A continuation audit on 2026-05-31 rechecked method fidelity, evaluator independence, scripts, and deliverables. The method remains a scaled partial reproduction rather than the full physical GelSight/ROS2/GTSAM system, but it implements the recognizable GelSLAM tracking computation rather than a surrogate. The audit found one evaluation hardening issue: `eval/evaluate_tracking.py` loaded `gt_poses.npy` from each method run directory. This is now fixed so evaluation loads ground truth from the fixed dataset and counts accepted loops from actual loop-edge records. The documented shell entrypoints were also made executable.
@@ -57,6 +65,18 @@ container and evaluator passed, but the result did not support the core claim:
 These values are retained as a failure diagnosis rather than a claimed
 reproduction. The next job reruns after adding the depth-consistency residual
 to the NormalFlow objective.
+
+CPU job `bf082aab-738` regenerated scores after the depth-consistency residual.
+The container and evaluator passed again, but the result still did not support
+the core claim:
+
+- NormalFlow baseline: 10.40 deg rotation MAE, 0.69 mm translation MAE.
+- Scaled GelSLAM Online: 19.10 deg rotation MAE, 1.50 mm translation MAE.
+- Scaled GelSLAM Online accepted 1 loop closure; it was false, so valid-loop
+  rate was 0.0 and false-loop rate was 1.0.
+
+The next job tests stricter loop verification rather than changing the score
+contract.
 
 Final verification on 2026-06-04 confirmed the stale-artifact mismatch: the
 tracked synthetic benchmark metadata still records a planar trajectory and the
@@ -113,6 +133,14 @@ errors and unsafe loop acceptances. The objective now includes a matched
 height residual in both `method/scaled_gelslam/normalflow.py` and
 `baseline/normalflow.py` so future scores compare the same registration
 primitive fairly.
+
+CPU job `bf082aab-738` exposed a remaining loop-verification failure. The only
+accepted loop had marginal SIFT support and failed the evaluator's ground-truth
+pose check, yet it still passed the NormalFlow CCS/SCR thresholds. The method
+now rejects loop proposals with fewer than 12 SIFT inliers and rejects proposals
+whose refined SE(3) transform disagrees too strongly with the accumulated
+odometry estimate. Rejected-loop diagnostics record the specific gate and
+odometry disagreement so a future failure is easier to diagnose.
 
 Continuation audit on 2026-05-31 after the milestone reset found that the
 checked-in `scoring/scores.json` initially reflected older 144-frame

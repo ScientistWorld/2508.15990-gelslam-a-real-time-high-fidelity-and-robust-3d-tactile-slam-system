@@ -11,8 +11,8 @@ documentation is generally suitable for from-scratch agents.
 
 However, the current repository state is not the previously validated
 `core_claim` state. The latest faithful 6DoF runnable path has now been tested
-in CPU job `1d21151c-831`; it executed successfully and passed structural
-validation, but its scores do not support the core claim.
+in CPU jobs `1d21151c-831` and `bf082aab-738`; both executed successfully and
+passed structural validation, but their scores do not support the core claim.
 
 ## Issues Found
 
@@ -21,10 +21,17 @@ validation, but its scores do not support the core claim.
   translation drift relative to NormalFlow but had much worse rotation error and
   accepted three false loop closures. This justifies `method_runs`, not
   `core_claim`.
+- **Critical:** CPU job `bf082aab-738` reran after the depth-residual patch. The
+  extreme translation drift was fixed, but the reproduced method still trailed
+  NormalFlow on both tracked benefit metrics and accepted one false loop. This
+  still justifies only `method_runs`.
 - **Critical:** The failed 6DoF result exposed an observability gap in the
   registration objective. The existing residual matched target normal
   directions but did not penalize disagreement with target height, leaving depth
   motion and coupled SE(3) rotation weakly constrained in the scaled renderer.
+- **Critical:** The latest 6DoF result exposes a loop-verification gap: a
+  low-support SIFT-curvature proposal can pass CCS/SCR checks but be false under
+  ground-truth SE(3) loop error.
 - **Minor:** Generated Python `__pycache__` directories existed under root and
   source directories. These are ignored artifacts and were removed.
 - **Residual:** The workspace has pre-existing unrelated dirty entries
@@ -38,6 +45,10 @@ validation, but its scores do not support the core claim.
 - Added a height-consistency residual to the NormalFlow registration objective
   in both the method and baseline implementations. The evaluator remains
   unchanged; the next CPU job must regenerate scores from method artifacts.
+- Tightened method-side loop insertion: SIFT loop proposals now require at
+  least 12 inliers and must be consistent with accumulated odometry before
+  entering the pose graph. Rejected-loop diagnostics record inlier and odometry
+  gates for future debugging.
 - Verified `scripts/download.sh` is self-contained for the default generated
   benchmark and has no `shared/` references.
 - Verified both optional external URLs in `scripts/download.sh` using
@@ -47,16 +58,19 @@ validation, but its scores do not support the core claim.
 - CPU job `1d21151c-831` ran `python validate.py --compare` in the container;
   it passed structurally on regenerated 6DoF artifacts, but the scores were
   scientifically insufficient.
+- CPU job `bf082aab-738` ran `python validate.py --compare` in the container;
+  it passed structurally on regenerated depth-aware 6DoF artifacts, but the
+  scores were scientifically insufficient.
 
 ## Final Judgment
 
 The workspace is structurally close to gym-ready, but it is not ready to signal
 final `done` at `core_claim` in the current state. The correct next action is to
-rerun the CPU container validation job after the depth-aware registration patch
-so `scores.json`, `scores_train.json`, and `scores_test.json` are regenerated
-from the current 6DoF method and benchmark. If that job supports the claim, a
-later verifier can restore `core_claim`; if it fails, the honest milestone
-remains `method_runs`.
+rerun the CPU container validation job after the stricter loop-verification
+patch so `scores.json`, `scores_train.json`, and `scores_test.json` are
+regenerated from the current 6DoF method and benchmark. If that job supports
+the claim, a later verifier can restore `core_claim`; if it fails, the honest
+milestone remains `method_runs`.
 
 - Milestone: method_runs
 - Ready for gym use: partial
