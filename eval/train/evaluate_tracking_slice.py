@@ -148,10 +148,10 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     pred = origin_relative(pred)
     gt = origin_relative(gt)
     errors = np.asarray([relative_error(p, g) for p, g in zip(pred, gt)], dtype=np.float64)
-    pos_err = np.linalg.norm(errors[indices, :3], axis=1)
-    rot_err = np.linalg.norm(errors[indices, 3:], axis=1)
-    pos_err_mm = pos_err * GELSIGHT_MM_PER_PIXEL
-    rot_err_deg = np.degrees(rot_err)
+    full_pos_err_mm = np.linalg.norm(errors[:, :3], axis=1) * GELSIGHT_MM_PER_PIXEL
+    full_rot_err_deg = np.degrees(np.linalg.norm(errors[:, 3:], axis=1))
+    pos_err_mm = full_pos_err_mm[indices]
+    rot_err_deg = full_rot_err_deg[indices]
 
     summary = read_summary(run_dir)
     keyframe_indices = summary.get("keyframe_indices", [])
@@ -160,7 +160,15 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     false_loops = 0
     loop_translation_errors_mm = []
     loop_rotation_errors_deg = []
+    loop_span_mask = np.zeros(len(gt), dtype=bool)
     for edge in loop_edges:
+        if len(edge) >= 2 and keyframe_indices:
+            key_i, key_j = int(edge[0]), int(edge[1])
+            if key_i < len(keyframe_indices) and key_j < len(keyframe_indices):
+                frame_i = int(keyframe_indices[key_i])
+                frame_j = int(keyframe_indices[key_j])
+                lo, hi = sorted((frame_i, frame_j))
+                loop_span_mask[lo : hi + 1] = True
         if len(edge) < 3 or not keyframe_indices:
             false_loops += 1
             loop_translation_errors_mm.append(NO_LOOP_TRANSLATION_PENALTY_MM)
@@ -184,6 +192,9 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
     if not loop_translation_errors_mm:
         loop_translation_errors_mm.append(NO_LOOP_TRANSLATION_PENALTY_MM)
         loop_rotation_errors_deg.append(NO_LOOP_ROTATION_PENALTY_DEG)
+    loop_span_indices = indices[loop_span_mask[indices]]
+    if len(loop_span_indices) == 0:
+        loop_span_indices = indices
     return {
         "rotation_mae_deg": float(rot_err_deg.mean()),
         "translation_mae_mm": float(pos_err_mm.mean()),
@@ -197,6 +208,8 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
         "false_loop_rate": float(false_loops / max(accepted, 1)),
         "loop_translation_error_mm": float(np.mean(loop_translation_errors_mm)),
         "loop_rotation_error_deg": float(np.mean(loop_rotation_errors_deg)),
+        "loop_span_translation_mae_mm": float(np.mean(full_pos_err_mm[loop_span_indices])),
+        "loop_span_rotation_mae_deg": float(np.mean(full_rot_err_deg[loop_span_indices])),
     }
 
 
@@ -254,6 +267,8 @@ def main() -> None:
                         "false_loop_rate": vals["false_loop_rate"],
                         "loop_translation_error_mm": vals["loop_translation_error_mm"],
                         "loop_rotation_error_deg": vals["loop_rotation_error_deg"],
+                        "loop_span_translation_mae_mm": vals["loop_span_translation_mae_mm"],
+                        "loop_span_rotation_mae_deg": vals["loop_span_rotation_mae_deg"],
                     }
                     for name, vals in flat_results.items()
                 }

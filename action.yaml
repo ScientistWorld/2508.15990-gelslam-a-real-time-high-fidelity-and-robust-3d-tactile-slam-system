@@ -6,4 +6,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Rerun split scoring after fixing sparse loop-closure test saturation; require every reference metric to be present and non-null."
+notes: "Rerun split scoring after changing loop primary metric to slice-specific loop-span drift; require all reference metrics."
