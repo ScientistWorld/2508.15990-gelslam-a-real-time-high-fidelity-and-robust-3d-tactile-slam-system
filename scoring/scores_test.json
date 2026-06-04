@@ -27,16 +27,20 @@
     "loop_closure_quality": {
       "results": {
         "gelslam_online": {
-          "accepted_loops": 0,
-          "valid_loops": 0,
-          "valid_loop_rate": 0.0,
-          "false_loop_rate": 0.0
+          "accepted_loops": 1,
+          "valid_loops": 1,
+          "valid_loop_rate": 1.0,
+          "false_loop_rate": 0.0,
+          "loop_translation_error_mm": 0.1179658417536601,
+          "loop_rotation_error_deg": 5.501042521922737
         },
         "normalflow": {
           "accepted_loops": 0,
           "valid_loops": 0,
           "valid_loop_rate": 0.0,
-          "false_loop_rate": 0.0
+          "false_loop_rate": 0.0,
+          "loop_translation_error_mm": 0.625,
+          "loop_rotation_error_deg": 20.0
         }
       }
     }
