@@ -14,6 +14,7 @@ The validated score contract is intentionally narrower than the full paper. It e
 - CPU job `4b493d0e-95c` regenerated the full scores successfully but failed because both train/test slices counted the same single long loop.
 - Follow-up fix assigns long-loop edges to a split by their earlier anchor frame.
 - CPU job `8ba3d0e8-8c0` passed the full container validation path with exit code 0.
+- Continuation CPU job `6a7582cb-f64` passed the same full container validation path after the milestone reset and scoring-contract wording fix.
 
 ## Current Scores
 - NormalFlow: 6.09 deg rotation MAE, 0.95 mm translation MAE.

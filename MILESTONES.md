@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -18,5 +18,11 @@
 - Fixed the scoring-contract wording so the primary target matches `scripts/evaluate.sh`: the full fixed closed-loop synthetic sequence, with train/test slice scores treated as diagnostics.
 - Submitting a CPU container job to regenerate artifacts, run the evaluator, and determine whether `core_claim` can be restored from fresh results.
 
+### [2026-06-04 08:37] - core_claim
+- CPU container job `6a7582cb-f64` completed with exit code 0 and regenerated the full reproduction path from `scripts/run.sh`.
+- Restored the core tracking claim on the 144-frame scaled tactile benchmark: GelSLAM scored 5.713 deg / 0.703 mm versus NormalFlow at 6.086 deg / 0.948 mm.
+- Restored the loop-closure safety constraint: GelSLAM accepted one loop, the loop was valid, and the false-loop rate was 0.0.
+- `python validate.py --compare` passed in the container and locally after the job.
+
 ## Stop Justification
-- Pending fresh CPU container validation after continuation audit.
+- Completed at milestone `core_claim` for the packaged scaled benchmark. Higher milestones would require a broader multi-object or real-dataset reproduction beyond the current validated substitute.
