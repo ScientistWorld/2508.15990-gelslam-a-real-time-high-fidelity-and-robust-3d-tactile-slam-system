@@ -29,5 +29,10 @@
 - Updated `scripts/run.sh` to regenerate the synthetic benchmark, NormalFlow baseline, scaled GelSLAM artifacts, full scores, train/test scores, and validator comparison in one CPU job.
 - Local syntax compilation passed; evaluator execution requires the container NumPy/SciPy/OpenCV overlay, so a CPU test job is submitted for fresh end-to-end validation.
 
+### [2026-06-04 09:13] - core_claim
+- CPU verification job `b9542f1c-97a` completed with exit code 0.
+- The job regenerated the benchmark and artifacts, emitted complete full/train/test scores, checked full metric coverage, and passed `python validate.py --compare`.
+- Final verification report written; workspace judged ready for scaled gym use.
+
 ## Stop Justification
 - Completed at milestone `core_claim`.

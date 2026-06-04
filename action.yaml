@@ -1,9 +1,4 @@
-# Validate the hardened full/train/test scoring contract.
-# Once this is submitted, STOP immediately.
-# Do NOT sleep, poll, or wait. The system reads this file
-# only after your turn ends.
-action: submit
-gpus: 0
-test: true
+# Final verification complete.
+action: done
 milestone: core_claim
-notes: "CPU container test: regenerate synthetic benchmark, rerun NormalFlow and scaled GelSLAM, emit full/train/test metrics matching reference.json, and run validate.py --compare."
+notes: "Final verification passed: scoring contract is complete, docs are method-safe, and the core_claim benchmark is ready for gym use."
