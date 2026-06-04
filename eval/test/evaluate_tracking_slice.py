@@ -11,7 +11,6 @@ from scipy.spatial.transform import Rotation
 SLICE_NAME = "test"
 BLOCK_SIZE = 8
 LONG_LOOP_SPAN_FRAMES = 32
-LOOP_OPPORTUNITY_BUDGET = 3.0
 GELSIGHT_MM_PER_PIXEL = 20.0 / 320.0
 LEGACY_SCORE_NAMES = {
     "normalflow_baseline": "normalflow",
@@ -69,15 +68,10 @@ def tracking_indices(n_frames: int) -> np.ndarray:
     return np.asarray([idx for idx in range(n_frames) if (idx // BLOCK_SIZE) % 2 == 1], dtype=np.int64)
 
 
-def frame_in_slice(frame_idx: int) -> bool:
-    return (frame_idx // BLOCK_SIZE) % 2 == 1
-
-
-def loop_edges_for_slice(loop_edges: list, keyframe_indices: list) -> list:
+def long_loop_edges(loop_edges: list, keyframe_indices: list) -> list:
     selected = []
     for edge in loop_edges:
         is_long = False
-        in_slice = False
         if len(edge) >= 2 and keyframe_indices:
             key_i, key_j = int(edge[0]), int(edge[1])
             if key_i < len(keyframe_indices) and key_j < len(keyframe_indices):
@@ -85,8 +79,7 @@ def loop_edges_for_slice(loop_edges: list, keyframe_indices: list) -> list:
                 frame_j = int(keyframe_indices[key_j])
                 span = abs(frame_j - frame_i)
                 is_long = span >= LONG_LOOP_SPAN_FRAMES
-                in_slice = frame_in_slice(min(frame_i, frame_j))
-        if is_long and in_slice:
+        if is_long:
             selected.append(edge)
     return selected
 
@@ -159,7 +152,7 @@ def metrics(run_dir: Path, gt: np.ndarray) -> dict[str, float]:
 
     summary = read_summary(run_dir)
     keyframe_indices = summary.get("keyframe_indices", [])
-    loop_edges = loop_edges_for_slice(summary.get("loop_edges", []), keyframe_indices)
+    loop_edges = long_loop_edges(summary.get("loop_edges", []), keyframe_indices)
     accepted = len(loop_edges)
     false_loops = 0
     for edge in loop_edges:
@@ -220,7 +213,7 @@ def main() -> None:
     scores = {
         "_metadata": {
             "slice": SLICE_NAME,
-            "split": f"block_interleaved_{BLOCK_SIZE}_frame_tracking_and_anchor_assigned_long_loop_spans_ge_{LONG_LOOP_SPAN_FRAMES}_frames",
+            "split": f"block_interleaved_{BLOCK_SIZE}_frame_tracking_with_global_long_loop_constraint_ge_{LONG_LOOP_SPAN_FRAMES}_frames",
         },
         "experiments": {
             "synthetic_long_horizon_tracking": {
