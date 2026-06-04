@@ -7,8 +7,8 @@
     "synthetic_long_horizon_tracking": {
       "results": {
         "gelslam_online": {
-          "rotation_mae_deg": 6.0447721160913215,
-          "translation_mae_mm": 4.6248408673016685
+          "rotation_mae_deg": 5.62548706252559,
+          "translation_mae_mm": 1.3077864502548282
         },
         "normalflow": {
           "rotation_mae_deg": 9.396095680362269,
@@ -19,11 +19,11 @@
     "loop_closure_quality": {
       "results": {
         "gelslam_online": {
-          "accepted_loops": 1,
+          "accepted_loops": 0,
           "valid_loops": 0,
           "valid_loop_recall": 0.0,
           "valid_loop_rate": 0.0,
-          "false_loop_rate": 1.0
+          "false_loop_rate": 0.0
         },
         "normalflow": {
           "accepted_loops": 0,

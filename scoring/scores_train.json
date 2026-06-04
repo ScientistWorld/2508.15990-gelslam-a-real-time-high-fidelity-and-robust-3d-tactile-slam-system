@@ -7,8 +7,8 @@
     "synthetic_long_horizon_tracking": {
       "results": {
         "gelslam_online": {
-          "rotation_mae_deg": 6.073175397407572,
-          "translation_mae_mm": 4.594131116386871
+          "rotation_mae_deg": 5.1701606500815345,
+          "translation_mae_mm": 1.1806849115729063
         },
         "normalflow": {
           "rotation_mae_deg": 7.649075766935646,
