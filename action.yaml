@@ -1,6 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
-milestone: core_claim
-notes: "Scaled GelSLAM reproduction reaches core_claim on the packaged 144-frame synthetic long-horizon tracking benchmark: it improves over NormalFlow on rotation and translation MAE and accepts only a valid loop closure with zero false-loop rate. Full real-data 6DoF reconstruction remains out of scope for higher milestones."
+action: submit
+gpus: 0
+test: true
+milestone: method_runs
+notes: "CPU container validation after fixing train/test split scoring to emit loop_closure_quality. This reruns reproduce, full eval, split eval, and validate.py --compare; if scores remain stable it should restore core_claim."

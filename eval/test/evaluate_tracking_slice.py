@@ -224,6 +224,17 @@ def main() -> None:
                     for name, vals in flat_results.items()
                 }
             },
+            "loop_closure_quality": {
+                "results": {
+                    name: {
+                        "accepted_loops": vals["accepted_loops"],
+                        "valid_loops": vals["valid_loops"],
+                        "valid_loop_rate": vals["valid_loop_rate"],
+                        "false_loop_rate": vals["false_loop_rate"],
+                    }
+                    for name, vals in flat_results.items()
+                }
+            },
         },
     }
     out = Path(args.output)
