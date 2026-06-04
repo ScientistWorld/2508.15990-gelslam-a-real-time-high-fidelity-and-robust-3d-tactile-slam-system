@@ -3,28 +3,28 @@
     "synthetic_long_horizon_tracking": {
       "results": {
         "normalflow": {
-          "rotation_mae_deg": 12.930931734188865,
-          "translation_mae_mm": 881.0876800644004,
-          "rotation_p95_deg": 21.130994975426674,
-          "translation_p95_mm": 3382.7896566977297,
-          "terminal_rotation_error_deg": 9.39552795049799,
-          "terminal_translation_error_mm": 1547.583458490236
+          "rotation_mae_deg": 10.403242530074415,
+          "translation_mae_mm": 0.6941093028809385,
+          "rotation_p95_deg": 20.891675348783508,
+          "translation_p95_mm": 2.1620635244751214,
+          "terminal_rotation_error_deg": 22.428447411103445,
+          "terminal_translation_error_mm": 2.3738367490388543
         },
         "gelslam_online": {
-          "rotation_mae_deg": 73.97978662348925,
-          "translation_mae_mm": 151.16049698460347,
-          "rotation_p95_deg": 152.1955758675772,
-          "translation_p95_mm": 199.2008870162083,
-          "terminal_rotation_error_deg": 100.94552321309688,
-          "terminal_translation_error_mm": 172.75275701831325
+          "rotation_mae_deg": 19.095776247705437,
+          "translation_mae_mm": 1.496710372147891,
+          "rotation_p95_deg": 37.48109235045133,
+          "translation_p95_mm": 5.095871404125448,
+          "terminal_rotation_error_deg": 31.464164115239573,
+          "terminal_translation_error_mm": 5.440123374695386
         }
       }
     },
     "loop_closure_quality": {
       "results": {
         "normalflow": {
-          "loop_span_translation_mae_mm": 881.0876800644004,
-          "loop_span_rotation_mae_deg": 12.930931734188865,
+          "loop_span_translation_mae_mm": 0.6941093028809385,
+          "loop_span_rotation_mae_deg": 10.403242530074415,
           "accepted_loops": 0,
           "valid_loops": 0,
           "valid_loop_rate": 0.0,
@@ -33,14 +33,14 @@
           "loop_rotation_error_deg": 20.0
         },
         "gelslam_online": {
-          "loop_span_translation_mae_mm": 176.10398464896832,
-          "loop_span_rotation_mae_deg": 90.32342862130959,
-          "accepted_loops": 3,
+          "loop_span_translation_mae_mm": 1.0940850895245382,
+          "loop_span_rotation_mae_deg": 21.58141937080572,
+          "accepted_loops": 1,
           "valid_loops": 0,
           "valid_loop_rate": 0.0,
           "false_loop_rate": 1.0,
-          "loop_translation_error_mm": 6.8604033184741935,
-          "loop_rotation_error_deg": 65.13272393924028
+          "loop_translation_error_mm": 3.8642765206083287,
+          "loop_rotation_error_deg": 22.8840485137234
         }
       }
     }
