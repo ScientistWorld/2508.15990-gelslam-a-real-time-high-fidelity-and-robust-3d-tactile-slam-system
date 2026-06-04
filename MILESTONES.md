@@ -39,5 +39,10 @@
 - Reset the milestone to `method_runs`: the implementation still runs recognizable GelSLAM components, but a higher milestone needs results from a more faithful scaled SE(3) procedure.
 - Patched the runnable path to use full SE(3) pose graph variables, remove planar projection from method and baseline, remove final-anchor/odometry loop shortcuts, and generate the default synthetic benchmark in 6DoF mode.
 
+### [2026-06-04 09:28] - method_runs
+- Final verification found that the checked-in scores and checkpoint artifacts are stale relative to the current 6DoF runnable path.
+- Local structural validation passes on the existing artifacts, and optional download URLs were verified, but `core_claim` cannot be restored without a fresh container run from the current code.
+- Keeping `action: submit` for a CPU validation job to regenerate the benchmark, baseline, method outputs, full/train/test scores, and validator comparison.
+
 ## Stop Justification
 - Not stopped. A CPU validation job is being submitted for the more faithful scaled SE(3) path before any higher milestone is claimed.
