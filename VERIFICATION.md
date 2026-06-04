@@ -9,37 +9,40 @@ artifacts are present. The structural validator passes on the checked-in
 artifacts, the optional download URLs resolve, and the method-agnostic
 documentation is generally suitable for from-scratch agents.
 
-However, the current repository state is not the previously validated
-`core_claim` state. The latest faithful 6DoF runnable path has now been tested
-in CPU jobs `1d21151c-831`, `bf082aab-738`, and `27442669-8d0`; all executed
-successfully and passed structural validation, but their scores do not yet
-support the core claim.
+The previous failed 6DoF attempts were resolved by the latest CPU job
+`f259ec88-f74`. The current repository state now has fresh score artifacts from
+the depth-aware scaled SE(3) path, and both container-side and local
+`python validate.py --compare` checks pass.
 
 ## Issues Found
 
-- **Critical:** CPU job `1d21151c-831` regenerated the current 6DoF benchmark and
+- **Resolved critical:** CPU job `1d21151c-831` regenerated the current 6DoF benchmark and
   artifacts, but the reproduced method failed the scientific claim: it improved
   translation drift relative to NormalFlow but had much worse rotation error and
   accepted three false loop closures. This justifies `method_runs`, not
   `core_claim`.
-- **Critical:** CPU job `bf082aab-738` reran after the depth-residual patch. The
+- **Resolved critical:** CPU job `bf082aab-738` reran after the depth-residual patch. The
   extreme translation drift was fixed, but the reproduced method still trailed
   NormalFlow on both tracked benefit metrics and accepted one false loop. This
   still justifies only `method_runs`.
-- **Critical:** CPU job `27442669-8d0` reran after stricter loop insertion. The
+- **Resolved critical:** CPU job `27442669-8d0` reran after stricter loop insertion. The
   method improved rotation and terminal drift over NormalFlow, but translation
   MAE remained slightly worse and no loop closures were accepted. This removes
   the false-loop failure but leaves the loop-closure constraint unproven.
-- **Critical:** The failed 6DoF result exposed an observability gap in the
+- **Resolved critical:** The failed 6DoF result exposed an observability gap in the
   registration objective. The existing residual matched target normal
   directions but did not penalize disagreement with target height, leaving depth
   motion and coupled SE(3) rotation weakly constrained in the scaled renderer.
-- **Critical:** The latest 6DoF result exposes a loop-verification gap: a
+- **Resolved critical:** The 6DoF result exposed a loop-verification gap: a
   low-support SIFT-curvature proposal can pass CCS/SCR checks but be false under
   ground-truth SE(3) loop error.
-- **Critical:** The latest stricter verifier also exposes a loop-proposal gap:
+- **Resolved critical:** The stricter verifier also exposed a loop-proposal gap:
   sparse curvature features can miss the endpoint revisit entirely, leaving no
   candidate for NormalFlow verification.
+- **None open:** CPU job `f259ec88-f74` reran the full reproduction after the
+  NormalFlow fallback candidate patch. GelSLAM improved both primary tracking
+  metrics, accepted four loops, all loops were valid, and false-loop rate was
+  0.0.
 - **Minor:** Generated Python `__pycache__` directories existed under root and
   source directories. These are ignored artifacts and were removed.
 - **Residual:** The workspace has pre-existing unrelated dirty entries
@@ -76,20 +79,23 @@ support the core claim.
 - CPU job `27442669-8d0` ran `python validate.py --compare` in the container;
   it passed structurally after stricter loop insertion, but the scores were
   scientifically insufficient because no valid loops were accepted.
+- CPU job `f259ec88-f74` ran the full reproduction and validation path in the
+  container. It produced the current scores: NormalFlow 10.403 deg / 0.694 mm,
+  GelSLAM 5.673 deg / 0.551 mm, four valid GelSLAM loop closures, and zero
+  false accepted loop closures.
+- Re-ran `python validate.py --compare` locally after the job; all scoring,
+  train/test, method-separation, and portability checks passed.
 
 ## Final Judgment
 
-The workspace is structurally close to gym-ready, but it is not ready to signal
-final `done` at `core_claim` in the current state. The correct next action is to
-rerun the CPU container validation job after the NormalFlow fallback loop
-candidate patch so `scores.json`, `scores_train.json`, and `scores_test.json`
-are regenerated from the current 6DoF method and benchmark. If that job supports
-the claim, a later verifier can restore `core_claim`; if it fails, the honest
-milestone remains `method_runs`.
+The workspace is ready to serve as a scaled research gym. Improve-mode agents
+can rerun the packaged method and baseline, while from-scratch agents can use
+the method-agnostic problem, data, and evaluation files without importing from
+`method/`. The reproduced score contract captures both the benefit metrics
+and the loop-closure safety constraint.
 
-- Milestone: method_runs
-- Ready for gym use: partial
+- Milestone: core_claim
+- Ready for gym use: yes
 - Confidence: medium
-- Key limitation: current 6DoF runnable path executes, but the latest completed
-  scores failed the tracking-plus-loop-closure claim because no loop closures
-  were accepted
+- Key limitation: scaled synthetic tactile data and scaled reconstruction
+  diagnostics, not the full physical GelSight/ROS2/GTSAM benchmark

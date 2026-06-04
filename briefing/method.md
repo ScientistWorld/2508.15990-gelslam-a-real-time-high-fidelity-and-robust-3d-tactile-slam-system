@@ -12,6 +12,14 @@ Because tactile sensing is local, GelSLAM inserts keyframes frequently. A subset
 
 For reconstruction, the optimized poses are used to fuse tactile surface observations into a global object mesh. This workspace uses a scaled fused-point-surface target rather than the paper's full physical meshing stack, but it preserves the essential computation: local tactile surface samples are transformed by estimated poses and fused globally for surface scoring.
 
+Implementation note for this scaled gym: sparse curvature features can miss the
+synthetic endpoint revisit, so the loop module also tries an odometry-initialized
+NormalFlow candidate for long-span coverage pairs after the feature proposal is
+missing or rejected. This follows the paper's same geometric verification family
+rather than adding a learned surrogate: the fallback candidate still must pass
+NormalFlow CCS/SCR quality checks and SE(3) consistency gates before becoming a
+pose-graph loop edge.
+
 ## Main Claims
 
 - **Primary claim:** GelSLAM improves long-horizon tactile tracking over frame-to-frame NormalFlow by correcting drift through valid loop closures while remaining online-capable.

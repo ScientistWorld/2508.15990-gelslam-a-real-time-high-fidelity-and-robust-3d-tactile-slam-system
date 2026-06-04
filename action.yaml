@@ -1,6 +1,4 @@
-# Validate NormalFlow fallback loop candidates in the depth-aware SE(3) implementation.
-action: submit
-gpus: 0
-test: true
-milestone: method_runs
-notes: "Retry the scaled SE(3) path after adding NormalFlow-only fallback candidates for missed long-span loops: regenerate the 6DoF benchmark, rerun baseline and GelSLAM, evaluate full/train/test scores, and validate the scoring contract."
+# Final verification completed after successful scaled SE(3) reproduction.
+action: done
+milestone: core_claim
+notes: "Verified fresh container run f259ec88-f74: GelSLAM improves tracking over NormalFlow, accepts four valid loops with zero false loops, and all validation checks pass."

@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -59,5 +59,10 @@
 - GelSLAM improved rotation and terminal drift over NormalFlow, but translation MAE was slightly worse and no loop closures were accepted, leaving no loop-constraint signal.
 - Added a conservative NormalFlow-only loop-candidate fallback for long-span coverage pairs when sparse curvature features miss a revisit; fallback candidates still must pass CCS/SCR and odometry-consistency gates before entering the pose graph.
 
+### [2026-06-04 10:09] - core_claim
+- CPU job `f259ec88-f74` completed the full reproduction path with exit code 0 and passed `python validate.py --compare` in the container and locally.
+- Restored the tracking claim on the fresh 6DoF scaled benchmark: GelSLAM scored 5.673 deg / 0.551 mm versus NormalFlow at 10.403 deg / 0.694 mm.
+- Restored the loop-closure constraint: GelSLAM accepted four loop closures, all four were valid, valid-loop rate was 1.0, and false-loop rate was 0.0.
+
 ## Stop Justification
-- Not stopped. A CPU retry job is being submitted for the depth-aware scaled SE(3) path with NormalFlow fallback loop candidates before any higher milestone is claimed.
+- Stopping at `core_claim`: the packaged scaled SE(3) reproduction runs end to end, improves over the NormalFlow baseline on the primary tracking metrics, accepts valid loop closures, rejects false loop closures, and passes structural validation.
