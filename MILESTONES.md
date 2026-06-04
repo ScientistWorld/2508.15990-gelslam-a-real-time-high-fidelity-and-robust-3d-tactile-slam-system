@@ -57,4 +57,4 @@
 - Limited train/test slice files to the tracking experiment so the split evaluator ranks agents on per-frame tracking metrics while the full-run score enforces the loop-safety constraint.
 
 ## Stop Justification
-- Reached `core_claim` on the packaged scaled synthetic benchmark. Higher milestones would require a larger multi-setting sweep or the 73 GB released dataset plus ROS2/GTSAM infrastructure, which is outside the current minimum reproducible environment.
+- Completed at milestone `core_claim`.
