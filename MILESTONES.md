@@ -30,3 +30,4 @@
 - Scope limitation: this is a scaled synthetic planar tracking substitute, not the full physical GelSight dataset with complete 6DoF reconstruction.
 
 ## Stop Justification
+- Completed at milestone `core_claim`.
