@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Final hardening job: reproduce reference on enlarged 40-episode hidden test + train, 9 variants (incl. hybrid better variant, brute force) on test, 5 on train, 15 shortcuts, rank/paired summaries, validate."
+notes: "Resumable hardening audit: variants+brute force and 15 shortcuts on the 40-episode hidden test, final reference rerun from final code, train variants, rank/paired summaries (resubmit if preempted)."
