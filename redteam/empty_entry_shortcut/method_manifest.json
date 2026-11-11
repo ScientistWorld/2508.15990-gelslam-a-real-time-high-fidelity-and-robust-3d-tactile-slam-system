@@ -1,0 +1,11 @@
+{
+  "summary": {
+    "keyframe_indices": [],
+    "score_name": "gelslam_online"
+  },
+  "loop_edge_count": 0,
+  "first_eight_loop_edges": [],
+  "artifact_sha256": {
+    "summary.json": "5179ec8eb2b067f6febdac701eb25193cb7909786746ef431ba88f61e8381eb5"
+  }
+}

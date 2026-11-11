@@ -1,0 +1,21 @@
+{
+  "summary": {
+    "keyframe_indices": [],
+    "accepted_loops": 1000000000,
+    "valid_loops": 1000000000,
+    "valid_loop_rate": 1,
+    "false_loop_rate": 0,
+    "rotation_mae_deg": 0,
+    "translation_mae_mm": 0,
+    "success": true,
+    "runtime_seconds": -1,
+    "failed": false,
+    "score_name": "gelslam_online"
+  },
+  "loop_edge_count": 0,
+  "first_eight_loop_edges": [],
+  "artifact_sha256": {
+    "pred_poses.npy": "44c3973d75800b469d90656ca28e9defedefa54b3f2c8cbb7081dd3f72c109c9",
+    "summary.json": "851b0a1a4a68a11d9aa983efe2245adbaad537404cd2e88dff8e5b1807d251ce"
+  }
+}

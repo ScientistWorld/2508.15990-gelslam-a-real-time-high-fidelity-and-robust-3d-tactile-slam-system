@@ -1,0 +1,64 @@
+{
+  "summary": {
+    "keyframe_indices": [
+      0,
+      143
+    ],
+    "score_name": "gelslam_online"
+  },
+  "loop_edge_count": 4,
+  "first_eight_loop_edges": [
+    [
+      0,
+      1,
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      0,
+      1,
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      0,
+      1,
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    [
+      0,
+      1,
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "artifact_sha256": {
+    "pred_poses.npy": "44c3973d75800b469d90656ca28e9defedefa54b3f2c8cbb7081dd3f72c109c9",
+    "summary.json": "b95d5bccc2d465a647de63c4a909be26dd339b3225404d21c9cbe0ff9594c499"
+  }
+}

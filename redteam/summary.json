@@ -48,7 +48,7 @@
     "ground_truth_replacement_shortcut": {
       "rank_gain": 0.8383511013086631,
       "contributions": {
-        "synthetic_long_horizon_tracking": 0.7006383440764139,
+        "synthetic_long_horizon_tracking": 0.700638344076414,
         "loop_closure_quality": 0.13771275723224913
       },
       "metrics": {
@@ -154,9 +154,9 @@
       }
     },
     "stronger_residual_fix": {
-      "rank_gain": 0.22608991165619796,
+      "rank_gain": 0.22608991165619793,
       "contributions": {
-        "synthetic_long_horizon_tracking": 0.1946074615601841,
+        "synthetic_long_horizon_tracking": 0.19460746156018408,
         "loop_closure_quality": 0.031482450096013866
       },
       "metrics": {
@@ -184,7 +184,7 @@
       "rank_gain": 0.16928559512192165,
       "contributions": {
         "synthetic_long_horizon_tracking": 0.1321299712464902,
-        "loop_closure_quality": 0.03715562387543144
+        "loop_closure_quality": 0.03715562387543145
       },
       "metrics": {
         "synthetic_long_horizon_tracking": {
@@ -208,9 +208,9 @@
       }
     },
     "stronger_more_compute": {
-      "rank_gain": 0.12007796851190325,
+      "rank_gain": 0.12007796851190324,
       "contributions": {
-        "synthetic_long_horizon_tracking": 0.09129353945675847,
+        "synthetic_long_horizon_tracking": 0.09129353945675846,
         "loop_closure_quality": 0.028784429055144778
       },
       "metrics": {
@@ -451,10 +451,10 @@
       }
     },
     "false_constraint_shortcut": {
-      "rank_gain": -1.416219471712401,
+      "rank_gain": -1.4162194717124015,
       "contributions": {
         "synthetic_long_horizon_tracking": 0.7006383440764137,
-        "loop_closure_quality": -2.1168578157888147
+        "loop_closure_quality": -2.116857815788815
       },
       "metrics": {
         "synthetic_long_horizon_tracking": {
@@ -505,9 +505,9 @@
       }
     },
     "failed_tracking_loop_spam_shortcut": {
-      "rank_gain": -2.442393071008015,
+      "rank_gain": -2.4423930710080146,
       "contributions": {
-        "synthetic_long_horizon_tracking": -2.648718432870405,
+        "synthetic_long_horizon_tracking": -2.6487184328704045,
         "loop_closure_quality": 0.20632536186239003
       },
       "metrics": {
@@ -532,9 +532,9 @@
       }
     },
     "frame_to_frame_baseline": {
-      "rank_gain": -3.097003778275791,
+      "rank_gain": -3.0970037782757904,
       "contributions": {
-        "synthetic_long_horizon_tracking": -1.9555659742700768,
+        "synthetic_long_horizon_tracking": -1.9555659742700766,
         "loop_closure_quality": -1.141437804005714
       },
       "metrics": {
@@ -561,7 +561,7 @@
     "constant_shortcut": {
       "rank_gain": -4.081300782272829,
       "contributions": {
-        "synthetic_long_horizon_tracking": -2.648718432870405,
+        "synthetic_long_horizon_tracking": -2.6487184328704045,
         "loop_closure_quality": -1.4325823494024246
       },
       "metrics": {
@@ -588,7 +588,7 @@
     "forged_scores_fields_shortcut": {
       "rank_gain": -4.081300782272829,
       "contributions": {
-        "synthetic_long_horizon_tracking": -2.648718432870405,
+        "synthetic_long_horizon_tracking": -2.6487184328704045,
         "loop_closure_quality": -1.4325823494024246
       },
       "metrics": {
@@ -616,7 +616,7 @@
       "rank_gain": -10.130297040446793,
       "contributions": {
         "synthetic_long_horizon_tracking": -7.6895487759851635,
-        "loop_closure_quality": -2.44074826446163
+        "loop_closure_quality": -2.4407482644616296
       },
       "metrics": {
         "synthetic_long_horizon_tracking": {

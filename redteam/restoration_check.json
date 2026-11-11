@@ -1,0 +1,12 @@
+{
+  "audit_base_commit": "795b74c",
+  "tracked_gym_directories_restored": true,
+  "checkpoint_files_restored": 14,
+  "checkpoint_hashes_equal_initial": true,
+  "preexisting_changes_preserved": [
+    "README.md",
+    "manifest.json",
+    "removed trajectory logs"
+  ],
+  "protocol_exception": "Final action.yaml is written after the audit commit."
+}

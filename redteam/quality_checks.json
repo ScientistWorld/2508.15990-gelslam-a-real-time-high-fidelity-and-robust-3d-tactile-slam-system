@@ -1,0 +1,32 @@
+{
+  "seed_metric_ranges": {
+    "synthetic_long_horizon_tracking": {
+      "rotation_mae_deg": 0.0,
+      "translation_mae_mm": 0.0,
+      "rotation_p95_deg": 0.0,
+      "translation_p95_mm": 0.0,
+      "terminal_rotation_error_deg": 0.0,
+      "terminal_translation_error_mm": 0.0
+    },
+    "loop_closure_quality": {
+      "loop_span_translation_mae_mm": 0.0,
+      "loop_span_rotation_mae_deg": 0.0,
+      "accepted_loops": 0,
+      "valid_loops": 0,
+      "valid_loop_rate": 0.0,
+      "false_loop_rate": 0.0,
+      "loop_translation_error_mm": 0.0,
+      "loop_rotation_error_deg": 0.0
+    }
+  },
+  "seed_rank_range": 0.0,
+  "completed_trials": 24,
+  "finite_rank_cohort_size": 22,
+  "test_failure_trials": [
+    "empty_entry_shortcut",
+    "empty_predictions_shortcut",
+    "nan_predictions_shortcut"
+  ],
+  "reference_reproduced_exactly": true,
+  "all_evaluator_hashes_unchanged": true
+}

@@ -59,6 +59,23 @@ def main():
               'excluded_nonfinite': sorted(set(candidates) - set(finite)),
               'outcomes': outcomes}
     (RT / 'summary.json').write_text(json.dumps(report, indent=2) + '\n')
+    seed_values = [candidates[f'ref_seed_{i}'] for i in range(3)]
+    ranges = {exp: {metric: max(v[exp][metric] for v in seed_values) -
+                           min(v[exp][metric] for v in seed_values)
+                    for metric in spec['metrics']}
+              for exp, spec in contract.items()}
+    checks = {'seed_metric_ranges': ranges,
+              'seed_rank_range': max(ranking[f'ref_seed_{i}']['rank_gain'] for i in range(3)) -
+                                 min(ranking[f'ref_seed_{i}']['rank_gain'] for i in range(3)),
+              'completed_trials': len(outcomes),
+              'finite_rank_cohort_size': len(finite),
+              'test_failure_trials': [name for name, val in outcomes.items()
+                                     if val.get('test', {}).get('exit_code') != 0],
+              'reference_reproduced_exactly': all(v == reference for v in seed_values),
+              'all_evaluator_hashes_unchanged': all(
+                  val.get('evaluator_sha256_before') == val.get('evaluator_sha256_after')
+                  for val in outcomes.values())}
+    (RT / 'quality_checks.json').write_text(json.dumps(checks, indent=2) + '\n')
     lines = ['| Run | Rank gain | Rot MAE deg | Trans MAE mm | Loops / valid | False rate |',
              '|---|---:|---:|---:|---:|---:|']
     for name in ordered:

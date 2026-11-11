@@ -68,6 +68,25 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def save_method_manifest(trial):
+    """Keep small, reviewable provenance without committing binary artifacts."""
+    artifacts = trial / 'artifacts'
+    source = artifacts / 'summary.json'
+    if not source.exists():
+        return
+    summary = json.loads(source.read_text())
+    edges = summary.pop('loop_edges', [])
+    summary.pop('rejected_loop_details', None)
+    manifest = {
+        'summary': summary,
+        'loop_edge_count': len(edges),
+        'first_eight_loop_edges': edges[:8],
+        'artifact_sha256': {p.name: digest(p) for p in sorted(artifacts.iterdir())
+                            if p.is_file()},
+    }
+    (trial / 'method_manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
+
+
 def main():
     name = sys.argv[1]
     trial = RT / name
@@ -98,6 +117,7 @@ def main():
         status['method'] = result
         if result['exit_code']:
             return
+        save_method_manifest(trial)
         artifacts = trial / 'artifacts'
         shutil.copytree(artifacts, ROOT / 'checkpoints/scaled_gelslam')
         train_args = ['bash', 'scripts/evaluate_train.sh']
