@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim
-notes: "Debug/calibration smoke test of the hardened gym: render short synthetic tactile episodes, NormalFlow/GelSLAM diagnostics, train/test harness end-to-end with variants and shortcuts (tmp/smoke/smoke.py)."
+notes: "Calibration job: compare two simulator noise settings on full-length episodes (NF, NF-KF, GelSLAM, session-chain errors, loops, timings)."
