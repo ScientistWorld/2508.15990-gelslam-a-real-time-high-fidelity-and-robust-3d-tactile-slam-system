@@ -6,6 +6,8 @@ Each variant is a complete tactile tracker with the gym's entry-point contract:
 
 Variants (all deterministic):
   reference_seed1      paper method, RANSAC seed 1 (seed spread check)
+  reference_seed2      paper method, RANSAC seed 2 (seed spread check)
+  loop_ccs_070         loop verification at CCS 0.70 (the paper's less conservative reconstruction setting)
   nf_kf                tracking module only, no loop closure (paper ablation NF-KF; weaker)
   only_sift            loops accepted on SIFT alone (paper ablation GS-OnlySIFT; weaker)
   only_nf_exhaustive   NormalFlow against every earlier keyframe, no SIFT, no coverage set
@@ -41,6 +43,10 @@ class SessionChainGelSLAM(GelSLAM):
 def build(variant: str, mm_per_pixel: float) -> GelSLAM:
     if variant == "reference_seed1":
         return GelSLAM(mm_per_pixel, seed=1)
+    if variant == "reference_seed2":
+        return GelSLAM(mm_per_pixel, seed=2)
+    if variant == "loop_ccs_070":
+        return GelSLAM(mm_per_pixel, loop_ccs=0.70)
     if variant == "nf_kf":
         return GelSLAM(mm_per_pixel, loop_mode="none")
     if variant == "only_sift":

@@ -1,39 +1,34 @@
 {
   "experiments": {
-    "synthetic_long_horizon_tracking": {
-      "description": "Long-horizon tactile tracking. Reference values are paper Table IV axis-averaged MAE for NormalFlow and GS-Online; the runnable reproduction uses a scaled 144-frame synthetic substitute with the same metric units.",
-      "weight": 0.7,
+    "long_horizon_tracking": {
+      "description": "Long-horizon 6DoF tactile tracking with continuous contact (paper Section V, Table IV). Held-out test: 12 synthetic GelSight-Mini-style episodes of 400 frames over four texture families (seed, fabric, wood, rock), rendered only inside eval/test/. Results below are the paper's Table IV axis-averaged MAEs on 140 real episodes (GS-Online and NF); the gym is a scaled synthetic substitute, so absolute values are not expected to match (see _paper_context).",
+      "weight": 0.6,
       "primary_metric": "rotation_mae_deg",
       "metrics": {
         "rotation_mae_deg": {
           "higher_is_better": false,
           "coefficient": 1.0,
-          "description": "Mean rotational pose error over the evaluated slice; lower values indicate better tactile tracking."
+          "description": "Mean absolute rotation error, averaged over the three Euler axes (theta_x, theta_y, theta_z) and over frames, of sensor poses relative to the first frame; averaged over the continuous-contact episodes. Same statistic as the paper's Table IV."
         },
         "translation_mae_mm": {
           "higher_is_better": false,
-          "coefficient": 0.8,
-          "description": "Mean translational pose error in millimeters over the evaluated slice; lower values indicate better tactile tracking."
+          "coefficient": 1.0,
+          "description": "Mean absolute translation error in millimetres, averaged over x, y, z and over frames, relative to the first frame; averaged over the continuous-contact episodes (Table IV statistic)."
         },
         "rotation_p95_deg": {
           "higher_is_better": false,
-          "coefficient": 0.5,
-          "description": "Ninety-fifth percentile rotational pose error over the evaluated slice; this catches methods that optimize average error while leaving severe spikes."
+          "coefficient": 0.4,
+          "description": "95th percentile over all frames of the continuous-contact episodes of the geodesic rotation error (capped at 90 deg); catches tracking failures hidden by the mean."
         },
         "translation_p95_mm": {
           "higher_is_better": false,
           "coefficient": 0.4,
-          "description": "Ninety-fifth percentile translational pose error in millimeters over the evaluated slice; this catches localized tracking failures."
+          "description": "95th percentile over all frames of the continuous-contact episodes of the translation error norm in millimetres (capped at 30 mm)."
         },
-        "terminal_rotation_error_deg": {
+        "false_loop_rate": {
           "higher_is_better": false,
-          "coefficient": 0.35,
-          "description": "Rotational error at the last frame assigned to the slice; this probes accumulated drift rather than only per-frame average behavior."
-        },
-        "terminal_translation_error_mm": {
-          "higher_is_better": false,
-          "coefficient": 0.3,
-          "description": "Translational error in millimeters at the last frame assigned to the slice; this probes accumulated drift over the sequence."
+          "coefficient": 0.5,
+          "description": "Constraint: fraction of the method's reported loop constraints (deduplicated by frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg; malformed or non-finite records count as false. A method whose overall rate exceeds 10% fails the run (worst value in every metric). The paper reports no false loops (Section VI-B)."
         }
       },
       "results": {
@@ -49,87 +44,51 @@
         }
       }
     },
-    "loop_closure_quality": {
-      "description": "Loop-closure behavior supporting long-horizon tracking. The paper reports 34 accepted loops on average for GelSLAM in Table II; valid-loop and false-loop rates encode the paper's qualitative robustness claim that loop verification rejects unsafe loops.",
-      "weight": 0.3,
-      "primary_metric": "loop_span_rotation_mae_deg",
+    "relocalization_after_contact_loss": {
+      "description": "Tracking when contact is periodically lost (paper Section V-E, Fig. 11: 25 frames removed after every 100 frames), so the tracker must relocalize new tracking sessions against earlier ones. Held-out test: 8 synthetic episodes of 400 kept frames over the four texture families. The paper reports this study only graphically (relocalized tracking 'nearly identical' to full episodes), so the proposed-method values are the full-episode Table IV GS-Online MAEs; the paper gives no NormalFlow number for this setting.",
+      "weight": 0.4,
+      "primary_metric": "rotation_mae_deg",
       "metrics": {
-        "loop_span_translation_mae_mm": {
+        "rotation_mae_deg": {
           "higher_is_better": false,
-          "coefficient": 0.7,
-          "description": "Mean translational tracking drift on this slice's frames inside accepted long-loop spans; if no long loop is accepted, the full slice is scored as the abstention fallback."
+          "coefficient": 1.0,
+          "description": "Mean absolute rotation error, averaged over the three Euler axes (theta_x, theta_y, theta_z) and over frames, of sensor poses relative to the first frame; averaged over the contact-loss episodes. Same statistic as the paper's Table IV."
         },
-        "loop_span_rotation_mae_deg": {
+        "translation_mae_mm": {
           "higher_is_better": false,
-          "coefficient": 0.6,
-          "description": "Mean rotational tracking drift on this slice's frames inside accepted long-loop spans; if no long loop is accepted, the full slice is scored as the abstention fallback."
+          "coefficient": 1.0,
+          "description": "Mean absolute translation error in millimetres, averaged over x, y, z and over frames, relative to the first frame; averaged over the contact-loss episodes (Table IV statistic)."
         },
-        "accepted_loops": {
-          "higher_is_better": true,
-          "coefficient": 0.15,
-          "description": "Number of accepted loop closures in the evaluated slice; retained as a weak productivity signal."
+        "rotation_p95_deg": {
+          "higher_is_better": false,
+          "coefficient": 0.4,
+          "description": "95th percentile over all frames of the contact-loss episodes of the geodesic rotation error (capped at 90 deg); catches tracking failures hidden by the mean."
         },
-        "valid_loops": {
-          "higher_is_better": true,
-          "coefficient": 0.45,
-          "description": "Accepted loop closures whose measured relative pose agrees with the ground-truth revisit relation."
-        },
-        "valid_loop_rate": {
-          "higher_is_better": true,
-          "coefficient": 0.8,
-          "description": "Fraction of accepted loop closures that are valid; methods that accept no loops receive zero so abstention does not satisfy the loop-closure constraint."
+        "translation_p95_mm": {
+          "higher_is_better": false,
+          "coefficient": 0.4,
+          "description": "95th percentile over all frames of the contact-loss episodes of the translation error norm in millimetres (capped at 30 mm)."
         },
         "false_loop_rate": {
           "higher_is_better": false,
-          "coefficient": -1.0,
-          "description": "Fraction of accepted loop closures that violate the ground-truth revisit relation; this penalizes unsafe loop acceptance."
-        },
-        "loop_translation_error_mm": {
-          "higher_is_better": false,
-          "coefficient": 0.35,
-          "description": "Mean translational residual of accepted long-loop constraints against the ground-truth revisit relation; methods with no accepted long loop receive the validity-threshold penalty."
-        },
-        "loop_rotation_error_deg": {
-          "higher_is_better": false,
-          "coefficient": 0.35,
-          "description": "Mean rotational residual of accepted long-loop constraints against the ground-truth revisit relation; methods with no accepted long loop receive the validity-threshold penalty."
+          "coefficient": 0.5,
+          "description": "Constraint: fraction of the method's reported loop constraints (deduplicated by frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg; malformed or non-finite records count as false. A method whose overall rate exceeds 10% fails the run (worst value in every metric). The paper reports no false loops (Section VI-B)."
         }
       },
       "results": {
         "normalflow": {
-          "type": "baseline",
-          "loop_span_translation_mae_mm": 1.0866666666666667,
-          "loop_span_rotation_mae_deg": 7.423333333333333,
-          "accepted_loops": 0,
-          "valid_loops": 0,
-          "valid_loop_rate": 0.0,
-          "false_loop_rate": 0.0
+          "type": "baseline"
         },
         "gelslam_online": {
           "type": "proposed",
-          "loop_span_translation_mae_mm": 0.8933333333333334,
-          "loop_span_rotation_mae_deg": 4.003333333333333,
-          "accepted_loops": 34,
-          "valid_loops": 34,
-          "valid_loop_rate": 1.0,
-          "false_loop_rate": 0.0
+          "rotation_mae_deg": 4.003333333333333,
+          "translation_mae_mm": 0.8933333333333334
         }
       }
     }
   },
-  "paper_context": {
-    "table_ii_tracking_statistics": {
-      "frames_mean": 523,
-      "frames_std": 50,
-      "keyframes_mean": 68,
-      "keyframes_std": 59,
-      "coverage_keyframes_mean": 21,
-      "coverage_keyframes_std": 14,
-      "loop_candidates_mean": 65,
-      "loop_candidates_std": 78,
-      "accepted_loops_mean": 34,
-      "accepted_loops_std": 36
-    },
+  "_paper_context": {
+    "note": "Paper numbers on the real GelSight Mini dataset (140 episodes, 20 objects, 523 frames on average). The gym's synthetic episodes are 400 frames at 160x120 (0.1268 mm/pixel), so its absolute errors are on a different scale; only directions and relative effects are comparable.",
     "table_iv_tracking_mae": {
       "normalflow": {
         "theta_x_deg": 7.11,
@@ -143,26 +102,118 @@
         "theta_x_deg": 4.06,
         "theta_y_deg": 4.38,
         "theta_z_deg": 3.57,
-        "x_mm": 1.00,
+        "x_mm": 1.0,
         "y_mm": 0.96,
         "z_mm": 0.72
+      },
+      "gelslam_offline": {
+        "theta_x_deg": 3.98,
+        "theta_y_deg": 4.29,
+        "theta_z_deg": 3.41,
+        "x_mm": 0.98,
+        "y_mm": 0.94,
+        "z_mm": 0.71
+      },
+      "nf_kf": {
+        "theta_x_deg": 6.55,
+        "theta_y_deg": 7.39,
+        "theta_z_deg": 7.11,
+        "x_mm": 1.26,
+        "y_mm": 1.24,
+        "z_mm": 0.9
+      },
+      "gs_only_sift": {
+        "theta_x_deg": 8.13,
+        "theta_y_deg": 8.37,
+        "theta_z_deg": 4.17,
+        "x_mm": 1.04,
+        "y_mm": 1.02,
+        "z_mm": 0.89
+      },
+      "gs_only_nf": {
+        "theta_x_deg": 5.61,
+        "theta_y_deg": 6.28,
+        "theta_z_deg": 6.95,
+        "x_mm": 1.53,
+        "y_mm": 1.62,
+        "z_mm": 0.77
       }
     },
+    "table_ii_tracking_statistics": {
+      "frames_mean": 523,
+      "frames_std": 50,
+      "keyframes_mean": 68,
+      "keyframes_std": 59,
+      "coverage_keyframes_mean": 21,
+      "coverage_keyframes_std": 14,
+      "loop_candidates_mean": 65,
+      "loop_candidates_std": 78,
+      "accepted_loops_mean": 34,
+      "accepted_loops_std": 36
+    },
     "table_vi_reconstruction": {
-      "average_cd_mm": 0.60,
+      "average_cd_mm": 0.6,
       "average_ncd": 0.962,
       "objects": {
-        "dice_small": {"size_mm": 10.0, "cd_mm": 0.44, "ncd": 0.955},
-        "shell_small": {"size_mm": 18.4, "cd_mm": 0.76, "ncd": 0.944},
-        "almond_small": {"size_mm": 17.3, "cd_mm": 0.60, "ncd": 0.966},
-        "seed_small": {"size_mm": 9.5, "cd_mm": 0.63, "ncd": 0.954},
-        "lime_small": {"size_mm": 15.0, "cd_mm": 0.26, "ncd": 0.985},
-        "dice_large": {"size_mm": 15.0, "cd_mm": 0.41, "ncd": 0.947},
-        "shell_large": {"size_mm": 27.6, "cd_mm": 0.91, "ncd": 0.955},
-        "almond_large": {"size_mm": 25.9, "cd_mm": 0.85, "ncd": 0.962},
-        "seed_large": {"size_mm": 14.3, "cd_mm": 0.63, "ncd": 0.967},
-        "lime_large": {"size_mm": 29.9, "cd_mm": 0.50, "ncd": 0.986}
+        "dice_small": {
+          "size_mm": 10.0,
+          "cd_mm": 0.44,
+          "ncd": 0.955
+        },
+        "shell_small": {
+          "size_mm": 18.4,
+          "cd_mm": 0.76,
+          "ncd": 0.944
+        },
+        "almond_small": {
+          "size_mm": 17.3,
+          "cd_mm": 0.6,
+          "ncd": 0.966
+        },
+        "seed_small": {
+          "size_mm": 9.5,
+          "cd_mm": 0.63,
+          "ncd": 0.954
+        },
+        "lime_small": {
+          "size_mm": 15.0,
+          "cd_mm": 0.26,
+          "ncd": 0.985
+        },
+        "dice_large": {
+          "size_mm": 15.0,
+          "cd_mm": 0.41,
+          "ncd": 0.947
+        },
+        "shell_large": {
+          "size_mm": 27.6,
+          "cd_mm": 0.91,
+          "ncd": 0.955
+        },
+        "almond_large": {
+          "size_mm": 25.9,
+          "cd_mm": 0.85,
+          "ncd": 0.962
+        },
+        "seed_large": {
+          "size_mm": 14.3,
+          "cd_mm": 0.63,
+          "ncd": 0.967
+        },
+        "lime_large": {
+          "size_mm": 29.9,
+          "cd_mm": 0.5,
+          "ncd": 0.986
+        }
       }
+    },
+    "settings": {
+      "ccs_threshold_tracking": 0.85,
+      "scr_threshold_tracking": 0.3,
+      "min_sift_inliers": "more than 8",
+      "normalflow_samples": 3000,
+      "coverage_area_mm2": 0.2,
+      "curvature_gaussian_filter": "7x7 at 320x240 (5x5 used at the gym's 160x120, as in the released code)"
     }
   }
 }
