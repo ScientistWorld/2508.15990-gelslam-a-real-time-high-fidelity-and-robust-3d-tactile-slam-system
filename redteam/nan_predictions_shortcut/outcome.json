@@ -1,0 +1,25 @@
+{
+  "trial": "nan_predictions_shortcut",
+  "test_command": "bash scripts/evaluate_test.sh",
+  "evaluator_sha256_before": {
+    "scripts/evaluate_test.sh": "6d320e81ddab751500e1001a43244d06ee125edabdd128dcc2eb28c308cf167a",
+    "eval/test/evaluate_tracking_slice.py": "b761cffc24ef3cb32524a30b99e222a93cfae33872ad6609fc28026634fdfec4"
+  },
+  "method": {
+    "exit_code": 0,
+    "elapsed_seconds": 2.9071837310038973
+  },
+  "train": {
+    "exit_code": 1,
+    "elapsed_seconds": 3.3265532739897026
+  },
+  "test": {
+    "exit_code": 1,
+    "elapsed_seconds": 2.158581307012355
+  },
+  "score_file_exists": false,
+  "evaluator_sha256_after": {
+    "scripts/evaluate_test.sh": "6d320e81ddab751500e1001a43244d06ee125edabdd128dcc2eb28c308cf167a",
+    "eval/test/evaluate_tracking_slice.py": "b761cffc24ef3cb32524a30b99e222a93cfae33872ad6609fc28026634fdfec4"
+  }
+}

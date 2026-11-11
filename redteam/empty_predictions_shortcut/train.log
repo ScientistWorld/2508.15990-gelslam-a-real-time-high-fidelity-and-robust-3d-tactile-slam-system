@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/user/eval/train/evaluate_tracking_slice.py", line 284, in <module>
+    main()
+  File "/home/user/eval/train/evaluate_tracking_slice.py", line 241, in main
+    flat_results = {name: metrics(run_dir, gt) for name, run_dir in method_runs}
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/train/evaluate_tracking_slice.py", line 241, in <dictcomp>
+    flat_results = {name: metrics(run_dir, gt) for name, run_dir in method_runs}
+                          ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/train/evaluate_tracking_slice.py", line 146, in metrics
+    raise ValueError(f"{run_dir} has {len(pred)} predictions but dataset has {len(gt)} ground-truth poses")
+ValueError: checkpoints/scaled_gelslam has 0 predictions but dataset has 144 ground-truth poses

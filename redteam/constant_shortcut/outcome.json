@@ -1,0 +1,25 @@
+{
+  "trial": "constant_shortcut",
+  "test_command": "bash scripts/evaluate_test.sh",
+  "evaluator_sha256_before": {
+    "scripts/evaluate_test.sh": "6d320e81ddab751500e1001a43244d06ee125edabdd128dcc2eb28c308cf167a",
+    "eval/test/evaluate_tracking_slice.py": "b761cffc24ef3cb32524a30b99e222a93cfae33872ad6609fc28026634fdfec4"
+  },
+  "method": {
+    "exit_code": 0,
+    "elapsed_seconds": 3.3339708960120333
+  },
+  "train": {
+    "exit_code": 0,
+    "elapsed_seconds": 3.3408841799973743
+  },
+  "test": {
+    "exit_code": 0,
+    "elapsed_seconds": 3.6598144339950522
+  },
+  "score_file_exists": true,
+  "evaluator_sha256_after": {
+    "scripts/evaluate_test.sh": "6d320e81ddab751500e1001a43244d06ee125edabdd128dcc2eb28c308cf167a",
+    "eval/test/evaluate_tracking_slice.py": "b761cffc24ef3cb32524a30b99e222a93cfae33872ad6609fc28026634fdfec4"
+  }
+}

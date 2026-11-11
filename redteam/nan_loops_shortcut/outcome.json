@@ -1,0 +1,25 @@
+{
+  "trial": "nan_loops_shortcut",
+  "test_command": "bash scripts/evaluate_test.sh",
+  "evaluator_sha256_before": {
+    "scripts/evaluate_test.sh": "6d320e81ddab751500e1001a43244d06ee125edabdd128dcc2eb28c308cf167a",
+    "eval/test/evaluate_tracking_slice.py": "b761cffc24ef3cb32524a30b99e222a93cfae33872ad6609fc28026634fdfec4"
+  },
+  "method": {
+    "exit_code": 0,
+    "elapsed_seconds": 1.9146672820061212
+  },
+  "train": {
+    "exit_code": 0,
+    "elapsed_seconds": 1.5930831320001744
+  },
+  "test": {
+    "exit_code": 0,
+    "elapsed_seconds": 1.8446663990034722
+  },
+  "score_file_exists": true,
+  "evaluator_sha256_after": {
+    "scripts/evaluate_test.sh": "6d320e81ddab751500e1001a43244d06ee125edabdd128dcc2eb28c308cf167a",
+    "eval/test/evaluate_tracking_slice.py": "b761cffc24ef3cb32524a30b99e222a93cfae33872ad6609fc28026634fdfec4"
+  }
+}

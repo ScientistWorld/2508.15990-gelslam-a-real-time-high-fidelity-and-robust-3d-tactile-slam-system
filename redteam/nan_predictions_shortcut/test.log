@@ -1,0 +1,33 @@
+/usr/local/lib/python3.11/site-packages/numpy/linalg/_linalg.py:2407: RuntimeWarning: invalid value encountered in det
+  r = _umath_linalg.det(a, signature=signature)
+Traceback (most recent call last):
+  File "/home/user/eval/test/evaluate_tracking_slice.py", line 284, in <module>
+    main()
+  File "/home/user/eval/test/evaluate_tracking_slice.py", line 241, in main
+    flat_results = {name: metrics(run_dir, gt) for name, run_dir in method_runs}
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate_tracking_slice.py", line 241, in <dictcomp>
+    flat_results = {name: metrics(run_dir, gt) for name, run_dir in method_runs}
+                          ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate_tracking_slice.py", line 148, in metrics
+    pred = origin_relative(pred)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate_tracking_slice.py", line 55, in origin_relative
+    inv0 = invert(poses[0])
+           ^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate_tracking_slice.py", line 50, in invert
+    return pose_from_matrix(np.linalg.inv(matrix_from_pose(a)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate_tracking_slice.py", line 42, in pose_from_matrix
+    return np.concatenate([mat[:3, 3], Rotation.from_matrix(mat[:3, :3]).as_rotvec()]).astype(np.float64)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/scipy/spatial/transform/_rotation.py", line 600, in from_matrix
+    quat = backend.from_matrix(matrix, assume_valid=assume_valid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "scipy/spatial/transform/_rotation_cy.pyx", line 506, in scipy.spatial.transform._rotation_cy.from_matrix
+  File "/usr/local/lib/python3.11/site-packages/numpy/linalg/_linalg.py", line 1841, in svd
+    u, s, vh = gufunc(a, signature=signature)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/numpy/linalg/_linalg.py", line 153, in _raise_linalgerror_svd_nonconvergence
+    raise LinAlgError("SVD did not converge")
+numpy.linalg.LinAlgError: SVD did not converge
