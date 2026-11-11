@@ -1,0 +1,2 @@
+Audit base commit: 795b74c
+Pre-existing unrelated working tree changes: README.md, manifest.json, and removed trajectory logs. These are not modified by the audit.
