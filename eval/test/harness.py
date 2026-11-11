@@ -349,6 +349,39 @@ def _read_summary(out_dir: Path) -> dict | None:
     return None
 
 
+def _cache_file(slice_name: str, name: str, episode_name: str) -> Path | None:
+    """Optional per-episode result cache (audit jobs only; unset in the default scripts)."""
+    root = os.environ.get("TACTILE_EVAL_CACHE")
+    if not root:
+        return None
+    return Path(root) / slice_name / _sanitize(name) / f"{episode_name}.json"
+
+
+def _cache_load(slice_name: str, name: str, episode_name: str) -> dict | None:
+    path = _cache_file(slice_name, name, episode_name)
+    if path is None or not path.is_file():
+        return None
+    try:
+        row = json.loads(path.read_text())
+    except Exception:  # noqa: BLE001
+        return None
+    if "error" not in row:
+        row["geodesic"] = np.asarray(row["geodesic"], dtype=np.float64)
+        row["trans_norm"] = np.asarray(row["trans_norm"], dtype=np.float64)
+    return row
+
+
+def _cache_save(slice_name: str, name: str, episode_name: str, row: dict) -> None:
+    path = _cache_file(slice_name, name, episode_name)
+    if path is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {k: (v.tolist() if isinstance(v, np.ndarray) else v) for k, v in row.items()}
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(payload))
+    os.replace(tmp, path)
+
+
 def evaluate(
     slice_name: str,
     episodes: list[dict],
@@ -380,6 +413,19 @@ def evaluate(
         (tmp / "inputs").mkdir()
         (tmp / "logs").mkdir()
         for episode in episodes:
+            pending = set()
+            for name, state in [("normalflow", baseline_state)] + [(m["name"], states[m["name"]]) for m in methods]:
+                if state["error"] is not None:
+                    continue
+                cached = _cache_load(slice_name, name, episode["name"])
+                if cached is None:
+                    pending.add(name)
+                elif "error" in cached:
+                    state["error"] = cached["error"]
+                else:
+                    state["episodes"][episode["name"]] = cached
+            if not pending:
+                continue
             print(f"[{slice_name}] rendering {episode['name']}", flush=True)
             data = render(episode)
             gt = np.asarray(data["poses_mm"], dtype=np.float64)
@@ -387,19 +433,20 @@ def evaluate(
             input_path = tmp / "inputs" / f"{episode['name']}.npz"
             save_observations(data, input_path)
 
-            if baseline_state["error"] is None:
+            if baseline_state["error"] is None and "normalflow" in pending:
                 try:
                     start = time.monotonic()
                     poses = frozen_baseline(data["gradients"], data["heights"], data["contact_masks"], data["mm_per_pixel"])
                     row = pose_errors(np.asarray(poses, dtype=np.float64), gt)
                     row.update({"loops_unique": 0, "loops_false": 0, "seconds": time.monotonic() - start})
                     baseline_state["episodes"][episode["name"]] = row
+                    _cache_save(slice_name, "normalflow", episode["name"], row)
                 except Exception as exc:  # noqa: BLE001
                     baseline_state["error"] = f"{episode['name']}: {exc!r}"
 
             for method in methods:
                 state = states[method["name"]]
-                if state["error"] is not None:
+                if state["error"] is not None or method["name"] not in pending:
                     continue
                 if keep_outputs:
                     out_dir = method["dir"] / f"{slice_name}_outputs" / episode["name"]
@@ -415,6 +462,7 @@ def evaluate(
                     row.update({"loops_unique": loops["unique"], "loops_false": loops["false"], "seconds": seconds,
                                 "method_summary": _read_summary(out_dir)})
                     state["episodes"][episode["name"]] = row
+                    _cache_save(slice_name, method["name"], episode["name"], row)
                 except MethodFailure as exc:
                     state["error"] = f"{episode['name']}: {exc}"
                 except Exception as exc:  # noqa: BLE001 - never let one method stop the evaluation
@@ -423,6 +471,7 @@ def evaluate(
                     if not keep_outputs:
                         shutil.rmtree(out_dir, ignore_errors=True)
                 if state["error"] is not None:
+                    _cache_save(slice_name, method["name"], episode["name"], {"error": state["error"]})
                     log_file = tmp / "logs" / f"{method['name']}.log"
                     if log_file.exists():
                         tail = log_file.read_text(errors="replace")[-3000:]

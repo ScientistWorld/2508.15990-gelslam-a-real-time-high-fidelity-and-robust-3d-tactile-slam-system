@@ -1,0 +1,1220 @@
+{
+  "_metadata": {
+    "slice": "test",
+    "episodes": [
+      {
+        "name": "heldout_seed_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_3",
+        "contact_loss": true
+      }
+    ],
+    "methods_discovered": [
+      "gelslam_online"
+    ]
+  },
+  "experiments": {
+    "long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 3.1665362089972446,
+          "translation_mae_mm": 0.7006527123393953,
+          "rotation_p95_deg": 14.614924587735011,
+          "translation_p95_mm": 3.968794510862936,
+          "false_loop_rate": 0.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 1.4389941638954198,
+          "translation_mae_mm": 0.14228978032903844,
+          "rotation_p95_deg": 4.294562713525054,
+          "translation_p95_mm": 0.49606073738809936,
+          "false_loop_rate": 0.0
+        }
+      }
+    },
+    "relocalization_after_contact_loss": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 11.451145472699565,
+          "translation_mae_mm": 2.806023645153234,
+          "rotation_p95_deg": 62.40266851803462,
+          "translation_p95_mm": 13.624579015039714,
+          "false_loop_rate": 0.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 2.1500371506874463,
+          "translation_mae_mm": 0.4011010747909716,
+          "rotation_p95_deg": 32.050698859802814,
+          "translation_p95_mm": 10.918708805844412,
+          "false_loop_rate": 0.0
+        }
+      }
+    }
+  },
+  "_diagnostics": {
+    "normalflow": {
+      "status": "scored",
+      "episodes": {
+        "heldout_seed_continuous_0": {
+          "rotation_mae_deg": 5.0709,
+          "translation_mae_mm": 0.36859,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.49
+        },
+        "heldout_seed_continuous_1": {
+          "rotation_mae_deg": 2.47324,
+          "translation_mae_mm": 0.19865,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.69
+        },
+        "heldout_seed_continuous_2": {
+          "rotation_mae_deg": 1.93733,
+          "translation_mae_mm": 0.20687,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.13
+        },
+        "heldout_fabric_continuous_0": {
+          "rotation_mae_deg": 2.24291,
+          "translation_mae_mm": 0.51277,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.12
+        },
+        "heldout_fabric_continuous_1": {
+          "rotation_mae_deg": 2.00214,
+          "translation_mae_mm": 0.7533,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.31
+        },
+        "heldout_fabric_continuous_2": {
+          "rotation_mae_deg": 2.39081,
+          "translation_mae_mm": 0.62612,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.59
+        },
+        "heldout_wood_continuous_0": {
+          "rotation_mae_deg": 2.89926,
+          "translation_mae_mm": 0.9723,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.97
+        },
+        "heldout_wood_continuous_1": {
+          "rotation_mae_deg": 3.11709,
+          "translation_mae_mm": 0.95594,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.0
+        },
+        "heldout_wood_continuous_2": {
+          "rotation_mae_deg": 3.2448,
+          "translation_mae_mm": 1.09001,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.11
+        },
+        "heldout_rock_continuous_0": {
+          "rotation_mae_deg": 4.16672,
+          "translation_mae_mm": 1.43709,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.53
+        },
+        "heldout_rock_continuous_1": {
+          "rotation_mae_deg": 5.13769,
+          "translation_mae_mm": 1.1804,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.87
+        },
+        "heldout_rock_continuous_2": {
+          "rotation_mae_deg": 3.51549,
+          "translation_mae_mm": 0.93019,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.45
+        },
+        "heldout_seed_contact_loss_0": {
+          "rotation_mae_deg": 26.59248,
+          "translation_mae_mm": 4.75385,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.0
+        },
+        "heldout_seed_contact_loss_1": {
+          "rotation_mae_deg": 8.2589,
+          "translation_mae_mm": 3.17353,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.93
+        },
+        "heldout_fabric_contact_loss_0": {
+          "rotation_mae_deg": 8.45324,
+          "translation_mae_mm": 3.21594,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.02
+        },
+        "heldout_fabric_contact_loss_1": {
+          "rotation_mae_deg": 12.35321,
+          "translation_mae_mm": 3.00715,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.39
+        },
+        "heldout_wood_contact_loss_0": {
+          "rotation_mae_deg": 6.47288,
+          "translation_mae_mm": 2.25053,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.64
+        },
+        "heldout_wood_contact_loss_1": {
+          "rotation_mae_deg": 15.77673,
+          "translation_mae_mm": 3.27042,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.8
+        },
+        "heldout_rock_contact_loss_0": {
+          "rotation_mae_deg": 7.88366,
+          "translation_mae_mm": 1.97959,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.96
+        },
+        "heldout_rock_contact_loss_1": {
+          "rotation_mae_deg": 7.57821,
+          "translation_mae_mm": 2.86839,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.99
+        },
+        "heldout_seed_continuous_3": {
+          "rotation_mae_deg": 2.44164,
+          "translation_mae_mm": 0.33105,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.84
+        },
+        "heldout_seed_continuous_4": {
+          "rotation_mae_deg": 4.29799,
+          "translation_mae_mm": 0.38567,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.62
+        },
+        "heldout_seed_continuous_5": {
+          "rotation_mae_deg": 2.81051,
+          "translation_mae_mm": 0.18755,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.84
+        },
+        "heldout_fabric_continuous_3": {
+          "rotation_mae_deg": 1.44578,
+          "translation_mae_mm": 0.51702,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.18
+        },
+        "heldout_fabric_continuous_4": {
+          "rotation_mae_deg": 1.51285,
+          "translation_mae_mm": 0.49511,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.31
+        },
+        "heldout_fabric_continuous_5": {
+          "rotation_mae_deg": 1.86069,
+          "translation_mae_mm": 0.54971,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.13
+        },
+        "heldout_wood_continuous_3": {
+          "rotation_mae_deg": 2.9404,
+          "translation_mae_mm": 0.98575,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.88
+        },
+        "heldout_wood_continuous_4": {
+          "rotation_mae_deg": 2.36624,
+          "translation_mae_mm": 0.92727,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.66
+        },
+        "heldout_wood_continuous_5": {
+          "rotation_mae_deg": 3.53156,
+          "translation_mae_mm": 0.76299,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.12
+        },
+        "heldout_rock_continuous_3": {
+          "rotation_mae_deg": 2.96851,
+          "translation_mae_mm": 0.46583,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.83
+        },
+        "heldout_rock_continuous_4": {
+          "rotation_mae_deg": 5.54809,
+          "translation_mae_mm": 1.02816,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.16
+        },
+        "heldout_rock_continuous_5": {
+          "rotation_mae_deg": 6.07422,
+          "translation_mae_mm": 0.94734,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.44
+        },
+        "heldout_seed_contact_loss_2": {
+          "rotation_mae_deg": 7.7095,
+          "translation_mae_mm": 1.71109,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.93
+        },
+        "heldout_seed_contact_loss_3": {
+          "rotation_mae_deg": 10.94794,
+          "translation_mae_mm": 2.63257,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.59
+        },
+        "heldout_fabric_contact_loss_2": {
+          "rotation_mae_deg": 10.06252,
+          "translation_mae_mm": 2.44485,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.94
+        },
+        "heldout_fabric_contact_loss_3": {
+          "rotation_mae_deg": 15.57602,
+          "translation_mae_mm": 3.70641,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.78
+        },
+        "heldout_wood_contact_loss_2": {
+          "rotation_mae_deg": 14.11763,
+          "translation_mae_mm": 3.15558,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.87
+        },
+        "heldout_wood_contact_loss_3": {
+          "rotation_mae_deg": 12.48264,
+          "translation_mae_mm": 3.06536,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.71
+        },
+        "heldout_rock_contact_loss_2": {
+          "rotation_mae_deg": 8.53439,
+          "translation_mae_mm": 1.86416,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.76
+        },
+        "heldout_rock_contact_loss_3": {
+          "rotation_mae_deg": 10.41838,
+          "translation_mae_mm": 1.79697,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 3.71
+        }
+      }
+    },
+    "gelslam_online": {
+      "status": "scored",
+      "episodes": {
+        "heldout_seed_continuous_0": {
+          "rotation_mae_deg": 0.84906,
+          "translation_mae_mm": 0.07565,
+          "unique_loops": 7,
+          "false_loops": 0,
+          "seconds": 5.98,
+          "method_summary": {
+            "keyframes": 10,
+            "coverage_keyframes": 6,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 7,
+            "loops": 7,
+            "pose_graph_solves": 5,
+            "frames": 400,
+            "cpu_seconds": 4.17
+          }
+        },
+        "heldout_seed_continuous_1": {
+          "rotation_mae_deg": 1.02094,
+          "translation_mae_mm": 0.07425,
+          "unique_loops": 5,
+          "false_loops": 0,
+          "seconds": 6.14,
+          "method_summary": {
+            "keyframes": 10,
+            "coverage_keyframes": 8,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 8,
+            "loops": 5,
+            "pose_graph_solves": 4,
+            "frames": 400,
+            "cpu_seconds": 4.49
+          }
+        },
+        "heldout_seed_continuous_2": {
+          "rotation_mae_deg": 0.37531,
+          "translation_mae_mm": 0.02005,
+          "unique_loops": 11,
+          "false_loops": 0,
+          "seconds": 6.13,
+          "method_summary": {
+            "keyframes": 10,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 16,
+            "loops": 11,
+            "pose_graph_solves": 6,
+            "frames": 400,
+            "cpu_seconds": 4.346
+          }
+        },
+        "heldout_fabric_continuous_0": {
+          "rotation_mae_deg": 0.54784,
+          "translation_mae_mm": 0.05892,
+          "unique_loops": 5,
+          "false_loops": 0,
+          "seconds": 5.79,
+          "method_summary": {
+            "keyframes": 9,
+            "coverage_keyframes": 8,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 5,
+            "loops": 5,
+            "pose_graph_solves": 4,
+            "frames": 400,
+            "cpu_seconds": 4.08
+          }
+        },
+        "heldout_fabric_continuous_1": {
+          "rotation_mae_deg": 0.30059,
+          "translation_mae_mm": 0.02651,
+          "unique_loops": 18,
+          "false_loops": 0,
+          "seconds": 6.23,
+          "method_summary": {
+            "keyframes": 12,
+            "coverage_keyframes": 9,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 19,
+            "loops": 18,
+            "pose_graph_solves": 8,
+            "frames": 400,
+            "cpu_seconds": 4.666
+          }
+        },
+        "heldout_fabric_continuous_2": {
+          "rotation_mae_deg": 0.31156,
+          "translation_mae_mm": 0.04693,
+          "unique_loops": 3,
+          "false_loops": 0,
+          "seconds": 5.08,
+          "method_summary": {
+            "keyframes": 6,
+            "coverage_keyframes": 5,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 5,
+            "loops": 3,
+            "pose_graph_solves": 4,
+            "frames": 400,
+            "cpu_seconds": 3.363
+          }
+        },
+        "heldout_wood_continuous_0": {
+          "rotation_mae_deg": 0.72687,
+          "translation_mae_mm": 0.12316,
+          "unique_loops": 4,
+          "false_loops": 0,
+          "seconds": 7.14,
+          "method_summary": {
+            "keyframes": 15,
+            "coverage_keyframes": 9,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 4,
+            "loops": 4,
+            "pose_graph_solves": 5,
+            "frames": 400,
+            "cpu_seconds": 5.264
+          }
+        },
+        "heldout_wood_continuous_1": {
+          "rotation_mae_deg": 1.09381,
+          "translation_mae_mm": 0.09832,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 5.68,
+          "method_summary": {
+            "keyframes": 8,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 0,
+            "loops": 0,
+            "pose_graph_solves": 0,
+            "frames": 400,
+            "cpu_seconds": 3.862
+          }
+        },
+        "heldout_wood_continuous_2": {
+          "rotation_mae_deg": 0.73566,
+          "translation_mae_mm": 0.1051,
+          "unique_loops": 1,
+          "false_loops": 0,
+          "seconds": 5.73,
+          "method_summary": {
+            "keyframes": 8,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 2,
+            "loops": 1,
+            "pose_graph_solves": 2,
+            "frames": 400,
+            "cpu_seconds": 3.924
+          }
+        },
+        "heldout_rock_continuous_0": {
+          "rotation_mae_deg": 0.48674,
+          "translation_mae_mm": 0.05128,
+          "unique_loops": 1,
+          "false_loops": 0,
+          "seconds": 5.37,
+          "method_summary": {
+            "keyframes": 7,
+            "coverage_keyframes": 6,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 3,
+            "loops": 1,
+            "pose_graph_solves": 2,
+            "frames": 400,
+            "cpu_seconds": 3.42
+          }
+        },
+        "heldout_rock_continuous_1": {
+          "rotation_mae_deg": 0.35702,
+          "translation_mae_mm": 0.02284,
+          "unique_loops": 11,
+          "false_loops": 0,
+          "seconds": 5.64,
+          "method_summary": {
+            "keyframes": 8,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 12,
+            "loops": 11,
+            "pose_graph_solves": 6,
+            "frames": 400,
+            "cpu_seconds": 3.985
+          }
+        },
+        "heldout_rock_continuous_2": {
+          "rotation_mae_deg": 0.37544,
+          "translation_mae_mm": 0.02243,
+          "unique_loops": 14,
+          "false_loops": 0,
+          "seconds": 5.64,
+          "method_summary": {
+            "keyframes": 9,
+            "coverage_keyframes": 8,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 16,
+            "loops": 14,
+            "pose_graph_solves": 8,
+            "frames": 400,
+            "cpu_seconds": 3.926
+          }
+        },
+        "heldout_seed_contact_loss_0": {
+          "rotation_mae_deg": 0.62794,
+          "translation_mae_mm": 0.03037,
+          "unique_loops": 12,
+          "false_loops": 0,
+          "seconds": 6.52,
+          "method_summary": {
+            "keyframes": 13,
+            "coverage_keyframes": 11,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 23,
+            "loops": 12,
+            "pose_graph_solves": 7,
+            "frames": 400,
+            "cpu_seconds": 5.133
+          }
+        },
+        "heldout_seed_contact_loss_1": {
+          "rotation_mae_deg": 0.39028,
+          "translation_mae_mm": 0.02728,
+          "unique_loops": 20,
+          "false_loops": 0,
+          "seconds": 7.56,
+          "method_summary": {
+            "keyframes": 17,
+            "coverage_keyframes": 12,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 37,
+            "loops": 20,
+            "pose_graph_solves": 13,
+            "frames": 400,
+            "cpu_seconds": 9.913
+          }
+        },
+        "heldout_fabric_contact_loss_0": {
+          "rotation_mae_deg": 0.48524,
+          "translation_mae_mm": 0.03086,
+          "unique_loops": 169,
+          "false_loops": 0,
+          "seconds": 47.29,
+          "method_summary": {
+            "keyframes": 47,
+            "coverage_keyframes": 15,
+            "tracking_sessions": 6,
+            "unmerged_sessions": 1,
+            "loop_candidates": 200,
+            "loops": 169,
+            "pose_graph_solves": 46,
+            "frames": 400,
+            "cpu_seconds": 208.014
+          }
+        },
+        "heldout_fabric_contact_loss_1": {
+          "rotation_mae_deg": 0.37427,
+          "translation_mae_mm": 0.02328,
+          "unique_loops": 39,
+          "false_loops": 0,
+          "seconds": 7.2,
+          "method_summary": {
+            "keyframes": 17,
+            "coverage_keyframes": 9,
+            "tracking_sessions": 3,
+            "unmerged_sessions": 1,
+            "loop_candidates": 43,
+            "loops": 39,
+            "pose_graph_solves": 15,
+            "frames": 400,
+            "cpu_seconds": 8.436
+          }
+        },
+        "heldout_wood_contact_loss_0": {
+          "rotation_mae_deg": 18.43552,
+          "translation_mae_mm": 3.35683,
+          "unique_loops": 1,
+          "false_loops": 0,
+          "seconds": 6.23,
+          "method_summary": {
+            "keyframes": 15,
+            "coverage_keyframes": 15,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 3,
+            "loop_candidates": 1,
+            "loops": 1,
+            "pose_graph_solves": 2,
+            "frames": 400,
+            "cpu_seconds": 4.673
+          }
+        },
+        "heldout_wood_contact_loss_1": {
+          "rotation_mae_deg": 8.29068,
+          "translation_mae_mm": 2.42679,
+          "unique_loops": 3,
+          "false_loops": 0,
+          "seconds": 6.2,
+          "method_summary": {
+            "keyframes": 12,
+            "coverage_keyframes": 12,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 2,
+            "loop_candidates": 3,
+            "loops": 3,
+            "pose_graph_solves": 4,
+            "frames": 400,
+            "cpu_seconds": 4.404
+          }
+        },
+        "heldout_rock_contact_loss_0": {
+          "rotation_mae_deg": 0.53649,
+          "translation_mae_mm": 0.07068,
+          "unique_loops": 27,
+          "false_loops": 0,
+          "seconds": 28.87,
+          "method_summary": {
+            "keyframes": 37,
+            "coverage_keyframes": 12,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 38,
+            "loops": 27,
+            "pose_graph_solves": 17,
+            "frames": 400,
+            "cpu_seconds": 118.153
+          }
+        },
+        "heldout_rock_contact_loss_1": {
+          "rotation_mae_deg": 0.57337,
+          "translation_mae_mm": 0.054,
+          "unique_loops": 14,
+          "false_loops": 0,
+          "seconds": 8.31,
+          "method_summary": {
+            "keyframes": 21,
+            "coverage_keyframes": 11,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 14,
+            "loops": 14,
+            "pose_graph_solves": 8,
+            "frames": 400,
+            "cpu_seconds": 16.387
+          }
+        },
+        "heldout_seed_continuous_3": {
+          "rotation_mae_deg": 0.48444,
+          "translation_mae_mm": 0.02305,
+          "unique_loops": 6,
+          "false_loops": 0,
+          "seconds": 5.69,
+          "method_summary": {
+            "keyframes": 8,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 10,
+            "loops": 6,
+            "pose_graph_solves": 6,
+            "frames": 400,
+            "cpu_seconds": 4.096
+          }
+        },
+        "heldout_seed_continuous_4": {
+          "rotation_mae_deg": 0.94474,
+          "translation_mae_mm": 0.06961,
+          "unique_loops": 8,
+          "false_loops": 0,
+          "seconds": 5.78,
+          "method_summary": {
+            "keyframes": 15,
+            "coverage_keyframes": 12,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 16,
+            "loops": 8,
+            "pose_graph_solves": 6,
+            "frames": 400,
+            "cpu_seconds": 4.497
+          }
+        },
+        "heldout_seed_continuous_5": {
+          "rotation_mae_deg": 21.21419,
+          "translation_mae_mm": 2.04962,
+          "unique_loops": 13,
+          "false_loops": 0,
+          "seconds": 6.23,
+          "method_summary": {
+            "keyframes": 14,
+            "coverage_keyframes": 8,
+            "tracking_sessions": 2,
+            "unmerged_sessions": 2,
+            "loop_candidates": 23,
+            "loops": 13,
+            "pose_graph_solves": 6,
+            "frames": 400,
+            "cpu_seconds": 4.699
+          }
+        },
+        "heldout_fabric_continuous_3": {
+          "rotation_mae_deg": 0.27014,
+          "translation_mae_mm": 0.03127,
+          "unique_loops": 11,
+          "false_loops": 0,
+          "seconds": 4.93,
+          "method_summary": {
+            "keyframes": 8,
+            "coverage_keyframes": 6,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 11,
+            "loops": 11,
+            "pose_graph_solves": 6,
+            "frames": 400,
+            "cpu_seconds": 3.457
+          }
+        },
+        "heldout_fabric_continuous_4": {
+          "rotation_mae_deg": 0.37548,
+          "translation_mae_mm": 0.06456,
+          "unique_loops": 2,
+          "false_loops": 0,
+          "seconds": 4.97,
+          "method_summary": {
+            "keyframes": 4,
+            "coverage_keyframes": 4,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 2,
+            "loops": 2,
+            "pose_graph_solves": 3,
+            "frames": 400,
+            "cpu_seconds": 2.985
+          }
+        },
+        "heldout_fabric_continuous_5": {
+          "rotation_mae_deg": 0.33995,
+          "translation_mae_mm": 0.02411,
+          "unique_loops": 11,
+          "false_loops": 0,
+          "seconds": 5.94,
+          "method_summary": {
+            "keyframes": 10,
+            "coverage_keyframes": 8,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 16,
+            "loops": 11,
+            "pose_graph_solves": 7,
+            "frames": 400,
+            "cpu_seconds": 4.366
+          }
+        },
+        "heldout_wood_continuous_3": {
+          "rotation_mae_deg": 0.5555,
+          "translation_mae_mm": 0.06502,
+          "unique_loops": 3,
+          "false_loops": 0,
+          "seconds": 5.88,
+          "method_summary": {
+            "keyframes": 8,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 3,
+            "loops": 3,
+            "pose_graph_solves": 4,
+            "frames": 400,
+            "cpu_seconds": 3.897
+          }
+        },
+        "heldout_wood_continuous_4": {
+          "rotation_mae_deg": 0.61745,
+          "translation_mae_mm": 0.09795,
+          "unique_loops": 1,
+          "false_loops": 0,
+          "seconds": 5.33,
+          "method_summary": {
+            "keyframes": 8,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 1,
+            "loops": 1,
+            "pose_graph_solves": 2,
+            "frames": 400,
+            "cpu_seconds": 3.589
+          }
+        },
+        "heldout_wood_continuous_5": {
+          "rotation_mae_deg": 0.56558,
+          "translation_mae_mm": 0.08384,
+          "unique_loops": 6,
+          "false_loops": 0,
+          "seconds": 5.89,
+          "method_summary": {
+            "keyframes": 10,
+            "coverage_keyframes": 8,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 6,
+            "loops": 6,
+            "pose_graph_solves": 6,
+            "frames": 400,
+            "cpu_seconds": 4.147
+          }
+        },
+        "heldout_rock_continuous_3": {
+          "rotation_mae_deg": 0.61962,
+          "translation_mae_mm": 0.0374,
+          "unique_loops": 17,
+          "false_loops": 0,
+          "seconds": 5.64,
+          "method_summary": {
+            "keyframes": 12,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 17,
+            "loops": 17,
+            "pose_graph_solves": 9,
+            "frames": 400,
+            "cpu_seconds": 4.247
+          }
+        },
+        "heldout_rock_continuous_4": {
+          "rotation_mae_deg": 0.66448,
+          "translation_mae_mm": 0.0961,
+          "unique_loops": 8,
+          "false_loops": 0,
+          "seconds": 5.58,
+          "method_summary": {
+            "keyframes": 12,
+            "coverage_keyframes": 10,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 10,
+            "loops": 8,
+            "pose_graph_solves": 5,
+            "frames": 400,
+            "cpu_seconds": 3.888
+          }
+        },
+        "heldout_rock_continuous_5": {
+          "rotation_mae_deg": 0.70346,
+          "translation_mae_mm": 0.04695,
+          "unique_loops": 11,
+          "false_loops": 0,
+          "seconds": 5.29,
+          "method_summary": {
+            "keyframes": 10,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 11,
+            "loops": 11,
+            "pose_graph_solves": 5,
+            "frames": 400,
+            "cpu_seconds": 3.795
+          }
+        },
+        "heldout_seed_contact_loss_2": {
+          "rotation_mae_deg": 0.46025,
+          "translation_mae_mm": 0.02288,
+          "unique_loops": 23,
+          "false_loops": 0,
+          "seconds": 6.28,
+          "method_summary": {
+            "keyframes": 12,
+            "coverage_keyframes": 9,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 28,
+            "loops": 23,
+            "pose_graph_solves": 9,
+            "frames": 400,
+            "cpu_seconds": 4.945
+          }
+        },
+        "heldout_seed_contact_loss_3": {
+          "rotation_mae_deg": 0.26706,
+          "translation_mae_mm": 0.03321,
+          "unique_loops": 25,
+          "false_loops": 0,
+          "seconds": 5.68,
+          "method_summary": {
+            "keyframes": 11,
+            "coverage_keyframes": 6,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 29,
+            "loops": 25,
+            "pose_graph_solves": 10,
+            "frames": 400,
+            "cpu_seconds": 4.528
+          }
+        },
+        "heldout_fabric_contact_loss_2": {
+          "rotation_mae_deg": 0.61452,
+          "translation_mae_mm": 0.04132,
+          "unique_loops": 42,
+          "false_loops": 0,
+          "seconds": 10.3,
+          "method_summary": {
+            "keyframes": 21,
+            "coverage_keyframes": 10,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 51,
+            "loops": 42,
+            "pose_graph_solves": 19,
+            "frames": 400,
+            "cpu_seconds": 26.155
+          }
+        },
+        "heldout_fabric_contact_loss_3": {
+          "rotation_mae_deg": 0.48983,
+          "translation_mae_mm": 0.05614,
+          "unique_loops": 50,
+          "false_loops": 0,
+          "seconds": 11.48,
+          "method_summary": {
+            "keyframes": 21,
+            "coverage_keyframes": 9,
+            "tracking_sessions": 6,
+            "unmerged_sessions": 1,
+            "loop_candidates": 55,
+            "loops": 50,
+            "pose_graph_solves": 18,
+            "frames": 400,
+            "cpu_seconds": 30.239
+          }
+        },
+        "heldout_wood_contact_loss_2": {
+          "rotation_mae_deg": 0.39618,
+          "translation_mae_mm": 0.06775,
+          "unique_loops": 7,
+          "false_loops": 0,
+          "seconds": 6.43,
+          "method_summary": {
+            "keyframes": 15,
+            "coverage_keyframes": 10,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 7,
+            "loops": 7,
+            "pose_graph_solves": 6,
+            "frames": 400,
+            "cpu_seconds": 4.94
+          }
+        },
+        "heldout_wood_contact_loss_3": {
+          "rotation_mae_deg": 0.41099,
+          "translation_mae_mm": 0.04255,
+          "unique_loops": 13,
+          "false_loops": 0,
+          "seconds": 5.44,
+          "method_summary": {
+            "keyframes": 12,
+            "coverage_keyframes": 9,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 13,
+            "loops": 13,
+            "pose_graph_solves": 8,
+            "frames": 400,
+            "cpu_seconds": 3.98
+          }
+        },
+        "heldout_rock_contact_loss_2": {
+          "rotation_mae_deg": 0.3666,
+          "translation_mae_mm": 0.03101,
+          "unique_loops": 18,
+          "false_loops": 0,
+          "seconds": 5.73,
+          "method_summary": {
+            "keyframes": 13,
+            "coverage_keyframes": 8,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 19,
+            "loops": 18,
+            "pose_graph_solves": 10,
+            "frames": 400,
+            "cpu_seconds": 4.351
+          }
+        },
+        "heldout_rock_contact_loss_3": {
+          "rotation_mae_deg": 1.68137,
+          "translation_mae_mm": 0.10265,
+          "unique_loops": 19,
+          "false_loops": 0,
+          "seconds": 32.28,
+          "method_summary": {
+            "keyframes": 68,
+            "coverage_keyframes": 17,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 37,
+            "loops": 19,
+            "pose_graph_solves": 17,
+            "frames": 400,
+            "cpu_seconds": 146.101
+          }
+        }
+      }
+    }
+  }
+}

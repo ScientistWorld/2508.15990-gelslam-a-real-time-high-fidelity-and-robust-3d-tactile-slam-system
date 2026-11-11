@@ -232,3 +232,4 @@ tmp/
 protocol.md
 *.egg-info
 core.[0-9]*
+redteam/hardening/results/final_rerun_complete.txt

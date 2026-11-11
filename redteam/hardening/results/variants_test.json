@@ -1,0 +1,331 @@
+{
+  "_metadata": {
+    "slice": "test",
+    "episodes": [
+      {
+        "name": "heldout_seed_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_3",
+        "contact_loss": true
+      }
+    ],
+    "methods_discovered": [
+      "exhaustive_two_stage",
+      "hybrid_local_loops",
+      "loop_ccs_070",
+      "nf_kf",
+      "only_nf_exhaustive",
+      "only_sift",
+      "reference_seed1",
+      "session_chain",
+      "session_chain_dense"
+    ]
+  },
+  "experiments": {
+    "long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "exhaustive_two_stage": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "hybrid_local_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "loop_ccs_070": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "nf_kf": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "only_nf_exhaustive": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "only_sift": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "reference_seed1": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "session_chain": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "session_chain_dense": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        }
+      }
+    },
+    "relocalization_after_contact_loss": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "exhaustive_two_stage": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "hybrid_local_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "loop_ccs_070": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "nf_kf": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "only_nf_exhaustive": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "only_sift": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "reference_seed1": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "session_chain": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "session_chain_dense": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        }
+      }
+    }
+  },
+  "_diagnostics": {
+    "status": "pending: every method holds its worst values until scored"
+  }
+}
