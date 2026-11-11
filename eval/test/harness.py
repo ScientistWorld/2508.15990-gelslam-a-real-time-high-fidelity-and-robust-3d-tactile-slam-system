@@ -360,7 +360,11 @@ def evaluate(
 
     states = {m["name"]: {"error": m["error"], "episodes": {}} for m in methods}
     baseline_state = {"error": None, "episodes": {}}
-    with tempfile.TemporaryDirectory(prefix=f"tactile_{slice_name}_") as tmp_name:
+    # Episode inputs are ~100 MB each; container /tmp is a small tmpfs, so the
+    # scratch space lives in the workspace's (gitignored) tmp/ directory.
+    scratch_root = Path(os.environ.get("TACTILE_EVAL_SCRATCH", str(root / "tmp" / "eval_scratch")))
+    scratch_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=f"tactile_{slice_name}_", dir=str(scratch_root)) as tmp_name:
         tmp = Path(tmp_name)
         (tmp / "inputs").mkdir()
         (tmp / "logs").mkdir()
