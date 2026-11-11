@@ -1,8 +1,4 @@
-# Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends.
-action: pending
+action: submit
 gpus: 0
-test: false
-milestone: core_claim
-notes: ""
+test: true
+notes: "Resume nine unfinished audit trials only; completed reference seeds and scientific variants are preserved. Run unmodified no-argument hidden tests and summarize all scores."
