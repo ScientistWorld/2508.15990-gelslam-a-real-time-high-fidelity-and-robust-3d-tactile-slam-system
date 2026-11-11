@@ -1,33 +1,27 @@
 #!/bin/bash
-# Download all data and models needed for this environment.
+# Fetch/generate everything this environment needs. Idempotent.
 #
-# Run on a node with internet access BEFORE building the container
-# or submitting compute jobs.
+# The benchmark is synthetic: the evaluators render every episode on the fly
+# from code in data/ (training) and eval/test/ (held-out), so no external data
+# or model weights are required. This script optionally caches the rendered
+# public training episodes (about 100 MB each, 8 episodes) in
+# data/downloads/train_episodes/ for inspection.
 #
-# This script should be idempotent — safe to run multiple times.
-# It should skip files that already exist.
+# Optional real-data resources from the paper's release (not used by the
+# scored benchmark) can be fetched with the flags below.
 #
-# Update the storage estimate below as you add downloads.
-#
-# Estimated total download size: 0 GB for the default scaled benchmark.
-# Optional official calibration model: 12 KB.
-# Optional full dataset download: 68.1 GiB compressed / 73.1 GB reported.
-# Estimated disk usage after default generation: <20 MB.
-#
-# You do not need to run this script during reproduction — it exists
-# for future portability. Write it to download to workspace-local
-# paths (data/, checkpoints/) instead of the shared directories
-# so a future user with just the workspace can run this script and get everything they need.
+# Estimated size: 0 GB required; ~0.8 GB with CACHE_TRAIN_EPISODES=1;
+# 68 GB with DOWNLOAD_FULL_GELSLAM_DATASET=1.
 
 set -e
 
 cd /home/user
+export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 
-python data/generate_synthetic_tracking.py \
-  --output data/synthetic_tracking/loop_patch.npz \
-  --frames 144 \
-  --surface-size 300 \
-  --trajectory sixdof
+if [ "${CACHE_TRAIN_EPISODES:-0}" = "1" ]; then
+  mkdir -p data/downloads/train_episodes
+  python data/tactile_sim.py --configs data/train_episodes.json --output-dir data/downloads/train_episodes
+fi
 
 if [ "${DOWNLOAD_OFFICIAL_GELSLAM_CALIBRATION:-0}" = "1" ]; then
   mkdir -p data/downloads/gelslam_example_calibration
@@ -35,14 +29,8 @@ if [ "${DOWNLOAD_OFFICIAL_GELSLAM_CALIBRATION:-0}" = "1" ]; then
     wget -O data/downloads/gelslam_example_calibration/nnmodel.pth \
       https://raw.githubusercontent.com/rpl-cmu/gelslam/main/src/gelslam/resources/example_calibration/model/nnmodel.pth
   fi
-  mkdir -p method/gelslam/src/gelslam/resources/example_calibration/model
-  cp data/downloads/gelslam_example_calibration/nnmodel.pth \
-    method/gelslam/src/gelslam/resources/example_calibration/model/nnmodel.pth
 fi
 
-# The full released GelSLAM dataset is not required for the packaged CPU core
-# experiment, but this verified optional path lets a future agent fetch it for
-# higher-milestone real-data work without guessing a URL.
 if [ "${DOWNLOAD_FULL_GELSLAM_DATASET:-0}" = "1" ]; then
   mkdir -p data/downloads/gelslam_dataset
   if [ ! -e data/downloads/gelslam_dataset/dataset.zip ]; then

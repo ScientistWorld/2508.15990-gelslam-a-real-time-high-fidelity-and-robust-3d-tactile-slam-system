@@ -1,162 +1,213 @@
+"""NumPy/OpenCV port of NormalFlow (Huang et al., RA-L 2024) as used by GelSLAM.
+
+Ported from https://github.com/rpl-cmu/normalflow (MIT License, (c) 2025
+Hung-Jui Huang). The computation is unchanged: Gauss-Newton on the normal-map
+alignment objective of GelSLAM Eq. (1) over the n highest-|curvature| pixels of
+the reference frame (5 DoF: rotation + in-plane translation), followed by the
+z translation from the mean height difference, then the Curvature Cosine
+Similarity (CCS) and Shared Curvature Ratio (SCR) quality scores.
+
+Units: image arrays are indexed in pixels; 3D points and translations are in
+millimetres (the official code uses metres; only the unit changes).
+"""
+
 from __future__ import annotations
 
 import cv2
 import numpy as np
-from scipy.optimize import least_squares
-
-from .geometry import as_se3, bilinear_image, invert, rotate_vectors, transform_points
-
-
-def geometric_properties(height: np.ndarray, mask: np.ndarray | None = None) -> dict:
-    """Compute the tactile geometry tuple used by GelSLAM from a height map.
-
-    The real system obtains normals from GelSight RGB images through
-    photometric stereo and then integrates/derives the remaining fields. The
-    scaled benchmark starts from synthetic height maps, so this function is the
-    equivalent geometry stage for the available observations.
-    """
-    height = height.astype(np.float64)
-    gy, gx = np.gradient(height)
-    denom = np.sqrt(gx * gx + gy * gy + 1.0)
-    normal = np.stack([-gx / denom, -gy / denom, np.ones_like(height) / denom], axis=-1)
-    curvature = np.abs(np.gradient(gx, axis=1) + np.gradient(gy, axis=0))
-    curvature = curvature / (np.percentile(curvature, 98) + 1e-8)
-    if mask is None:
-        mask = np.ones_like(height, dtype=bool)
-    return {
-        "height": height,
-        "normal": normal,
-        "curvature": np.clip(curvature, 0.0, 1.0),
-        "mask": mask.astype(bool),
-    }
+from scipy.linalg import lstsq
+from scipy.ndimage import binary_erosion
+from scipy.spatial.transform import Rotation
 
 
-def _surface_points(height: np.ndarray, xs: np.ndarray, ys: np.ndarray) -> np.ndarray:
-    h, w = height.shape
-    cx = (w - 1) / 2.0
-    cy = (h - 1) / 2.0
-    z = height[ys, xs]
-    return np.column_stack([xs.astype(np.float64) - cx, ys.astype(np.float64) - cy, z])
+class LoseTrackError(Exception):
+    """NormalFlow could not find enough shared contact to estimate a pose."""
 
 
-def _project(points: np.ndarray, shape: tuple[int, int]) -> tuple[np.ndarray, np.ndarray]:
+def erode_contact_mask(contact: np.ndarray) -> np.ndarray:
+    size = max(contact.shape[0] // 48, 1)
+    return binary_erosion(contact, structure=np.ones((size, size)))
+
+
+def gxy2normal(gradients: np.ndarray) -> np.ndarray:
+    ones = np.ones_like(gradients[:, :, :1], dtype=np.float32)
+    normals = np.dstack([-gradients.astype(np.float32), ones])
+    return (normals / np.linalg.norm(normals, axis=-1, keepdims=True)).astype(np.float32)
+
+
+def gxy2laplacian(gradients: np.ndarray, contact: np.ndarray, ksize: int = 5) -> np.ndarray:
+    """Curvature map: divergence of the gradient field, Gaussian filtered."""
+    gx = gradients[:, :, 0].astype(np.float32)
+    gy = gradients[:, :, 1].astype(np.float32)
+    lap = np.gradient(gx, axis=1) + np.gradient(gy, axis=0)
+    lap = cv2.GaussianBlur(lap.astype(np.float32), (ksize, ksize), 0)
+    lap[np.logical_not(contact)] = 0.0
+    return np.clip(lap, -0.7, 0.7).astype(np.float32)
+
+
+def height2pointcloud(height: np.ndarray, mask: np.ndarray, mm_per_pixel: float) -> np.ndarray:
+    rows, cols = np.nonzero(mask)
+    xx = cols - height.shape[1] / 2 + 0.5
+    yy = rows - height.shape[0] / 2 + 0.5
+    return (np.vstack((xx, yy, height[rows, cols])).T * mm_per_pixel).astype(np.float32)
+
+
+def wide_remap(image: np.ndarray, xx: np.ndarray, yy: np.ndarray, mode: int = cv2.INTER_LINEAR) -> np.ndarray:
+    """Sample image at float pixel coordinates; returns (n,) or (n, channels)."""
+    xx = np.ascontiguousarray(xx, dtype=np.float32).reshape(-1, 1)
+    yy = np.ascontiguousarray(yy, dtype=np.float32).reshape(-1, 1)
+    image = np.ascontiguousarray(image, dtype=np.float32)
+    chunks = []
+    for start in range(0, len(xx), 30000):
+        stop = min(len(xx), start + 30000)
+        out = cv2.remap(image, xx[start:stop], yy[start:stop], mode,
+                        borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+        chunks.append(out.reshape(stop - start, -1))
+    if not chunks:
+        channels = 1 if image.ndim == 2 else image.shape[2]
+        return np.zeros((0,) if channels == 1 else (0, channels), dtype=np.float32)
+    out = np.concatenate(chunks, axis=0)
+    return out[:, 0] if image.ndim == 2 else out
+
+
+def get_J(normals: np.ndarray, mask: np.ndarray, pointcloud: np.ndarray, mm_per_pixel: float) -> np.ndarray:
+    """Jacobian of the normal residual w.r.t. (3 rotation, 2 translation) parameters."""
+    dndx = cv2.Sobel(normals, cv2.CV_32F, 1, 0, ksize=5, scale=2 ** (-7))
+    dndy = cv2.Sobel(normals, cv2.CV_32F, 0, 1, ksize=5, scale=2 ** (-7))
+    yy, xx = np.nonzero(mask)
+    jxx = dndx[:, :, 0][yy, xx] / mm_per_pixel
+    jyx = dndx[:, :, 1][yy, xx] / mm_per_pixel
+    jzx = dndx[:, :, 2][yy, xx] / mm_per_pixel
+    jxy = dndy[:, :, 0][yy, xx] / mm_per_pixel
+    jyy = dndy[:, :, 1][yy, xx] / mm_per_pixel
+    jzy = dndy[:, :, 2][yy, xx] / mm_per_pixel
+    n = pointcloud.shape[0]
+    jn = np.stack([jxx, jxy, jyx, jyy, jzx, jzy], axis=-1).T.reshape(3, 2, -1).astype(np.float32)
+    jx = np.array([[0.0, 0.0, 0.0], [0.0, 0.0, -1.0], [0.0, 1.0, 0.0]], dtype=np.float32)
+    jy = np.array([[0.0, 0.0, 1.0], [0.0, 0.0, 0.0], [-1.0, 0.0, 0.0]], dtype=np.float32)
+    jz = np.array([[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 0.0]], dtype=np.float32)
+    proj = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float32)
+    jw = np.concatenate(
+        [
+            (proj @ jx @ pointcloud.T).reshape(2, 1, -1),
+            (proj @ jy @ pointcloud.T).reshape(2, 1, -1),
+            (proj @ jz @ pointcloud.T).reshape(2, 1, -1),
+            np.tile(proj[:, :-1, np.newaxis], (1, 1, n)),
+        ],
+        axis=1,
+    )
+    jnw = np.matmul(jn.transpose(2, 0, 1), jw.transpose(2, 0, 1)).transpose(1, 2, 0)
+    jr = np.zeros((3, 5, n), dtype=np.float32)
+    jr[0, 1] = normals[yy, xx, 2]
+    jr[0, 2] = -normals[yy, xx, 1]
+    jr[1, 0] = -normals[yy, xx, 2]
+    jr[1, 2] = normals[yy, xx, 0]
+    jr[2, 0] = normals[yy, xx, 1]
+    jr[2, 1] = -normals[yy, xx, 0]
+    return jnw - jr
+
+
+def _project(points: np.ndarray, shape: tuple[int, int], mm_per_pixel: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     h, w = shape
-    cx = (w - 1) / 2.0
-    cy = (h - 1) / 2.0
-    return points[:, 0] + cx, points[:, 1] + cy
+    xx = points[:, 0] / mm_per_pixel + w / 2 - 0.5
+    yy = points[:, 1] / mm_per_pixel + h / 2 - 0.5
+    inside = (xx >= 0) & (xx < w) & (yy >= 0) & (yy < h)
+    return xx.astype(np.float32), yy.astype(np.float32), inside
 
 
-def quality(
-    ref_height: np.ndarray,
-    ref_curv: np.ndarray,
-    tgt_curv: np.ndarray,
-    ref_mask: np.ndarray,
-    tgt_mask: np.ndarray,
-    transform: np.ndarray,
-) -> tuple[float, float]:
-    ys, xs = np.nonzero(ref_mask)
-    points = _surface_points(ref_height, xs, ys)
-    # The optimized measurement composes keyframe poses as T_target = T_ref * T.
-    # Warping reference-frame samples into the target image needs the inverse
-    # local-coordinate transform: p_target = T_target^-1 T_ref p_ref.
-    warped = transform_points(points, invert(transform))
-    sample_x, sample_y = _project(warped, ref_curv.shape)
-    warped_curv, valid = bilinear_image(tgt_curv, sample_x, sample_y)
-    warped_mask_f, _ = bilinear_image(tgt_mask.astype(float), sample_x, sample_y)
-    shared = valid & (warped_mask_f > 0.5)
-    if shared.sum() < 16:
-        return 0.0, 0.0
-    a = ref_curv[ys[shared], xs[shared]].reshape(-1)
-    b = warped_curv[shared].reshape(-1)
-    ccs = float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-9))
-    scr = float(a.sum() / (ref_curv[ref_mask].sum() + 1e-9))
-    return ccs, scr
+def normalflow(
+    n_ref: np.ndarray,
+    c_ref: np.ndarray,
+    h_ref: np.ndarray,
+    l_ref: np.ndarray,
+    n_tar: np.ndarray,
+    c_tar: np.ndarray,
+    h_tar: np.ndarray,
+    l_tar: np.ndarray,
+    tar_T_ref_init: np.ndarray,
+    mm_per_pixel: float,
+    n_samples: int = 3000,
+    max_iters: int = 50,
+) -> tuple[np.ndarray, float, float]:
+    """Estimate tar_T_ref (4x4, mm). Returns (transform, ccs, scr).
 
-
-def estimate_relative(ref: dict, tgt: dict, init: np.ndarray | None = None, max_pixels: int = 900) -> tuple[np.ndarray, float, float, float]:
-    """Estimate the SE(3) transform from a reference tactile frame to a target.
-
-    This is a scaled implementation of GelSLAM's NormalFlow objective: surface
-    points q=[u,v,H(u,v)] from the reference contact are warped by an SE(3)
-    candidate, projected into the target frame, and the target normal at the
-    warped location is matched against the rotated reference normal.
+    Raises LoseTrackError when fewer than 10 sampled pixels share contact.
+    The caller applies the CCS/SCR thresholds (failure detection).
     """
-    if init is None:
-        init = np.zeros(6, dtype=np.float64)
-    init = as_se3(init)
-    ref_curv = ref["curvature"]
-    ref_mask = ref["mask"]
-    ys, xs = np.nonzero(ref_mask)
-    scores = ref_curv[ys, xs]
-    if len(scores) > max_pixels:
-        keep = np.argpartition(scores, -max_pixels)[-max_pixels:]
-        ys = ys[keep]
-        xs = xs[keep]
+    abs_l = np.abs(l_ref).ravel()
+    n_pick = int(min(n_samples, abs_l.size))
+    l_threshold = np.partition(abs_l, -n_pick)[-n_pick] + 1e-6
+    m_ref = np.abs(l_ref) >= l_threshold
+    if int(m_ref.sum()) < 10:
+        raise LoseTrackError()
+    pointcloud = height2pointcloud(h_ref, m_ref, mm_per_pixel)
+    masked_n_ref = n_ref[m_ref]
+    masked_c_ref = c_ref[m_ref]
+    masked_l_ref = l_ref[m_ref]
+    jac = np.transpose(get_J(n_ref, m_ref, pointcloud, mm_per_pixel), (2, 0, 1))
+    c_tar_f = c_tar.astype(np.float32)
+    shape = c_ref.shape
 
-    ref_points = _surface_points(ref["height"], xs, ys)
-    ref_normals = ref["normal"][ys, xs]
+    tar_T_ref = np.asarray(tar_T_ref_init, dtype=np.float64).copy()
+    for it in range(max_iters):
+        remapped = pointcloud @ tar_T_ref[:3, :3].T + tar_T_ref[:3, 3]
+        xx, yy, inside = _project(remapped, shape, mm_per_pixel)
+        shared = (wide_remap(c_tar_f, xx, yy, cv2.INTER_NEAREST) > 0.5) & inside
+        if int(shared.sum()) < 10:
+            raise LoseTrackError()
+        remapped_n_tar = wide_remap(n_tar, xx, yy)
+        b = (remapped_n_tar @ np.linalg.inv(tar_T_ref[:3, :3]).T - masked_n_ref)[shared].reshape(-1)
+        a = jac[shared].reshape(-1, 5)
+        dp = lstsq(a, b, lapack_driver="gelsy")[0]
+        d_t = np.eye(4)
+        d_t[:3, :3] = Rotation.from_euler("xyz", dp[:3], degrees=False).as_matrix()
+        d_t[:2, 3] = dp[3:]
+        tar_T_ref = tar_T_ref @ np.linalg.inv(d_t)
+        tar_T_ref[2, 3] = 0.0
+        if np.linalg.norm(dp[:3]) < 1e-4 and np.linalg.norm(dp[3:]) < 1e-2 and it > 5:
+            break
 
-    def residual(delta: np.ndarray) -> np.ndarray:
-        pose = as_se3(delta)
-        warp_pose = invert(pose)
-        warped_points = transform_points(ref_points, warp_pose)
-        sample_x, sample_y = _project(warped_points, ref_curv.shape)
-        target_normals, valid = bilinear_image(tgt["normal"], sample_x, sample_y)
-        target_heights, height_valid = bilinear_image(tgt["height"], sample_x, sample_y)
-        mask_values, _ = bilinear_image(tgt["mask"].astype(float), sample_x, sample_y)
-        ok = valid & height_valid & (mask_values > 0.5)
-        rotated_ref = rotate_vectors(ref_normals, warp_pose)
-        normal_res = np.zeros((len(xs), 3), dtype=np.float64)
-        normal_res[ok] = target_normals[ok] - rotated_ref[ok]
-        normal_res[~ok] = 0.35
-        height_res = np.zeros(len(xs), dtype=np.float64)
-        # Keep the baseline objective matched to the method objective: the
-        # warped reference surface should agree with both target normals and
-        # target height values in the local tactile frame.
-        height_res[ok] = (warped_points[ok, 2] - target_heights[ok]) / 0.5
-        height_res[~ok] = 0.35
-        return np.concatenate([normal_res.reshape(-1), height_res])
+    # z translation from the mean height difference over the shared contact.
+    remapped = pointcloud @ tar_T_ref[:3, :3].T + tar_T_ref[:3, 3]
+    xx, yy, inside = _project(remapped, shape, mm_per_pixel)
+    shared = (wide_remap(c_tar_f, xx, yy, cv2.INTER_NEAREST) > 0.5) & inside
+    if int(shared.sum()) < 10:
+        raise LoseTrackError()
+    remapped_h_tar = wide_remap(h_tar, xx, yy)
+    tar_T_ref[2, 3] = float(np.mean(remapped_h_tar[shared] * mm_per_pixel - remapped[shared, 2]))
 
-    guesses = [init]
-    try:
-        shift, _ = cv2.phaseCorrelate(ref_curv.astype(np.float32), tgt["curvature"].astype(np.float32))
-        guesses.append(invert(np.array([shift[0], shift[1], init[2], init[3], init[4], init[5]], dtype=np.float64)))
-    except cv2.error:
-        pass
-    try:
-        warp = np.array(
-            [[np.cos(init[5]), -np.sin(init[5]), init[0]], [np.sin(init[5]), np.cos(init[5]), init[1]]],
-            dtype=np.float32,
-        )
-        _, warp = cv2.findTransformECC(
-            ref_curv.astype(np.float32),
-            tgt["curvature"].astype(np.float32),
-            warp,
-            cv2.MOTION_EUCLIDEAN,
-            (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 80, 1e-5),
-        )
-        rz = float(np.arctan2(warp[1, 0], warp[0, 0]))
-        guesses.append(invert(np.array([warp[0, 2], warp[1, 2], init[2], init[3], init[4], rz], dtype=np.float64)))
-    except cv2.error:
-        pass
+    # Failure-detection scores (Section IV-A2).
+    remapped = pointcloud @ tar_T_ref[:3, :3].T + tar_T_ref[:3, 3]
+    xx, yy, inside = _project(remapped, shape, mm_per_pixel)
+    l_tar_backproj = wide_remap(l_tar, xx, yy)
+    c_tar_backproj = (wide_remap(c_tar_f, xx, yy) > 0.5) & inside
+    c_shared = masked_c_ref & c_tar_backproj
+    denom = float(np.sum(np.abs(masked_l_ref)))
+    scr = float(np.sum(np.abs(masked_l_ref[c_shared])) / denom) if denom > 0 else 0.0
+    a_vec = masked_l_ref[c_shared].astype(np.float64)
+    b_vec = l_tar_backproj[c_shared].astype(np.float64)
+    na = float(np.linalg.norm(a_vec))
+    nb = float(np.linalg.norm(b_vec))
+    ccs = float(a_vec @ b_vec / (na * nb)) if na > 0 and nb > 0 else -1.0
+    if not np.isfinite(tar_T_ref).all():
+        raise LoseTrackError()
+    return tar_T_ref, ccs, scr
 
-    best = None
-    for guess in guesses:
-        guess = as_se3(guess)
-        for pose, cost in [(guess, float(np.sum(residual(guess) ** 2))), (None, None)]:
-            if pose is None:
-                opt = least_squares(
-                    residual,
-                    guess,
-                    method="lm",
-                    max_nfev=45,
-                    x_scale=np.array([4.0, 4.0, 1.0, 0.08, 0.08, 0.15]),
-                )
-                pose = as_se3(opt.x)
-                cost = float(opt.cost)
-            ccs, scr = quality(ref["height"], ref_curv, tgt["curvature"], ref_mask, tgt["mask"], pose)
-            rank = (ccs + 0.4 * scr, -float(cost))
-            if best is None or rank > best[0]:
-                best = (rank, pose, ccs, scr, float(cost))
-    assert best is not None
-    return best[1], best[2], best[3], best[4]
+
+class TactileFrame:
+    """Geometric properties {N, L, H, C} of one tactile observation."""
+
+    def __init__(self, gradients: np.ndarray, height: np.ndarray, contact: np.ndarray,
+                 mm_per_pixel: float, contact_threshold: int = 125, laplacian_ksize: int = 5):
+        self.C = erode_contact_mask(contact.astype(bool))
+        self.G = gradients.astype(np.float32)
+        self.H = height.astype(np.float32)
+        self.N = gxy2normal(self.G)
+        self.L = gxy2laplacian(self.G, self.C, laplacian_ksize)
+        self.mm_per_pixel = float(mm_per_pixel)
+        self.in_contact = int(self.C.sum()) >= contact_threshold
+
+
+def register(ref: TactileFrame, tar: TactileFrame, tar_T_ref_init: np.ndarray, n_samples: int = 3000) -> tuple[np.ndarray, float, float]:
+    return normalflow(ref.N, ref.C, ref.H, ref.L, tar.N, tar.C, tar.H, tar.L,
+                      tar_T_ref_init, ref.mm_per_pixel, n_samples=n_samples)

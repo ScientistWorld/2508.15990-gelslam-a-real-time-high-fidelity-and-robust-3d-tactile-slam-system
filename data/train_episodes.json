@@ -1,0 +1,61 @@
+{
+  "description": "Public training/development episodes for the synthetic tactile tracking benchmark. Continuous-contact episodes feed the long_horizon_tracking experiment; contact-loss episodes (25 frames removed after every 100 kept frames) feed relocalization_after_contact_loss. The hidden test uses different, unpublished episodes drawn from the same families and parameter ranges.",
+  "episodes": [
+    {
+      "name": "train_seed_continuous",
+      "family": "seed",
+      "seed": 1101,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_fabric_continuous",
+      "family": "fabric",
+      "seed": 1202,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_wood_continuous",
+      "family": "wood",
+      "seed": 1303,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_rock_continuous",
+      "family": "rock",
+      "seed": 1404,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_seed_contact_loss",
+      "family": "seed",
+      "seed": 1151,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_fabric_contact_loss",
+      "family": "fabric",
+      "seed": 1252,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_wood_contact_loss",
+      "family": "wood",
+      "seed": 1353,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_rock_contact_loss",
+      "family": "rock",
+      "seed": 1454,
+      "frames": 400,
+      "contact_loss": true
+    }
+  ]
+}

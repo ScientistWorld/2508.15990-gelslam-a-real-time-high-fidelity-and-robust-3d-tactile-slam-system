@@ -8,7 +8,6 @@ checkpoints/
 *.bin
 *.npy
 *.npz
-!data/synthetic_tracking/*.npz
 *.h5
 *.hdf5
 *.pkl

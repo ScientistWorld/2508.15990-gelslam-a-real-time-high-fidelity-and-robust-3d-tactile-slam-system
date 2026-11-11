@@ -1,55 +1,18 @@
 #!/bin/bash
-# Evaluation script — the standard way to evaluate work in this environment.
+# Standard evaluation entry point for development: scores every method
+# registered under checkpoints/ on the public training episodes and writes
+# scoring/scores.json (same computation as scripts/evaluate_train.sh).
 #
-# This script must be SELF-CONTAINED using only code in eval/.
-# Do NOT import from method/ — evaluate.sh must work even when the
-# paper's method code is hidden from a scientist agent.
-#
-# Design it so that anyone following the same output format can run
-# this script to evaluate their results.
-#
-# OUTPUT CONTRACT: This script MUST write scoring/scores.json containing
-# a JSON dict nested by experiment, e.g.:
-#   {"imagenet_classification": {"top1_accuracy": 82.1, "top5_accuracy": 94.8}}
-# Experiment and metric names must match the keys in scoring/reference.json.
-# This file is read by the system for automated comparison.
-#
-# Example usage:
-#   ./scripts/evaluate.sh <method_and_run_name> checkpoints/epoch_10
-#   DATASET=data/synthetic_tracking/loop_patch.npz ./scripts/evaluate.sh
-#
-# Called from run.sh after training, or independently.
+# A method is registered by a checkpoints/<dir>/predict.json such as
+#   {"name": "my_method",
+#    "command": ["python", "-m", "my_pkg.run", "--input", "{input}", "--output", "{output}"]}
+# The command must write {output}/poses.npy (N x 4 x 4, mm) and may write
+# {output}/loops.json. See briefing/evaluation.md.
 
 set -e
 
 cd /home/user
 export PYTHONPATH="/home/user:${PYTHONPATH:-}"
-
 mkdir -p scoring
-DATASET="${DATASET:-data/synthetic_tracking/loop_patch.npz}"
 
-ARGS=()
-if [ "$#" -gt 0 ]; then
-  if [ $(( $# % 2 )) -ne 0 ]; then
-    echo "Usage: scripts/evaluate.sh [METHOD_NAME RUN_DIR]..." >&2
-    exit 2
-  fi
-  while [ "$#" -gt 0 ]; do
-    ARGS+=(--method-run "$1" "$2")
-    shift 2
-  done
-else
-  if [ -f checkpoints/normalflow_baseline/pred_poses.npy ]; then
-    ARGS+=(--method-run normalflow checkpoints/normalflow_baseline)
-  fi
-  if [ -f checkpoints/scaled_gelslam/pred_poses.npy ]; then
-    ARGS+=(--method-run gelslam_online checkpoints/scaled_gelslam)
-  fi
-fi
-
-if [ ${#ARGS[@]} -eq 0 ]; then
-  echo "No prediction artifacts found under checkpoints/." >&2
-  exit 1
-fi
-
-python eval/evaluate_tracking.py "${ARGS[@]}" --dataset "$DATASET" --output scoring/scores.json
+python eval/train/evaluate_train.py --output scoring/scores.json

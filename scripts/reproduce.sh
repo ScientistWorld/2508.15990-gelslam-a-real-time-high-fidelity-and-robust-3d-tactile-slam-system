@@ -1,33 +1,17 @@
 #!/bin/bash
-# Reproduce the paper's results end-to-end.
-#
-# This script runs inside the compute container and should call
-# scripts/baseline.sh and scripts/method.sh to run baselines and
-# the paper's method, each of which calls scripts/evaluate.sh.
-#
-# Assumes:
-#   - Container is built (environment/container.sif)
-#   - Data and models are downloaded (via scripts/download.sh)
-#   - Working directory is /home/user
-#
-# This is the "gold standard" reproduction — 
-# You do not need to run this, but keep this in good shape
-# so other agents can easily run a full loop of reproduction and get the paper's numbers.
+# Reproduce the paper's results end-to-end on the synthetic tactile benchmark:
+# register GelSLAM, score it with the NormalFlow baseline on the public training
+# episodes (scoring/scores.json, scoring/scores_train.json) and on the hidden
+# held-out episodes (scoring/scores_test.json). CPU only.
 
 set -e
 
 cd /home/user
 export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 
-echo "[reproduce] generating synthetic tactile benchmark"
-python data/generate_synthetic_tracking.py \
-  --output data/synthetic_tracking/loop_patch.npz \
-  --frames 144 \
-  --surface-size 300 \
-  --trajectory sixdof
-echo "[reproduce] running NormalFlow baseline"
-bash scripts/baseline.sh data/synthetic_tracking/loop_patch.npz checkpoints/normalflow_baseline
-echo "[reproduce] running scaled GelSLAM"
-bash scripts/method.sh data/synthetic_tracking/loop_patch.npz checkpoints/scaled_gelslam
-echo "[reproduce] evaluating full benchmark"
-bash scripts/evaluate.sh
+echo "[reproduce] registering GelSLAM and scoring the training episodes"
+bash scripts/method.sh
+echo "[reproduce] training slice"
+bash scripts/evaluate_train.sh
+echo "[reproduce] hidden test slice"
+bash scripts/evaluate_test.sh

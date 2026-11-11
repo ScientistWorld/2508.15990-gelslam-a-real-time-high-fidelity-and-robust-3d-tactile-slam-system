@@ -1,18 +1,19 @@
 #!/bin/bash
-# Run the paper's proposed method.
+# Register the paper's method (GelSLAM, method/gelslam_sim/) so every evaluator
+# runs it, then score it on the public training episodes.
 #
-# This script trains/runs the paper's method using code in method/.
-#
-# Usage:
-#   bash scripts/method.sh
+# Usage: bash scripts/method.sh
 
 set -e
 
 cd /home/user
 export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 
-DATASET="${1:-data/synthetic_tracking/loop_patch.npz}"
-OUT="${2:-checkpoints/scaled_gelslam}"
-
-python method/scaled_gelslam/run_gelslam.py --dataset "$DATASET" --output-dir "$OUT"
-bash scripts/evaluate.sh gelslam_online "$OUT"
+mkdir -p checkpoints/gelslam_online
+cat > checkpoints/gelslam_online/predict.json <<'JSON'
+{
+  "name": "gelslam_online",
+  "command": ["python", "-m", "method.gelslam_sim.run", "--input", "{input}", "--output", "{output}"]
+}
+JSON
+bash scripts/evaluate.sh
