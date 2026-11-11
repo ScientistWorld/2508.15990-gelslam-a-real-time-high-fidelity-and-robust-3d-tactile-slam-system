@@ -16,6 +16,9 @@ Variants (all deterministic):
   session_chain        new tracking sessions are anchored at the last estimated pose instead
                        of the identity (stronger relocalisation prior)
   session_chain_dense  session_chain + NormalFlow on 6000 samples and loop CCS 0.80
+  hybrid_local_loops   session_chain_dense + geometric loop proposals: coverage keyframes whose
+                       footprint overlaps the new keyframe under the current pose estimate are
+                       also verified with NormalFlow initialised from that estimate
 """
 
 from __future__ import annotations
@@ -27,7 +30,7 @@ from pathlib import Path
 
 import numpy as np
 
-from method.gelslam_sim.gelslam import GelSLAM, run_gelslam
+from method.gelslam_sim.gelslam import GelSLAM, inv_se3, run_gelslam
 from method.gelslam_sim.run import load_episode, write_outputs
 
 
@@ -38,6 +41,32 @@ class SessionChainGelSLAM(GelSLAM):
         if self.prev_fid is None or self.prev_fid not in self.parent:
             return np.eye(4)
         return self.kf_pose[self.parent[self.prev_fid]] @ self.rel[self.prev_fid]
+
+
+class HybridGelSLAM(SessionChainGelSLAM):
+    """Two-stage SIFT proposals plus pose-estimate (geometric) proposals."""
+
+    min_overlap_weight = 1500.0
+
+    def _detect_loops(self, tar: int) -> list[int]:
+        matched = super()._detect_loops(tar)
+        done = set(matched)
+        tar_kf = self.kfs[tar]
+        for ref in self.candidate_keyframes(tar):
+            if ref in done or self._overlap_weight(tar, ref) < self.min_overlap_weight:
+                continue
+            ref_kf = self.kfs[ref]
+            init = inv_se3(self.kf_pose[tar]) @ self.kf_pose[ref]
+            tar_T_ref = self._register(ref_kf.frame, tar_kf.frame, init, self.loop_ccs, self.loop_scr)
+            self.n_candidates += 1
+            if tar_T_ref is None:
+                continue
+            ref_T_tar = inv_se3(tar_T_ref)
+            self.edges.append((ref, tar, ref_T_tar))
+            matched.append(ref)
+            self.loops.append({"i": int(ref_kf.fid), "j": int(tar_kf.fid), "T_ij": ref_T_tar.tolist(),
+                               "sift_inliers": 0})
+        return matched
 
 
 def build(variant: str, mm_per_pixel: float) -> GelSLAM:
@@ -59,6 +88,8 @@ def build(variant: str, mm_per_pixel: float) -> GelSLAM:
         return SessionChainGelSLAM(mm_per_pixel)
     if variant == "session_chain_dense":
         return SessionChainGelSLAM(mm_per_pixel, n_samples=6000, loop_ccs=0.80)
+    if variant == "hybrid_local_loops":
+        return HybridGelSLAM(mm_per_pixel, n_samples=6000, loop_ccs=0.80)
     raise ValueError(variant)
 
 

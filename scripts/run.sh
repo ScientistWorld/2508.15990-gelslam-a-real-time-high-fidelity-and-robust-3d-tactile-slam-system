@@ -21,7 +21,8 @@ PY
 }
 
 echo "=== [1] final reference: scripts/reproduce.sh ($(date))"
-bash scripts/reproduce.sh
+rm -rf tmp/eval_scratch
+timeout -k 60 3600 bash scripts/reproduce.sh || echo "reproduce exited non-zero"
 cp scoring/scores_test.json "$RES/final_scores_test.json"
 cp scoring/scores_train.json "$RES/final_scores_train.json"
 cp scoring/scores.json "$RES/final_scores.json"
@@ -29,13 +30,14 @@ cp scoring/scores.json "$RES/final_scores.json"
 echo "=== [2] genuine variants and brute force on the hidden test ($(date))"
 rm -rf tmp/gelslam_online_parked
 mv checkpoints/gelslam_online tmp/gelslam_online_parked
-for v in reference_seed1 reference_seed2 nf_kf only_sift loop_ccs_070 session_chain session_chain_dense exhaustive_two_stage only_nf_exhaustive; do
+for v in reference_seed1 nf_kf only_sift loop_ccs_070 session_chain session_chain_dense hybrid_local_loops exhaustive_two_stage only_nf_exhaustive; do
   register "$v" redteam.hardening.variants --variant "$v"
 done
-python eval/test/evaluate_test.py --output "$RES/variants_test.json" || echo "variant test pass exited non-zero"
+timeout -k 60 7200 python eval/test/evaluate_test.py --output "$RES/variants_test.json" || echo "variant test pass exited non-zero"
 
 echo "=== [3] genuine variants on the training slice ($(date))"
-python eval/train/evaluate_train.py --output "$RES/variants_train.json" || echo "variant train pass exited non-zero"
+rm -rf checkpoints/only_sift checkpoints/reference_seed1 checkpoints/loop_ccs_070 checkpoints/session_chain
+timeout -k 60 2400 python eval/train/evaluate_train.py --output "$RES/variants_train.json" || echo "variant train pass exited non-zero"
 rm -rf checkpoints/*
 
 echo "=== [4] shortcuts on the hidden test ($(date))"
@@ -47,7 +49,7 @@ mkdir -p checkpoints/sc_orphan_artifacts
 python -c "import numpy as np; np.save('checkpoints/sc_orphan_artifacts/pred_poses.npy', np.zeros((400, 6)))"
 mkdir -p checkpoints/sc_invalid_spec
 echo '{"name": "sc_invalid_spec", "command": ["python", "-c", "pass"]}' > checkpoints/sc_invalid_spec/predict.json
-python eval/test/evaluate_test.py --output "$RES/shortcuts_test.json" || echo "shortcut pass exited non-zero"
+timeout -k 60 5400 python eval/test/evaluate_test.py --output "$RES/shortcuts_test.json" || echo "shortcut pass exited non-zero"
 git checkout -- data/tactile_sim.py baseline/normalflow_baseline.py
 rm -rf checkpoints/* data/downloads/train_episodes
 

@@ -25,6 +25,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import tempfile
 import time
@@ -54,7 +55,7 @@ LOOP_TRANS_TOL_MM = 1.0
 LOOP_ROT_TOL_DEG = 5.0
 FALSE_LOOP_GATE = 0.10
 MAX_LOOP_RECORDS = 50000
-EPISODE_TIMEOUT_S = 1800
+EPISODE_TIMEOUT_S = 900  # per episode on one CPU core (the reference needs < 20 s)
 RESERVED_NAMES = {"normalflow"}
 ARTIFACT_SUFFIXES = {".npy", ".npz", ".json", ".pt", ".pth", ".pkl", ".pickle", ".ckpt", ".safetensors"}
 
@@ -140,14 +141,24 @@ def run_command(method: dict, input_path: Path, out_dir: Path, root: Path, log_p
         log.write(f"\n$ {' '.join(command)}\n".encode())
         log.flush()
         try:
-            proc = subprocess.run(command, cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT,
-                                  timeout=EPISODE_TIMEOUT_S)
-        except subprocess.TimeoutExpired as exc:
-            raise MethodFailure(f"timed out after {EPISODE_TIMEOUT_S} s") from exc
+            proc = subprocess.Popen(command, cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT,
+                                    start_new_session=True)
         except OSError as exc:
             raise MethodFailure(f"could not start command: {exc}") from exc
-    if proc.returncode != 0:
-        raise MethodFailure(f"command exited with code {proc.returncode}")
+        try:
+            returncode = proc.wait(timeout=EPISODE_TIMEOUT_S)
+        except subprocess.TimeoutExpired as exc:
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                pass
+            try:
+                proc.wait(timeout=60)
+            except subprocess.TimeoutExpired:
+                pass
+            raise MethodFailure(f"timed out after {EPISODE_TIMEOUT_S} s") from exc
+    if returncode != 0:
+        raise MethodFailure(f"command exited with code {returncode}")
     return time.monotonic() - start
 
 
