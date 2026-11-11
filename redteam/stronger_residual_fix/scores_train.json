@@ -1,0 +1,52 @@
+{
+  "_metadata": {
+    "slice": "train",
+    "split": "block_interleaved_8_frame_tracking_with_global_long_loop_constraint_ge_32_frames"
+  },
+  "experiments": {
+    "synthetic_long_horizon_tracking": {
+      "results": {
+        "gelslam_online": {
+          "rotation_mae_deg": 3.983230526820286,
+          "translation_mae_mm": 0.35312987564853093,
+          "rotation_p95_deg": 6.041647117184196,
+          "translation_p95_mm": 0.6676490722820083,
+          "terminal_rotation_error_deg": 2.972594471000008,
+          "terminal_translation_error_mm": 0.08448512046290663
+        },
+        "normalflow": {
+          "rotation_mae_deg": 9.754942138106534,
+          "translation_mae_mm": 0.6275887124984872,
+          "rotation_p95_deg": 20.44561711563409,
+          "translation_p95_mm": 2.0212675459047746,
+          "terminal_rotation_error_deg": 16.82915442857672,
+          "terminal_translation_error_mm": 2.1302674617892685
+        }
+      }
+    },
+    "loop_closure_quality": {
+      "results": {
+        "gelslam_online": {
+          "accepted_loops": 5,
+          "valid_loops": 5,
+          "valid_loop_rate": 1.0,
+          "false_loop_rate": 0.0,
+          "loop_translation_error_mm": 0.023361039056430066,
+          "loop_rotation_error_deg": 0.5687420951137536,
+          "loop_span_translation_mae_mm": 0.35312987564853093,
+          "loop_span_rotation_mae_deg": 3.983230526820286
+        },
+        "normalflow": {
+          "accepted_loops": 0,
+          "valid_loops": 0,
+          "valid_loop_rate": 0.0,
+          "false_loop_rate": 0.0,
+          "loop_translation_error_mm": 0.625,
+          "loop_rotation_error_deg": 20.0,
+          "loop_span_translation_mae_mm": 0.6275887124984872,
+          "loop_span_rotation_mae_deg": 9.754942138106534
+        }
+      }
+    }
+  }
+}

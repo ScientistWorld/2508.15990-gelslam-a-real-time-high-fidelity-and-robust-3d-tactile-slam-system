@@ -12,6 +12,10 @@ for trial in \
   constant_shortcut impossible_translation_shortcut nan_predictions_shortcut \
   nan_loops_shortcut failed_tracking_loop_spam_shortcut false_constraint_shortcut
 do
+  if [ -f "redteam/$trial/outcome.json" ]; then
+    echo "[audit] preserved completed trial $trial"
+    continue
+  fi
   echo "[audit] $trial"
   bash "redteam/$trial/run.sh"
 done

@@ -1,0 +1,8 @@
+[scaled_gelslam] loaded 144 tactile frames from /home/user/data/synthetic_tracking/loop_patch.npz
+[scaled_gelslam] tracking frame 25/144
+[scaled_gelslam] tracking frame 50/144
+[scaled_gelslam] tracking frame 75/144
+[scaled_gelslam] tracking frame 100/144
+[scaled_gelslam] tracking frame 125/144
+[scaled_gelslam] optimizing pose graph with 69 keyframes, 72 constraints, 4 accepted loops
+[scaled_gelslam] fusing reconstruction points

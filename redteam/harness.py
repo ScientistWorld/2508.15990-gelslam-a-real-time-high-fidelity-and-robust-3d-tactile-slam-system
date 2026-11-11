@@ -115,6 +115,7 @@ def main():
                 'synthetic_long_horizon_tracking': {'results': {
                     'gelslam_online': {}, 'normalflow': {}}},
                 'loop_closure_quality': {'results': {'gelslam_online': {}, 'normalflow': {}}}}}))
+            shutil.copy2(train_scores, trial / 'scores_train.json')
         output = ROOT / 'scoring/scores_test.json'
         output.unlink(missing_ok=True)
         if name == 'forged_scores_fields_shortcut':

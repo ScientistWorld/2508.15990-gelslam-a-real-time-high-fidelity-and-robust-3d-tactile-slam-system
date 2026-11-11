@@ -1,0 +1,25 @@
+{
+  "trial": "stronger_more_compute",
+  "test_command": "bash scripts/evaluate_test.sh",
+  "evaluator_sha256_before": {
+    "scripts/evaluate_test.sh": "6d320e81ddab751500e1001a43244d06ee125edabdd128dcc2eb28c308cf167a",
+    "eval/test/evaluate_tracking_slice.py": "b761cffc24ef3cb32524a30b99e222a93cfae33872ad6609fc28026634fdfec4"
+  },
+  "method": {
+    "exit_code": 0,
+    "elapsed_seconds": 193.48936521500582
+  },
+  "train": {
+    "exit_code": 0,
+    "elapsed_seconds": 1.831044277001638
+  },
+  "test": {
+    "exit_code": 0,
+    "elapsed_seconds": 1.7819552709988784
+  },
+  "score_file_exists": true,
+  "evaluator_sha256_after": {
+    "scripts/evaluate_test.sh": "6d320e81ddab751500e1001a43244d06ee125edabdd128dcc2eb28c308cf167a",
+    "eval/test/evaluate_tracking_slice.py": "b761cffc24ef3cb32524a30b99e222a93cfae33872ad6609fc28026634fdfec4"
+  }
+}
