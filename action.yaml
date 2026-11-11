@@ -1,4 +1,8 @@
-# Final verification completed after successful scaled SE(3) reproduction.
-action: done
+# Once you set action to 'submit' or 'done', STOP immediately.
+# Do NOT sleep, poll, or wait for jobs. The system reads this file
+# only after your turn ends.
+action: pending
+gpus: 0
+test: false
 milestone: core_claim
-notes: "Fixed validation attempt 1/3 by changing loop_closure_quality primary metric to loop_span_rotation_mae_deg; validate.py --compare now passes and f259ec88-f74 supports core_claim."
+notes: ""
