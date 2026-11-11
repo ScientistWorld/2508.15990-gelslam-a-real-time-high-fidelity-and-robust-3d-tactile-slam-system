@@ -3,6 +3,6 @@
 # only after your turn ends.
 action: submit
 gpus: 0
-test: true
+test: false
 milestone: core_claim
-notes: "Calibration job: compare two simulator noise settings on full-length episodes (NF, NF-KF, GelSLAM, session-chain errors, loops, timings)."
+notes: "Main hardening job: reproduce reference (train/test/full scores), run 9 genuine/brute-force variants on hidden test and train, 15 shortcuts through the hidden test, rank and paired summaries, validate."

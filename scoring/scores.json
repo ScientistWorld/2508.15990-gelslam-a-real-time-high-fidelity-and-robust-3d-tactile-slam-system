@@ -1,1 +1,83 @@
-{"experiments": {"long_horizon_tracking": {"results": {"forged_scores": {"rotation_mae_deg": 0.0, "translation_mae_mm": 0.0, "rotation_p95_deg": 0.0, "translation_p95_mm": 0.0, "false_loop_rate": 0.0}}}, "relocalization_after_contact_loss": {"results": {"forged_scores": {"rotation_mae_deg": 0.0, "translation_mae_mm": 0.0, "rotation_p95_deg": 0.0, "translation_p95_mm": 0.0, "false_loop_rate": 0.0}}}}}
+{
+  "_metadata": {
+    "slice": "train",
+    "episodes": [
+      {
+        "name": "train_seed_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_fabric_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_wood_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_rock_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_seed_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_fabric_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_wood_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_rock_contact_loss",
+        "contact_loss": true
+      }
+    ],
+    "methods_discovered": [
+      "gelslam_online"
+    ]
+  },
+  "experiments": {
+    "long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        }
+      }
+    },
+    "relocalization_after_contact_loss": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_rate": 1.0
+        }
+      }
+    }
+  },
+  "_diagnostics": {
+    "status": "pending: every method holds its worst values until scored"
+  }
+}
