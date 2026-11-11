@@ -383,6 +383,8 @@ class GelSLAM:
         mat, inliers = cv2.estimateAffinePartial2D(src, dst, maxIters=100, ransacReprojThreshold=3)
         if mat is None or inliers is None:
             return None, 0
+        if not np.isfinite(mat).all() or np.hypot(mat[0, 0], mat[0, 1]) < 1e-6:
+            return None, 0
         h, w = tar_kf.frame.L.shape
         return affine_to_transform(mat, w, h, self.ppmm), int(np.sum(inliers))
 

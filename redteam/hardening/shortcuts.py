@@ -75,11 +75,7 @@ def _match_first_frame(gradients: np.ndarray, configs: list[dict], sim) -> dict 
         rot, xy, depth = sim.make_trajectory(obj, int(cfg["seed"]), int(kept[-1]) + 1)
         local, _ = sim.render_contact(obj, rot[0], xy[0], depth[0])
         rng = np.random.default_rng(int(cfg["seed"]) + 15485863)
-        from scipy import ndimage
-        bias = sim.GRADIENT_BIAS * np.stack(
-            [sim._unit(ndimage.gaussian_filter(rng.standard_normal((sim.SENSOR_H, sim.SENSOR_W)), 20.0)) for _ in range(2)],
-            axis=-1)
-        g, _, _ = sim.observe(local, rng, bias)
+        g, _, _ = sim.observe(local, rng, sim.sensor_pattern(rng))
         if g.shape == gradients[0].shape and np.allclose(g, gradients[0], atol=1e-4):
             return cfg
     return None
