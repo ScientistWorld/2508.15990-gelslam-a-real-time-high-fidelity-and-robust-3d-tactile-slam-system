@@ -1,9 +1,9 @@
 # Experiment Overview
 
-## synthetic_long_horizon_tracking
+## long_horizon_tracking
 
-Tests whether a tactile tracking system maintains accurate pose estimates over a 144-frame synthetic tactile sequence. The experiment is designed so short-range frame-to-frame tracking is not enough: repeated contacts are present, drift can accumulate, and a successful method must recover global consistency.
+Establishes whether a tactile-only system keeps an accurate global pose estimate over long continuous contact, where short-range motion estimates accumulate drift and the sensor repeatedly revisits earlier contacts. Scored on held-out episodes over four surface-texture families, from rich to weak texture, against a fixed frame-to-frame baseline. The mean errors measure overall accuracy, the tail errors catch isolated failures, and the false-relation rate checks that any claimed relation between frames is correct.
 
-## loop_closure_quality
+## relocalization_after_contact_loss
 
-Tests whether the system uses revisited contacts productively and safely on the scaled 144-frame sequence. This experiment measures both how many revisit links are accepted and how often accepted links are wrong, because accepting incorrect long-range associations can make trajectory error look temporarily better on some sequences while breaking the scientific claim.
+Establishes whether the system recovers a consistent pose after contact is interrupted (25 frames missing after every 100), when nothing short-range connects the new contact to earlier ones. Same metrics and families. The weak-texture episodes are where recovery is hardest; segments that are never related back to earlier contact carry large errors.

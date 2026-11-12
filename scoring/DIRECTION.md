@@ -2,21 +2,19 @@
 
 ## Research Problem
 
-This benchmark asks how to perform long-horizon tactile object tracking and touched-surface reconstruction when each observation is a small local contact patch. The central difficulty is accumulated drift: short-range estimates can be accurate locally but lose global consistency over long sequences unless revisited regions are recognized and used safely. Reconstruction quality then depends on the same global consistency.
+Long-horizon 6DoF pose tracking from local tactile contact patches. Short-range registration is accurate but drifts, and contact breaks leave new contacts unrelated to earlier ones. The test rewards lower drift on continuous contact and better recovery after contact loss, under the constraint that asserted frame-pair relations are correct.
 
-## Core Problem to Preserve
+## Where there is room
 
-Future improvements should target the same problem family: tactile-only long-horizon tracking and touched-surface reconstruction from local contact streams, with explicit attention to drift, repeated contacts, and false-revisit risk.
+The reference leaves error on the table in both experiments: drift between revisits on continuous contact, and episodes on low-texture surfaces where contact-loss recovery fails or is delayed and whole segments stay misplaced. Approaches that recover relations more reliably on weak texture, place unrecovered segments better, use the available relations more effectively, or register more precisely all show up directly in the metrics.
 
 ## Approach Scope
 
-Scientists may use alternative representations, uncertainty models, optimization strategies, temporal policies, or reconstruction procedures, provided the method still operates on the same tactile observation stream, satisfies the no-oracle constraints, and produces the standard output artifacts.
+Any tactile-only estimator that consumes the same observations and writes the standard outputs: alternative registration, representations, relation search, optimisation, robust estimation or learned components trained on public data.
 
 ## Out of Bounds
 
-- Replacing the tactile tracking problem with direct supervised full-trajectory prediction from the complete sequence.
-- Using ground-truth poses, ground-truth loop labels, or hidden synthetic generator state at inference time.
-- Changing the benchmark data, seeds, sequence distribution, or metric definitions to make the task easier.
-- Omitting the packaged frame-to-frame baseline comparison.
-- Optimizing only trajectory error while allowing high false-revisit rate or unbounded retained-state growth.
-- Generating reconstruction outputs from hidden target surfaces or ground-truth poses rather than from the method's estimated poses and tactile observations.
+- Reading or importing evaluator code, held-out configuration or ground truth.
+- Hard-coding the simulator's generating process (seeds, trajectory family) instead of estimating from observations.
+- Reporting fabricated or trajectory-derived frame-pair relations, or relations you did not estimate.
+- Leaving unregistered artifacts in `checkpoints/` or editing evaluator, baseline or score files.

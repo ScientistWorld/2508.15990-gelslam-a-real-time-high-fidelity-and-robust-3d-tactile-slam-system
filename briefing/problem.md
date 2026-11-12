@@ -2,12 +2,12 @@
 
 ## Research Question
 
-How can a tactile-only perception system estimate object pose and reconstruct touched object surface geometry accurately over long horizons when each tactile observation covers only a small local patch and short-range tracking accumulates drift?
+How can a system that sees only a stream of local tactile contact patches (GelSight-style surface-gradient, height and contact-mask images) estimate the sensor's 6DoF pose relative to the object accurately over long horizons, including after contact is lost and re-established?
 
 ## Why It Matters
 
-Robots often manipulate objects under occlusion or close contact, where cameras cannot reliably observe the contact geometry. A tactile long-horizon tracker can support in-hand manipulation, surface exploration, and object modeling using touch alone.
+Robots often manipulate objects under occlusion or close contact, where cameras cannot observe the contact. A tactile-only long-horizon tracker supports in-hand manipulation, surface exploration and object scanning using touch alone. Each tactile observation covers only a few square millimetres, so estimates that compose short-range motions accumulate drift, and after a contact break nothing short-range relates the new contact to the earlier ones.
 
 ## Success Criteria
 
-A successful system should produce low long-horizon 6DoF rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false revisit links, and reconstruct a geometrically faithful fused touched surface. In this scaled synthetic benchmark, success means outperforming the fixed frame-to-frame tactile registration baseline on trajectory error, maintaining low false revisit rate, and producing a fused surface close to the known touched target surface.
+A successful system produces low long-horizon rotation and translation error relative to the first frame, keeps its tail errors small, recovers a consistent pose after contact interruptions, and never asserts relations between frames that are geometrically wrong. In this benchmark (a scaled synthetic substitute for the paper's real GelSight dataset), success means beating the fixed frame-to-frame registration baseline on the held-out episodes in both experiments without failing the false-relation constraint.

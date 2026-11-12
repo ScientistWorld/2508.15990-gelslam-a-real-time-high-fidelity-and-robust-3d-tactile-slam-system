@@ -1,33 +1,34 @@
 # Evaluation
 
-This file describes the benchmark task and metrics without exposing implementation details that future methods must not rely on. The benchmark is a scaled synthetic substitute for the paper's real long-horizon tactile tracking and reconstruction dataset.
+The benchmark is a scaled synthetic substitute for the paper's real long-horizon tactile tracking data: a simulated GelSight-Mini-style sensor (160x120 pixels, 0.1268 mm per pixel) slides over textured convex objects from four texture families (dense bumps, near-periodic weave, low-texture grain, multi-scale roughness), with sensor-fixed calibration errors, per-frame gel distortion and per-pixel noise.
 
-## Metrics
+## Experiments
 
-- **rotation_mae_deg** and **translation_mae_mm:** Mean pose error over the evaluated trajectory. Lower is better.
-- **rotation_p95_deg** and **translation_p95_mm:** 95th percentile pose error, measuring tail failures. Lower is better.
-- **terminal_rotation_error_deg** and **terminal_translation_error_mm:** Final-frame accumulated drift. Lower is better.
-- **accepted_loops:** Number of long-range revisit links accepted during the trajectory. Higher is useful only when false links remain controlled.
-- **valid_loops** and **valid_loop_rate:** Count and fraction of accepted revisit links that are geometrically consistent. Higher is better.
-- **false_loop_rate:** Fraction of accepted revisit links that are inconsistent with ground truth revisits. Lower is better. This is a constraint metric because a method can artificially increase accepted links by accepting outliers.
-- **loop_span_rotation_mae_deg** and **loop_span_translation_mae_mm:** Pose error on frames far enough apart for revisit reasoning to matter. Lower is better.
-- **loop_rotation_error_deg** and **loop_translation_error_mm:** Pose disagreement for accepted revisits, with a conservative penalty when no revisit is accepted. Lower is better.
-Fused-surface artifacts may be inspected as diagnostics, but they are not part of the default scoring contract because the packaged touched-surface metric is not directly comparable to the paper's full CAD/object-scan reconstruction benchmark.
+- **long_horizon_tracking** (weight 0.6): 400-frame episodes with continuous contact and frequent revisits.
+- **relocalization_after_contact_loss** (weight 0.4): 400-frame episodes in which 25 frames are removed after every 100 kept frames (three contact breaks), as in the paper's relocalisation study.
 
-## Baselines and Targets
+## Metrics (per experiment)
 
-The required tracking comparison is between a candidate long-horizon tactile tracking system and the fixed frame-to-frame tactile registration baseline shipped in `baseline/`. The paper's full-scale tables provide context in `scoring/reference.json`; reproduced numbers in `scoring/scores.json` come only from running the packaged benchmark. The synthetic benchmark should preserve the same qualitative target: a successful long-horizon tracker should reduce drift relative to the frame-to-frame baseline while keeping revisit acceptance reliable.
+- **rotation_mae_deg**, **translation_mae_mm**: mean absolute error of the sensor pose relative to the first frame, averaged over the three rotation (Euler theta_x, theta_y, theta_z) or translation (x, y, z) axes and over frames, then over episodes. This is the statistic of the paper's Table IV. Lower is better. Coefficient 1.0 each.
+- **rotation_p95_deg**, **translation_p95_mm**: 95th percentile over all frames of the geodesic rotation error and of the translation-error norm. Lower is better. Coefficient 0.4 each.
+- **false_loop_rate**: constraint. Fraction of the method's reported frame-pair relations (deduplicated by frame pair) whose relative pose is off by more than 1 mm or 5 degrees from ground truth; malformed or non-finite records count as false. Lower is better. Coefficient 0.5.
 
-For revisit behavior, the scaled benchmark should not require matching full-scale raw counts exactly, but it should measure whether revisits are actually used and whether false links remain rare.
+Per-frame errors are capped at 90 degrees and 30 mm. A run fails, and receives the worst value of every metric in both experiments (90 deg, 30 mm, false-loop rate 1.0), if the method crashes or exceeds 15 minutes on an episode, writes poses of the wrong shape, non-finite or non-rigid poses, translations beyond 1 m, unreadable loop files or more than 50,000 loop records, or if more than 10% of its reported relations are false.
 
-For reconstruction, Table VI reports average Chamfer Distance of 0.60 mm and average Normal Cosine Distance of 0.962 on physical objects with CAD ground truth. The scaled benchmark can emit fused touched-surface artifacts, but reconstruction is documented as a diagnostic rather than a scored target until a CAD-comparable protocol is added.
+## Protocol
 
-## Evaluation Protocol
+- `scripts/evaluate_train.sh` (and `scripts/evaluate.sh`) render the 8 public training episodes listed in `data/train_episodes.json` (4 per experiment) with `data/tactile_sim.py`, run every registered method, and write `scoring/scores_train.json` (`scoring/scores.json`).
+- `scripts/evaluate_test.sh` takes no arguments. It renders 40 held-out episodes (24 continuous, 16 contact-loss; same families and parameter ranges, unpublished seeds) inside `eval/test/`, runs every registered method on them, and writes `scoring/scores_test.json`. Ground truth never leaves the evaluator process. This is the ranked score.
+- Both evaluators also score the eval-owned NormalFlow frame-to-frame baseline under the name `normalflow`.
+- Rendering and scoring are deterministic; every method sees identical inputs.
 
-Evaluate all methods on the same generated long-horizon tactile sequences, with fixed seeds and identical preprocessing. Each sequence should include local contact observations, ground-truth pose over time, known touched surface geometry, and repeated contacts that make revisit handling meaningful. Continuous contact and long enough horizons are important: the benchmark must not collapse into a short-range registration task where the frame-to-frame baseline already solves the problem.
+## Method Contract
 
-Report the tracking and revisit metrics for both the candidate method and the fixed frame-to-frame baseline on the same test split. The comparison is valid only if all methods consume the same synthetic tactile stream and are evaluated against the same withheld pose ground truth.
+Register a method by writing `checkpoints/<dir>/predict.json`:
 
-## Method Output Contract
+```json
+{"name": "my_method",
+ "command": ["python", "-m", "my_pkg.run", "--input", "{input}", "--output", "{output}"]}
+```
 
-`scripts/evaluate.sh` scores saved run artifacts rather than rerunning any method. A method run must write `pred_poses.npy` with one pose vector per frame. To score revisit constraints, it should also write `summary.json` with accepted revisit records and the frame/state indices they connect. `reconstructed_points.npy` and `reconstructed_normals.npy` are optional diagnostic artifacts. Malformed revisit records are counted as false links.
+The command is run once per episode from the workspace root (PYTHONPATH includes the root), on one CPU core. `{input}` is an `.npz` with `gradients` (N x 120 x 160 x 2, surface gradients du, dv), `heights` (N x 120 x 160, height map in pixels integrated from the gradients), `contact_masks` (N x 120 x 160, bool) and `mm_per_pixel`. The method must write `{output}/poses.npy`: N x 4 x 4 rigid transforms, sensor pose of each frame in a common object-fixed frame, translations in mm (they are re-expressed relative to frame 0 before scoring). It may write `{output}/loops.json` = `{"loops": [{"i": int, "j": int, "T_ij": 4x4}]}` where `T_ij` is the pose of frame j expressed in frame i (mm); these are the frame-pair relations checked by `false_loop_rate`. Any other file is ignored. Every directory under `checkpoints/` that holds model or prediction artifacts but no `predict.json` is scored as a failed method. The test runs inference only; anything a method needs (trained weights, configs) must already be on disk.

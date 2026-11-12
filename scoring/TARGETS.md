@@ -1,32 +1,31 @@
 # Evaluation Targets
 
-Every target below corresponds to an experiment and metric in `scoring/reference.json`. The benchmark is a scaled 144-frame synthetic substitute for the paper's real tactile tracking dataset, but it is designed to preserve the same long-horizon tracking question and loop-closure constraints.
+Every target corresponds to an experiment and metric in `scoring/reference.json` and is emitted for every method by `scripts/evaluate_test.sh` (ranked, 40 held-out episodes) and `scripts/evaluate_train.sh` (8 public episodes). The benchmark is a scaled synthetic substitute for the paper's real GelSight Mini data; reference.json keeps the paper's Table IV numbers, which are on a different scale.
 
-The reference values are derived from the paper's reported tracking and revisit tables. The reproduced scores are generated on the scaled substitute, so absolute numerical comparison is approximate; the core target is reducing long-horizon drift relative to the packaged frame-to-frame baseline while maintaining safe revisit behavior.
+## Primary: long_horizon_tracking (weight 0.6)
 
-## Primary: synthetic_long_horizon_tracking
+Continuous-contact tracking over 400-frame episodes (paper Table IV).
 
-Tests whether the method reduces long-horizon tactile tracking drift on generated tactile sequences with repeated contacts.
+- **Primary metric:** `rotation_mae_deg` (lower is better, coefficient 1.0)
+- `translation_mae_mm` (lower, 1.0)
+- `rotation_p95_deg` (lower, 0.4)
+- `translation_p95_mm` (lower, 0.4)
+- Constraint: `false_loop_rate` (lower, 0.5)
 
-- **Metric:** `rotation_mae_deg` (lower is better)
-- **Metric:** `translation_mae_mm` (lower is better)
-- **Metric:** `rotation_p95_deg` (lower is better)
-- **Metric:** `translation_p95_mm` (lower is better)
-- **Metric:** `terminal_rotation_error_deg` (lower is better)
-- **Metric:** `terminal_translation_error_mm` (lower is better)
-- **How to run:** Evaluate the candidate method and the fixed frame-to-frame baseline on the fixed closed-loop synthetic tracking sequence with identical input streams and preprocessing. The train/test slice files are diagnostics for partitioned error analysis; `scoring/scores.json` is the primary benchmark contract.
+## Secondary: relocalization_after_contact_loss (weight 0.4)
 
-## Constraint: loop_closure_quality
+Tracking with three contact breaks per 400-frame episode (paper Section V-E, Fig. 11).
 
-Tests whether drift reduction is accompanied by valid revisit behavior rather than accepting arbitrary pose constraints.
+- **Primary metric:** `rotation_mae_deg` (lower, 1.0)
+- `translation_mae_mm` (lower, 1.0)
+- `rotation_p95_deg` (lower, 0.4)
+- `translation_p95_mm` (lower, 0.4)
+- Constraint: `false_loop_rate` (lower, 0.5)
 
-- **Primary metric:** `loop_span_rotation_mae_deg` (lower is better). This is the primary loop-closure quality metric because it measures drift on frames affected by accepted long-span revisits and remains comparable to the paper's reported rotation-error scale.
-- **Metric:** `accepted_loops` (higher is better)
-- **Metric:** `valid_loops` (higher is better)
-- **Metric:** `valid_loop_rate` (higher is better)
-- **Metric:** `false_loop_rate` (lower is better)
-- **Metric:** `loop_span_rotation_mae_deg` (lower is better)
-- **Metric:** `loop_span_translation_mae_mm` (lower is better)
-- **Metric:** `loop_rotation_error_deg` (lower is better)
-- **Metric:** `loop_translation_error_mm` (lower is better)
-- **How to run:** Count accepted revisit links and compare each one against the ground-truth revisit relation for the same synthetic tracking episodes.
+## Constraint gate
+
+A method whose reported frame-pair relations are more than 10% false over the whole test, or whose run fails (crash, timeout, malformed or impossible output), receives the worst value of every metric in both experiments.
+
+## How to run
+
+`bash scripts/evaluate_train.sh` during development; `bash scripts/evaluate_test.sh` (no arguments) for the held-out score. Register methods as described in `briefing/evaluation.md`.
