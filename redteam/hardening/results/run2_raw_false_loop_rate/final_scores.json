@@ -1,0 +1,292 @@
+{
+  "_metadata": {
+    "slice": "train",
+    "episodes": [
+      {
+        "name": "train_seed_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_fabric_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_wood_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_rock_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_seed_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_fabric_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_wood_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_rock_contact_loss",
+        "contact_loss": true
+      }
+    ],
+    "methods_discovered": [
+      "gelslam_online"
+    ]
+  },
+  "experiments": {
+    "long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 3.0712553647833416,
+          "translation_mae_mm": 0.62042846415155,
+          "rotation_p95_deg": 14.34559317202496,
+          "translation_p95_mm": 3.3294521400670645,
+          "false_loop_rate": 0.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 0.6557496927358989,
+          "translation_mae_mm": 0.054689345193116204,
+          "rotation_p95_deg": 2.44202198400689,
+          "translation_p95_mm": 0.3214457211364792,
+          "false_loop_rate": 0.0
+        }
+      }
+    },
+    "relocalization_after_contact_loss": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 7.1504413894568515,
+          "translation_mae_mm": 2.1079152428598684,
+          "rotation_p95_deg": 37.18105250610163,
+          "translation_p95_mm": 11.030203076936969,
+          "false_loop_rate": 0.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 3.341675129059549,
+          "translation_mae_mm": 0.48547089887599887,
+          "rotation_p95_deg": 69.8079256847738,
+          "translation_p95_mm": 7.07881804089741,
+          "false_loop_rate": 0.0
+        }
+      }
+    }
+  },
+  "_diagnostics": {
+    "normalflow": {
+      "status": "scored",
+      "episodes": {
+        "train_seed_continuous": {
+          "rotation_mae_deg": 2.01178,
+          "translation_mae_mm": 0.18462,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.72
+        },
+        "train_fabric_continuous": {
+          "rotation_mae_deg": 3.00112,
+          "translation_mae_mm": 0.68143,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 5.01
+        },
+        "train_wood_continuous": {
+          "rotation_mae_deg": 2.57484,
+          "translation_mae_mm": 0.94842,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 5.62
+        },
+        "train_rock_continuous": {
+          "rotation_mae_deg": 4.69729,
+          "translation_mae_mm": 0.66725,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 5.21
+        },
+        "train_seed_contact_loss": {
+          "rotation_mae_deg": 4.96249,
+          "translation_mae_mm": 1.82725,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 5.81
+        },
+        "train_fabric_contact_loss": {
+          "rotation_mae_deg": 7.72944,
+          "translation_mae_mm": 3.00085,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 6.71
+        },
+        "train_wood_contact_loss": {
+          "rotation_mae_deg": 5.9055,
+          "translation_mae_mm": 1.52287,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 4.52
+        },
+        "train_rock_contact_loss": {
+          "rotation_mae_deg": 10.00434,
+          "translation_mae_mm": 2.08069,
+          "unique_loops": 0,
+          "false_loops": 0,
+          "seconds": 6.04
+        }
+      }
+    },
+    "gelslam_online": {
+      "status": "scored",
+      "episodes": {
+        "train_seed_continuous": {
+          "rotation_mae_deg": 0.74278,
+          "translation_mae_mm": 0.02239,
+          "unique_loops": 25,
+          "false_loops": 0,
+          "seconds": 18.43,
+          "method_summary": {
+            "keyframes": 18,
+            "coverage_keyframes": 15,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 41,
+            "loops": 25,
+            "pose_graph_solves": 13,
+            "frames": 400,
+            "cpu_seconds": 24.092
+          }
+        },
+        "train_fabric_continuous": {
+          "rotation_mae_deg": 0.50139,
+          "translation_mae_mm": 0.03196,
+          "unique_loops": 9,
+          "false_loops": 0,
+          "seconds": 12.56,
+          "method_summary": {
+            "keyframes": 9,
+            "coverage_keyframes": 6,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 11,
+            "loops": 9,
+            "pose_graph_solves": 7,
+            "frames": 400,
+            "cpu_seconds": 4.547
+          }
+        },
+        "train_wood_continuous": {
+          "rotation_mae_deg": 0.4701,
+          "translation_mae_mm": 0.09912,
+          "unique_loops": 1,
+          "false_loops": 0,
+          "seconds": 12.33,
+          "method_summary": {
+            "keyframes": 7,
+            "coverage_keyframes": 6,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 1,
+            "loops": 1,
+            "pose_graph_solves": 2,
+            "frames": 400,
+            "cpu_seconds": 4.253
+          }
+        },
+        "train_rock_continuous": {
+          "rotation_mae_deg": 0.90873,
+          "translation_mae_mm": 0.06529,
+          "unique_loops": 9,
+          "false_loops": 0,
+          "seconds": 6.74,
+          "method_summary": {
+            "keyframes": 14,
+            "coverage_keyframes": 7,
+            "tracking_sessions": 1,
+            "unmerged_sessions": 1,
+            "loop_candidates": 10,
+            "loops": 9,
+            "pose_graph_solves": 8,
+            "frames": 400,
+            "cpu_seconds": 4.462
+          }
+        },
+        "train_seed_contact_loss": {
+          "rotation_mae_deg": 0.478,
+          "translation_mae_mm": 0.03263,
+          "unique_loops": 17,
+          "false_loops": 0,
+          "seconds": 19.45,
+          "method_summary": {
+            "keyframes": 17,
+            "coverage_keyframes": 14,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 35,
+            "loops": 17,
+            "pose_graph_solves": 10,
+            "frames": 400,
+            "cpu_seconds": 16.144
+          }
+        },
+        "train_fabric_contact_loss": {
+          "rotation_mae_deg": 0.50428,
+          "translation_mae_mm": 0.0293,
+          "unique_loops": 28,
+          "false_loops": 0,
+          "seconds": 13.99,
+          "method_summary": {
+            "keyframes": 16,
+            "coverage_keyframes": 10,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 31,
+            "loops": 28,
+            "pose_graph_solves": 12,
+            "frames": 400,
+            "cpu_seconds": 5.508
+          }
+        },
+        "train_wood_contact_loss": {
+          "rotation_mae_deg": 11.02114,
+          "translation_mae_mm": 1.645,
+          "unique_loops": 1,
+          "false_loops": 0,
+          "seconds": 16.21,
+          "method_summary": {
+            "keyframes": 14,
+            "coverage_keyframes": 13,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 3,
+            "loop_candidates": 1,
+            "loops": 1,
+            "pose_graph_solves": 2,
+            "frames": 400,
+            "cpu_seconds": 5.312
+          }
+        },
+        "train_rock_contact_loss": {
+          "rotation_mae_deg": 1.36328,
+          "translation_mae_mm": 0.23495,
+          "unique_loops": 26,
+          "false_loops": 0,
+          "seconds": 200.56,
+          "method_summary": {
+            "keyframes": 74,
+            "coverage_keyframes": 19,
+            "tracking_sessions": 4,
+            "unmerged_sessions": 1,
+            "loop_candidates": 62,
+            "loops": 26,
+            "pose_graph_solves": 24,
+            "frames": 400,
+            "cpu_seconds": 426.287
+          }
+        }
+      }
+    }
+  }
+}

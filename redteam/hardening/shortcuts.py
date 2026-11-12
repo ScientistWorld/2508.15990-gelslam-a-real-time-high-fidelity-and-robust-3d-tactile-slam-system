@@ -148,7 +148,7 @@ def run(kind: str, inp: Path, out: Path) -> None:
     elif kind == "forged_scores":
         fake = {"experiments": {exp: {"results": {"forged_scores": {
             "rotation_mae_deg": 0.0, "translation_mae_mm": 0.0, "rotation_p95_deg": 0.0,
-            "translation_p95_mm": 0.0, "false_loop_rate": 0.0}}} for exp in
+            "translation_p95_mm": 0.0, "false_loop_excess": 0.0}}} for exp in
             ("long_horizon_tracking", "relocalization_after_contact_loss")}}
         for name in ("scores_test.json", "scores_train.json", "scores.json"):
             (ROOT / "scoring" / name).write_text(json.dumps(fake))

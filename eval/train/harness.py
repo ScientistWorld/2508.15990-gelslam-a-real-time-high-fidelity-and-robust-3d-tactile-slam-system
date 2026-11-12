@@ -39,7 +39,7 @@ EXPERIMENTS = {
     "long_horizon_tracking": False,  # value: episode has simulated contact loss
     "relocalization_after_contact_loss": True,
 }
-METRICS = ("rotation_mae_deg", "translation_mae_mm", "rotation_p95_deg", "translation_p95_mm", "false_loop_rate")
+METRICS = ("rotation_mae_deg", "translation_mae_mm", "rotation_p95_deg", "translation_p95_mm", "false_loop_excess")
 ROT_CAP_DEG = 90.0
 TRANS_CAP_MM = 30.0
 WORST = {
@@ -47,13 +47,14 @@ WORST = {
     "translation_mae_mm": TRANS_CAP_MM,
     "rotation_p95_deg": ROT_CAP_DEG,
     "translation_p95_mm": TRANS_CAP_MM,
-    "false_loop_rate": 1.0,
+    "false_loop_excess": 0.98,
 }
 MAX_ABS_TRANSLATION_MM = 1000.0
 ORTHO_TOL = 1e-3
 LOOP_TRANS_TOL_MM = 1.0
 LOOP_ROT_TOL_DEG = 5.0
 FALSE_LOOP_GATE = 0.10
+FALSE_LOOP_ALLOWANCE = 0.02  # verification tolerance; only false relations beyond 2% are scored
 MAX_LOOP_RECORDS = 50000
 EPISODE_TIMEOUT_S = 900  # per episode on one CPU core (the reference needs < 20 s)
 RESERVED_NAMES = {"normalflow"}
@@ -300,7 +301,7 @@ def aggregate(per_episode: dict, episodes: list[dict]) -> dict:
             "translation_mae_mm": float(np.mean([r["trans_axis_mae"] for r in rows])),
             "rotation_p95_deg": float(np.percentile(np.concatenate([r["geodesic"] for r in rows]), 95)),
             "translation_p95_mm": float(np.percentile(np.concatenate([r["trans_norm"] for r in rows]), 95)),
-            "false_loop_rate": float(false / unique) if unique else 0.0,
+            "false_loop_excess": max(0.0, (float(false / unique) if unique else 0.0) - FALSE_LOOP_ALLOWANCE),
         }
     return out
 

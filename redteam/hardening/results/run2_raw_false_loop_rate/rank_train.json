@@ -1,0 +1,359 @@
+{
+ "cohort": [
+  "normalflow",
+  "gelslam_online",
+  "exhaustive_two_stage",
+  "hybrid_local_loops",
+  "nf_kf",
+  "only_nf_exhaustive"
+ ],
+ "stds": {
+  "long_horizon_tracking:rotation_mae_deg": 0.8955204297011535,
+  "long_horizon_tracking:translation_mae_mm": 0.21155748304418814,
+  "long_horizon_tracking:rotation_p95_deg": 4.384935120439931,
+  "long_horizon_tracking:translation_p95_mm": 1.1364350153215477,
+  "long_horizon_tracking:false_loop_rate": 0.0,
+  "relocalization_after_contact_loss:rotation_mae_deg": 6.5518035853002585,
+  "relocalization_after_contact_loss:translation_mae_mm": 1.1964557016367203,
+  "relocalization_after_contact_loss:rotation_p95_deg": 24.08616119758829,
+  "relocalization_after_contact_loss:translation_p95_mm": 4.2116888625260165,
+  "relocalization_after_contact_loss:false_loop_rate": 0.0
+ },
+ "rows": [
+  {
+   "name": "hybrid_local_loops",
+   "status": "scored",
+   "rank_gain": 0.6881865358879511,
+   "values": {
+    "long_horizon_tracking": {
+     "rotation_mae_deg": 0.6131419511870357,
+     "translation_mae_mm": 0.03833889689704513,
+     "rotation_p95_deg": 2.392397415575904,
+     "translation_p95_mm": 0.18357590818124092,
+     "false_loop_rate": 0.0
+    },
+    "relocalization_after_contact_loss": {
+     "rotation_mae_deg": 1.5726194972069776,
+     "translation_mae_mm": 0.2873513499131981,
+     "rotation_p95_deg": 27.364724988084816,
+     "translation_p95_mm": 3.7817734278726913,
+     "false_loop_rate": 0.0
+    }
+   },
+   "paired": {
+    "long_horizon_tracking:rotation_mae_deg": {
+     "mean_diff": -0.042607500000000006,
+     "se": 0.02915143603523962,
+     "n_better": 2,
+     "n_worse": 0,
+     "n": 4
+    },
+    "long_horizon_tracking:translation_mae_mm": {
+     "mean_diff": -0.0163525,
+     "se": 0.011254321669918627,
+     "n_better": 2,
+     "n_worse": 0,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:rotation_mae_deg": {
+     "mean_diff": -1.769055,
+     "se": 1.5303622762410434,
+     "n_better": 3,
+     "n_worse": 0,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:translation_mae_mm": {
+     "mean_diff": -0.1981175,
+     "se": 0.14302420752999592,
+     "n_better": 2,
+     "n_worse": 1,
+     "n": 4
+    }
+   },
+   "source": "variants_train.json"
+  },
+  {
+   "name": "exhaustive_two_stage",
+   "status": "scored",
+   "rank_gain": 0.027351731996906103,
+   "values": {
+    "long_horizon_tracking": {
+     "rotation_mae_deg": 0.6521343531038295,
+     "translation_mae_mm": 0.054158205071256765,
+     "rotation_p95_deg": 2.4275848204047805,
+     "translation_p95_mm": 0.31977303303713583,
+     "false_loop_rate": 0.0
+    },
+    "relocalization_after_contact_loss": {
+     "rotation_mae_deg": 3.1910781082988104,
+     "translation_mae_mm": 0.446330619924921,
+     "rotation_p95_deg": 69.8079256847738,
+     "translation_p95_mm": 7.07881804089741,
+     "false_loop_rate": 0.0
+    }
+   },
+   "paired": {
+    "long_horizon_tracking:rotation_mae_deg": {
+     "mean_diff": -0.003615000000000021,
+     "se": 0.001903350116680245,
+     "n_better": 3,
+     "n_worse": 0,
+     "n": 4
+    },
+    "long_horizon_tracking:translation_mae_mm": {
+     "mean_diff": -0.0005299999999999992,
+     "se": 0.00019887181801351363,
+     "n_better": 3,
+     "n_worse": 0,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:rotation_mae_deg": {
+     "mean_diff": -0.1506,
+     "se": 0.1383788268365745,
+     "n_better": 2,
+     "n_worse": 1,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:translation_mae_mm": {
+     "mean_diff": -0.039139999999999994,
+     "se": 0.038180260825021434,
+     "n_better": 3,
+     "n_worse": 0,
+     "n": 4
+    }
+   },
+   "source": "variants_train.json"
+  },
+  {
+   "name": "gelslam_online",
+   "status": "scored",
+   "rank_gain": 0.0,
+   "values": {
+    "long_horizon_tracking": {
+     "rotation_mae_deg": 0.6557496927358989,
+     "translation_mae_mm": 0.054689345193116204,
+     "rotation_p95_deg": 2.44202198400689,
+     "translation_p95_mm": 0.3214457211364792,
+     "false_loop_rate": 0.0
+    },
+    "relocalization_after_contact_loss": {
+     "rotation_mae_deg": 3.341675129059549,
+     "translation_mae_mm": 0.48547089887599887,
+     "rotation_p95_deg": 69.8079256847738,
+     "translation_p95_mm": 7.07881804089741,
+     "false_loop_rate": 0.0
+    }
+   },
+   "paired": {},
+   "source": "final_scores_train.json"
+  },
+  {
+   "name": "only_nf_exhaustive",
+   "status": "scored",
+   "rank_gain": -2.016895029828279,
+   "values": {
+    "long_horizon_tracking": {
+     "rotation_mae_deg": 0.6165511197226377,
+     "translation_mae_mm": 0.03643914111972419,
+     "rotation_p95_deg": 2.3738037260141005,
+     "translation_p95_mm": 0.18010566479790005,
+     "false_loop_rate": 0.0
+    },
+    "relocalization_after_contact_loss": {
+     "rotation_mae_deg": 17.242553106766813,
+     "translation_mae_mm": 3.013330291816108,
+     "rotation_p95_deg": 90.0,
+     "translation_p95_mm": 14.990936809893311,
+     "false_loop_rate": 0.0
+    }
+   },
+   "paired": {
+    "long_horizon_tracking:rotation_mae_deg": {
+     "mean_diff": -0.039197500000000024,
+     "se": 0.02606922750901274,
+     "n_better": 4,
+     "n_worse": 0,
+     "n": 4
+    },
+    "long_horizon_tracking:translation_mae_mm": {
+     "mean_diff": -0.018252499999999998,
+     "se": 0.012536443125942858,
+     "n_better": 4,
+     "n_worse": 0,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:rotation_mae_deg": {
+     "mean_diff": 13.900879999999997,
+     "se": 3.3410875208231223,
+     "n_better": 0,
+     "n_worse": 4,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:translation_mae_mm": {
+     "mean_diff": 2.5278599999999996,
+     "se": 0.5243683071086581,
+     "n_better": 0,
+     "n_worse": 4,
+     "n": 4
+    }
+   },
+   "source": "variants_train.json"
+  },
+  {
+   "name": "nf_kf",
+   "status": "scored",
+   "rank_gain": -2.452796678703804,
+   "values": {
+    "long_horizon_tracking": {
+     "rotation_mae_deg": 0.8544090367502426,
+     "translation_mae_mm": 0.0899295111121339,
+     "rotation_p95_deg": 3.511166889473886,
+     "translation_p95_mm": 0.4436575478052613,
+     "false_loop_rate": 0.0
+    },
+    "relocalization_after_contact_loss": {
+     "rotation_mae_deg": 17.26228661810064,
+     "translation_mae_mm": 3.030431947073338,
+     "rotation_p95_deg": 90.0,
+     "translation_p95_mm": 14.990936810391085,
+     "false_loop_rate": 0.0
+    }
+   },
+   "paired": {
+    "long_horizon_tracking:rotation_mae_deg": {
+     "mean_diff": 0.1986575,
+     "se": 0.09771235245820595,
+     "n_better": 1,
+     "n_worse": 3,
+     "n": 4
+    },
+    "long_horizon_tracking:translation_mae_mm": {
+     "mean_diff": 0.0352375,
+     "se": 0.026607900573263323,
+     "n_better": 1,
+     "n_worse": 3,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:rotation_mae_deg": {
+     "mean_diff": 13.920609999999998,
+     "se": 3.3050030840757167,
+     "n_better": 0,
+     "n_worse": 4,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:translation_mae_mm": {
+     "mean_diff": 2.5449599999999997,
+     "se": 0.5216665240202147,
+     "n_better": 0,
+     "n_worse": 4,
+     "n": 4
+    }
+   },
+   "source": "variants_train.json"
+  },
+  {
+   "name": "normalflow",
+   "status": "scored",
+   "rank_gain": -5.217983389779838,
+   "values": {
+    "long_horizon_tracking": {
+     "rotation_mae_deg": 3.0712553647833416,
+     "translation_mae_mm": 0.62042846415155,
+     "rotation_p95_deg": 14.34559317202496,
+     "translation_p95_mm": 3.3294521400670645,
+     "false_loop_rate": 0.0
+    },
+    "relocalization_after_contact_loss": {
+     "rotation_mae_deg": 7.1504413894568515,
+     "translation_mae_mm": 2.1079152428598684,
+     "rotation_p95_deg": 37.18105250610163,
+     "translation_p95_mm": 11.030203076936969,
+     "false_loop_rate": 0.0
+    }
+   },
+   "paired": {
+    "long_horizon_tracking:rotation_mae_deg": {
+     "mean_diff": 2.4155074999999995,
+     "se": 0.5246762878095247,
+     "n_better": 0,
+     "n_worse": 4,
+     "n": 4
+    },
+    "long_horizon_tracking:translation_mae_mm": {
+     "mean_diff": 0.56574,
+     "se": 0.14478409068909012,
+     "n_better": 0,
+     "n_worse": 4,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:rotation_mae_deg": {
+     "mean_diff": 3.8087674999999996,
+     "se": 3.097370371819121,
+     "n_better": 1,
+     "n_worse": 3,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:translation_mae_mm": {
+     "mean_diff": 1.622445,
+     "se": 0.6418158562040984,
+     "n_better": 1,
+     "n_worse": 3,
+     "n": 4
+    }
+   },
+   "source": "final_scores_train.json"
+  },
+  {
+   "name": "session_chain_dense",
+   "status": "failed (train_rock_contact_loss: timed out after 900 s)",
+   "rank_gain": -172.01181853715394,
+   "values": {
+    "long_horizon_tracking": {
+     "rotation_mae_deg": 90.0,
+     "translation_mae_mm": 30.0,
+     "rotation_p95_deg": 90.0,
+     "translation_p95_mm": 30.0,
+     "false_loop_rate": 1.0
+    },
+    "relocalization_after_contact_loss": {
+     "rotation_mae_deg": 90.0,
+     "translation_mae_mm": 30.0,
+     "rotation_p95_deg": 90.0,
+     "translation_p95_mm": 30.0,
+     "false_loop_rate": 1.0
+    }
+   },
+   "paired": {
+    "long_horizon_tracking:rotation_mae_deg": {
+     "mean_diff": 0.039902499999999966,
+     "se": 0.11621038940753103,
+     "n_better": 1,
+     "n_worse": 3,
+     "n": 4
+    },
+    "long_horizon_tracking:translation_mae_mm": {
+     "mean_diff": -0.008160000000000002,
+     "se": 0.00638806830479032,
+     "n_better": 2,
+     "n_worse": 2,
+     "n": 4
+    },
+    "relocalization_after_contact_loss:rotation_mae_deg": {
+     "mean_diff": -2.0514433333333337,
+     "se": 2.0657159363388877,
+     "n_better": 1,
+     "n_worse": 2,
+     "n": 3
+    },
+    "relocalization_after_contact_loss:translation_mae_mm": {
+     "mean_diff": -0.20597,
+     "se": 0.2046855276597086,
+     "n_better": 3,
+     "n_worse": 0,
+     "n": 3
+    }
+   },
+   "source": "variants_train.json"
+  }
+ ]
+}

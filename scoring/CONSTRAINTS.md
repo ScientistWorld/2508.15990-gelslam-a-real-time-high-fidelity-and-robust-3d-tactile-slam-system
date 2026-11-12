@@ -18,7 +18,7 @@ Each episode is processed by one invocation on one CPU core and must finish with
 
 ## Evaluation
 
-The metrics are fixed: per-axis rotation and translation MAE, 95th-percentile rotation and translation error, and the false-relation rate, for both experiments. Do not drop `false_loop_rate`: reporting relations is optional, but any relation you report must be geometrically correct.
+The metrics are fixed: per-axis rotation and translation MAE, 95th-percentile rotation and translation error, and the false-relation rate, for both experiments. Do not drop `false_loop_excess`: reporting relations is optional, but any relation you report must be geometrically correct.
 
 ## Compliance checklist
 

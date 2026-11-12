@@ -25,10 +25,10 @@
           "coefficient": 0.4,
           "description": "95th percentile over all frames of the continuous-contact episodes of the translation error norm in millimetres (capped at 30 mm)."
         },
-        "false_loop_rate": {
+        "false_loop_excess": {
           "higher_is_better": false,
           "coefficient": 0.5,
-          "description": "Constraint: fraction of the method's reported loop constraints (deduplicated by frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg; malformed or non-finite records count as false. A method whose overall rate exceeds 10% fails the run (worst value in every metric). The paper reports no false loops (Section VI-B)."
+          "description": "Constraint: fraction of the method's reported frame-pair relations (deduplicated by frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg (malformed or non-finite records count as false), minus a 2% allowance for the verification tolerance, floored at 0. Methods that report no relations score 0. If more than 10% of a method's relations over the whole test are false, the run fails (worst value in every metric). The paper reports no false loops (Section VI-B)."
         }
       },
       "results": {
@@ -69,10 +69,10 @@
           "coefficient": 0.4,
           "description": "95th percentile over all frames of the contact-loss episodes of the translation error norm in millimetres (capped at 30 mm)."
         },
-        "false_loop_rate": {
+        "false_loop_excess": {
           "higher_is_better": false,
           "coefficient": 0.5,
-          "description": "Constraint: fraction of the method's reported loop constraints (deduplicated by frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg; malformed or non-finite records count as false. A method whose overall rate exceeds 10% fails the run (worst value in every metric). The paper reports no false loops (Section VI-B)."
+          "description": "Constraint: fraction of the method's reported frame-pair relations (deduplicated by frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg (malformed or non-finite records count as false), minus a 2% allowance for the verification tolerance, floored at 0. Methods that report no relations score 0. If more than 10% of a method's relations over the whole test are false, the run fails (worst value in every metric). The paper reports no false loops (Section VI-B)."
         }
       },
       "results": {

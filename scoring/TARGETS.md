@@ -10,7 +10,7 @@ Continuous-contact tracking over 400-frame episodes (paper Table IV).
 - `translation_mae_mm` (lower, 1.0)
 - `rotation_p95_deg` (lower, 0.4)
 - `translation_p95_mm` (lower, 0.4)
-- Constraint: `false_loop_rate` (lower, 0.5)
+- Constraint: `false_loop_excess` (lower, 0.5)
 
 ## Secondary: relocalization_after_contact_loss (weight 0.4)
 
@@ -20,7 +20,7 @@ Tracking with three contact breaks per 400-frame episode (paper Section V-E, Fig
 - `translation_mae_mm` (lower, 1.0)
 - `rotation_p95_deg` (lower, 0.4)
 - `translation_p95_mm` (lower, 0.4)
-- Constraint: `false_loop_rate` (lower, 0.5)
+- Constraint: `false_loop_excess` (lower, 0.5)
 
 ## Constraint gate
 
