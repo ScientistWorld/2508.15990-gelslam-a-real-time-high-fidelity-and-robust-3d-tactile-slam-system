@@ -3,19 +3,22 @@
 - **Paper ID:** arXiv:2508.15990
 - **Title:** GelSLAM: A Real-time, High-Fidelity, and Robust 3D Tactile SLAM System
 - **Domain:** Robotics / Tactile Perception / SLAM
-- **TL;DR:** GelSLAM is a tactile-only SLAM system that tracks long-horizon object motion and builds globally consistent tactile reconstructions by combining local tactile registration, dense keyframes, loop closure, and pose graph optimization.
+- **TL;DR:** Tactile-only SLAM: NormalFlow tracking with curvature-based failure detection and keyframes, two-stage (SIFT on curvature + NormalFlow) loop detection over a coverage set, and pose-graph optimisation for long-horizon 6DoF tracking and reconstruction.
 
-## Short Summary
+## This Workspace
 
-The paper addresses long-horizon tactile object tracking and reconstruction from vision-based tactile sensor streams. Frame-to-frame tactile tracking drifts over time because each tactile image covers only a small local patch; GelSLAM extends tactile tracking into a SLAM pipeline with keyframes, loop detection, loop verification, and global pose graph correction. The reported real-world experiments use GelSight Mini tactile videos for tracking and object scanning, with NormalFlow as the strongest frame-to-frame tracking baseline.
+A scaled synthetic substitute for the paper's tracking experiments. A simulated GelSight-Mini-style sensor slides over textured convex objects from four texture families. Two experiments are scored on 40 held-out episodes that exist only inside `eval/test/`: long-horizon tracking with continuous contact (paper Table IV) and tracking with periodic contact loss (paper Fig. 11). The frame-to-frame NormalFlow baseline is owned by the evaluator. Methods are run by the evaluator through a `predict.json` command, so the held-out inputs and ground truth never appear on disk before the test.
 
-This workspace is a scaled synthetic substitute for the paper's full real-data reproduction. It preserves the paper's computational procedure for a CPU-sized tracking and reconstruction benchmark while replacing the large real GelSLAM dataset and physical sensor calibration with generated long-horizon tactile sequences that expose the same failure mode: drift under local frame-to-frame registration, recovery through valid revisits, and reconstruction quality that depends on globally consistent poses.
+## Key Results From the Paper
 
-## Key Results From Paper
+- **Table IV (tracking MAE, per axis):** GS-Online 4.06/4.38/3.57 deg and 1.00/0.96/0.72 mm; NormalFlow 7.11/7.53/7.63 deg and 1.13/1.21/0.92 mm.
+- **Table II:** 523 frames, 68 keyframes, 21 coverage keyframes, 65 loop candidates and 34 loops per episode on average.
+- **Fig. 11:** after removing 25 frames every 100 frames, tracking error is nearly identical to the full episodes.
+- **Table VI (reconstruction, not scored here):** average Chamfer Distance 0.60 mm, normal cosine similarity 0.962.
 
-- **Tracking accuracy, Table IV:** GelSLAM Online reports average axis-wise tracking MAE of 4.06, 4.38, and 3.57 degrees, and 1.00, 0.96, and 0.72 mm translation, versus NormalFlow at 7.11, 7.53, and 7.63 degrees, and 1.13, 1.21, and 0.92 mm translation.
-- **Tracking statistics, Table II:** GelSLAM averages 523 frames, 68 keyframes, 21 coverage keyframes, 65 loop candidates, and 34 accepted loops over 140 long-horizon tracking episodes.
-- **Reconstruction quality, Table VI:** On ten 3D-printed objects with CAD ground truth, GelSLAM reports average Chamfer Distance of 0.60 mm and average Normal Cosine Distance of 0.962.
+## Reproduced Results (held-out test, 40 episodes)
+
+See `scoring/scores_test.json` and `HARDENING.md`. GelSLAM reduces the continuous-contact rotation/translation MAE of the NormalFlow baseline by more than half, relocalises after contact loss where the baseline cannot, and reports no false loops.
 
 ---
 
@@ -23,86 +26,82 @@ This workspace is a scaled synthetic substitute for the paper's full real-data r
 
 ## Research Question
 
-How can a tactile-only perception system estimate object pose and reconstruct touched object surface geometry accurately over long horizons when each tactile observation covers only a small local patch and short-range tracking accumulates drift?
+How can a system that sees only a stream of local tactile contact patches (GelSight-style surface-gradient, height and contact-mask images) estimate the sensor's 6DoF pose relative to the object accurately over long horizons, including after contact is lost and re-established?
 
 ## Why It Matters
 
-Robots often manipulate objects under occlusion or close contact, where cameras cannot reliably observe the contact geometry. A tactile long-horizon tracker can support in-hand manipulation, surface exploration, and object modeling using touch alone.
+Robots often manipulate objects under occlusion or close contact, where cameras cannot observe the contact. A tactile-only long-horizon tracker supports in-hand manipulation, surface exploration and object scanning using touch alone. Each tactile observation covers only a few square millimetres, so estimates that compose short-range motions accumulate drift, and after a contact break nothing short-range relates the new contact to the earlier ones.
 
 ## Success Criteria
 
-A successful system should produce low long-horizon 6DoF rotation and translation error, recover from drift when the sensor revisits previously touched regions, avoid false revisit links, and reconstruct a geometrically faithful fused touched surface. In this scaled synthetic benchmark, success means outperforming the fixed frame-to-frame tactile registration baseline on trajectory error, maintaining low false revisit rate, and producing a fused surface close to the known touched target surface.
+A successful system produces low long-horizon rotation and translation error relative to the first frame, keeps its tail errors small, recovers a consistent pose after contact interruptions, and never asserts relations between frames that are geometrically wrong. In this benchmark (a scaled synthetic substitute for the paper's real GelSight dataset), success means beating the fixed frame-to-frame registration baseline on the held-out episodes in both experiments without failing the false-relation constraint.
 
 ---
 
-# Paper's Method
+# Paper's Method (GelSLAM)
 
 ## Key Contribution
 
-GelSLAM turns local tactile tracking into full tactile SLAM. The core contribution is not a generic learned pose regressor; it is a geometric pipeline that estimates relative motion from tactile-derived differential surface signals, selects keyframes, detects revisited tactile contacts, verifies loop closures, and optimizes a pose graph to remove long-horizon drift.
+GelSLAM turns local tactile tracking into tactile SLAM. It treats GelSight images as differential representations: normal maps (first order) and curvature maps (second order), rather than nearly flat point clouds. Three modules run on them: tracking with failure detection and keyframes, loop closure with a two-stage detector, and pose-graph optimisation. (Reconstruction is a fourth module that this benchmark does not score.)
 
-## Approach
+## Computational Steps (as implemented in `method/gelslam_sim/`)
 
-The method operates on a stream of GelSight tactile images. Each frame is converted into geometric representations used by the tracking and loop modules, including contact-relevant image information, surface normals, curvature, and masks. Consecutive or selected tactile frames are registered using NormalFlow-style normal-map alignment to estimate relative sensor/object motion.
+1. **Geometry per frame** (Section III-C): normals N from the gradients; curvature L = divergence of the gradient field, Gaussian filtered (5x5 at this half resolution, i.e. the paper's 7x7 at 320x240), zeroed outside the eroded contact mask and clipped; height H and contact mask C as given.
+2. **NormalFlow registration** (IV-A1, Eq. 1): Gauss-Newton on the normal-alignment objective over the 3000 highest-|curvature| reference pixels (rotation and in-plane translation), then z translation from the mean height difference. Ported from the released NormalFlow code.
+3. **Failure detection** (IV-A2): Curvature Cosine Similarity and Shared Curvature Ratio; a registration fails if CCS < 0.85 or SCR < 0.3 (the paper's tracking setting).
+4. **Tracking and keyframes** (IV-A3): each frame is registered to the latest keyframe, initialised from the previous frame's estimate. On failure the previous frame becomes a keyframe; if the previous frame already is the keyframe, tracking is lost and a new tracking session starts.
+5. **Coverage set** (IV-B1): greedy set of keyframes that each contribute more than 0.2 mm^2 of boundary-weighted contact area not covered by their neighbours; redundant ones are pruned.
+6. **Loop detection** (IV-B2): for each new keyframe and each active coverage keyframe (except its immediate predecessor), SIFT features of the curvature maps are matched (cross-check), a planar similarity transform is fitted with RANSAC, pairs with more than 8 inliers become candidates, and NormalFlow initialised from that transform verifies them with the same CCS/SCR test.
+7. **Pose graph** (IV-B3): Levenberg-Marquardt over SE(3) keyframe poses with a fixed covariance (0.01 rad, 0.1 mm) on all tracking and loop constraints; each tracking session is anchored by an identity prior (as in the release) until a loop merges it with an older session. Frame poses follow from their keyframe.
 
-Because tactile sensing is local, GelSLAM inserts keyframes frequently. A subset of keyframes represents unique surface coverage, while candidate loop pairs are proposed when the current contact resembles an earlier contact. Loop detection uses curvature-based local feature matching to find plausible revisits and then refines or rejects each candidate with tactile registration and overlap/consistency checks. Accepted odometry and loop constraints are added to a pose graph, which is optimized to correct accumulated drift.
-
-For reconstruction, the optimized poses are used to fuse tactile surface observations into a global object mesh. This workspace uses a scaled fused-point-surface target rather than the paper's full physical meshing stack, but it preserves the essential computation: local tactile surface samples are transformed by estimated poses and fused globally for surface scoring.
-
-Implementation note for this scaled gym: sparse curvature features can miss the
-synthetic endpoint revisit, so the loop module also tries an odometry-initialized
-NormalFlow candidate for long-span coverage pairs after the feature proposal is
-missing or rejected. This follows the paper's same geometric verification family
-rather than adding a learned surrogate: the fallback candidate still must pass
-NormalFlow CCS/SCR quality checks and SE(3) consistency gates before becoming a
-pose-graph loop edge.
+The stream is processed synchronously, so no keyframe is skipped by the loop module (GS-Offline schedule; the paper's Table IV shows GS-Online within 0.1 deg of it).
 
 ## Main Claims
 
-- **Primary claim:** GelSLAM improves long-horizon tactile tracking over frame-to-frame NormalFlow by correcting drift through valid loop closures while remaining online-capable.
-- **Constraint claim:** The improvement depends on accepting correct loops and rejecting false loops; false loop closures can corrupt the global trajectory and reconstruction.
-- **Resource/behavior claim:** Dense keyframe insertion is expected for tactile SLAM because adjacent contacts can have limited overlap, but the number of keyframes and loop candidates must remain bounded enough for real-time or near-real-time operation.
-- **Secondary claim:** The same optimized tactile pose graph supports high-fidelity 3D reconstruction, with the paper reporting submillimeter average Chamfer Distance and high normal-map agreement on 3D-printed objects.
+- GelSLAM reduces long-horizon tracking error relative to frame-to-frame NormalFlow by 46% (rotation) and 17.5% (translation) on 140 real episodes (Table IV).
+- Loop closures are verified so that false loops are rejected; none were false in the reconstruction study (Section VI-B). SIFT-only loop acceptance is worse than no loops (GS-OnlySIFT); NormalFlow-only loop search is slower and misses loops (GS-OnlyNF).
+- After simulated contact loss the method relocalises and tracks nearly as well as on the full episodes (Fig. 11), though relocalisation can be delayed when contact resumes far from earlier contacts; low-texture objects yield few loops (Discussion).
 
 ## Scaled Reproduction Scope
 
-This reproduction evaluates a synthetic long-horizon tactile tracking and reconstruction substitute rather than the full physical GelSight dataset. The benchmark should still implement the paper's computational steps: tactile geometry extraction, NormalFlow baseline tracking, GelSLAM keyframe management, loop proposal, loop verification, pose graph optimization, fused-surface reconstruction, and trajectory/reconstruction evaluation. Scaling down data source and sequence size is acceptable; replacing the algorithm with a learned end-to-end pose predictor or unrelated tracker is not.
+Data: synthetic GelSight-Mini-style observations at half resolution instead of the real dataset; the paper's photometric-stereo calibration is replaced by simulated noisy gradients and Poisson-integrated heights. Episodes are 400 frames. The algorithm and its thresholds follow the paper and the released code. Reconstruction is not scored.
 
 ---
 
 # Evaluation
 
-This file describes the benchmark task and metrics without exposing implementation details that future methods must not rely on. The benchmark is a scaled synthetic substitute for the paper's real long-horizon tactile tracking and reconstruction dataset.
+The benchmark is a scaled synthetic substitute for the paper's real long-horizon tactile tracking data: a simulated GelSight-Mini-style sensor (160x120 pixels, 0.1268 mm per pixel) slides over textured convex objects from four texture families (dense bumps, near-periodic weave, low-texture grain, multi-scale roughness), with sensor-fixed calibration errors, per-frame gel distortion and per-pixel noise.
 
-## Metrics
+## Experiments
 
-- **rotation_mae_deg** and **translation_mae_mm:** Mean pose error over the evaluated trajectory. Lower is better.
-- **rotation_p95_deg** and **translation_p95_mm:** 95th percentile pose error, measuring tail failures. Lower is better.
-- **terminal_rotation_error_deg** and **terminal_translation_error_mm:** Final-frame accumulated drift. Lower is better.
-- **accepted_loops:** Number of long-range revisit links accepted during the trajectory. Higher is useful only when false links remain controlled.
-- **valid_loops** and **valid_loop_rate:** Count and fraction of accepted revisit links that are geometrically consistent. Higher is better.
-- **false_loop_rate:** Fraction of accepted revisit links that are inconsistent with ground truth revisits. Lower is better. This is a constraint metric because a method can artificially increase accepted links by accepting outliers.
-- **loop_span_rotation_mae_deg** and **loop_span_translation_mae_mm:** Pose error on frames far enough apart for revisit reasoning to matter. Lower is better.
-- **loop_rotation_error_deg** and **loop_translation_error_mm:** Pose disagreement for accepted revisits, with a conservative penalty when no revisit is accepted. Lower is better.
-Fused-surface artifacts may be inspected as diagnostics, but they are not part of the default scoring contract because the packaged touched-surface metric is not directly comparable to the paper's full CAD/object-scan reconstruction benchmark.
+- **long_horizon_tracking** (weight 0.6): 400-frame episodes with continuous contact and frequent revisits.
+- **relocalization_after_contact_loss** (weight 0.4): 400-frame episodes in which 25 frames are removed after every 100 kept frames (three contact breaks), as in the paper's relocalisation study.
 
-## Baselines and Targets
+## Metrics (per experiment)
 
-The required tracking comparison is between a candidate long-horizon tactile tracking system and the fixed frame-to-frame tactile registration baseline shipped in `baseline/`. The paper's full-scale tables provide context in `scoring/reference.json`; reproduced numbers in `scoring/scores.json` come only from running the packaged benchmark. The synthetic benchmark should preserve the same qualitative target: a successful long-horizon tracker should reduce drift relative to the frame-to-frame baseline while keeping revisit acceptance reliable.
+- **rotation_mae_deg**, **translation_mae_mm**: mean absolute error of the sensor pose relative to the first frame, averaged over the three rotation (Euler theta_x, theta_y, theta_z) or translation (x, y, z) axes and over frames, then over episodes. This is the statistic of the paper's Table IV. Lower is better. Coefficient 1.0 each.
+- **rotation_p95_deg**, **translation_p95_mm**: 95th percentile over all frames of the geodesic rotation error and of the translation-error norm. Lower is better. Coefficient 0.4 each.
+- **false_loop_excess**: constraint. Fraction of the method's reported frame-pair relations (deduplicated by frame pair) whose relative pose is off by more than 1 mm or 5 degrees from ground truth (malformed or non-finite records count as false), minus a 2% allowance for the verification tolerance, floored at 0. A method that reports no relations scores 0. Lower is better. Coefficient 0.5.
 
-For revisit behavior, the scaled benchmark should not require matching full-scale raw counts exactly, but it should measure whether revisits are actually used and whether false links remain rare.
+Per-frame errors are capped at 90 degrees and 30 mm. A run fails, and receives the worst value of every metric in both experiments (90 deg, 30 mm, false-loop excess 0.98), if the method crashes or exceeds 15 minutes on an episode, writes poses of the wrong shape, non-finite or non-rigid poses, translations beyond 1 m, unreadable loop files or more than 50,000 loop records, or if more than 10% of its reported relations are false.
 
-For reconstruction, Table VI reports average Chamfer Distance of 0.60 mm and average Normal Cosine Distance of 0.962 on physical objects with CAD ground truth. The scaled benchmark can emit fused touched-surface artifacts, but reconstruction is documented as a diagnostic rather than a scored target until a CAD-comparable protocol is added.
+## Protocol
 
-## Evaluation Protocol
+- `scripts/evaluate_train.sh` (and `scripts/evaluate.sh`) render the 8 public training episodes listed in `data/train_episodes.json` (4 per experiment) with `data/tactile_sim.py`, run every registered method, and write `scoring/scores_train.json` (`scoring/scores.json`).
+- `scripts/evaluate_test.sh` takes no arguments. It renders 40 held-out episodes (24 continuous, 16 contact-loss; same families and parameter ranges, unpublished seeds) inside `eval/test/`, runs every registered method on them, and writes `scoring/scores_test.json`. Ground truth never leaves the evaluator process. This is the ranked score.
+- Both evaluators also score the eval-owned NormalFlow frame-to-frame baseline under the name `normalflow`.
+- Rendering and scoring are deterministic; every method sees identical inputs.
 
-Evaluate all methods on the same generated long-horizon tactile sequences, with fixed seeds and identical preprocessing. Each sequence should include local contact observations, ground-truth pose over time, known touched surface geometry, and repeated contacts that make revisit handling meaningful. Continuous contact and long enough horizons are important: the benchmark must not collapse into a short-range registration task where the frame-to-frame baseline already solves the problem.
+## Method Contract
 
-Report the tracking and revisit metrics for both the candidate method and the fixed frame-to-frame baseline on the same test split. The comparison is valid only if all methods consume the same synthetic tactile stream and are evaluated against the same withheld pose ground truth.
+Register a method by writing `checkpoints/<dir>/predict.json`:
 
-## Method Output Contract
+```json
+{"name": "my_method",
+ "command": ["python", "-m", "my_pkg.run", "--input", "{input}", "--output", "{output}"]}
+```
 
-`scripts/evaluate.sh` scores saved run artifacts rather than rerunning any method. A method run must write `pred_poses.npy` with one pose vector per frame. To score revisit constraints, it should also write `summary.json` with accepted revisit records and the frame/state indices they connect. `reconstructed_points.npy` and `reconstructed_normals.npy` are optional diagnostic artifacts. Malformed revisit records are counted as false links.
+The command is run once per episode from the workspace root (PYTHONPATH includes the root), on one CPU core. `{input}` is an `.npz` with `gradients` (N x 120 x 160 x 2, surface gradients du, dv), `heights` (N x 120 x 160, height map in pixels integrated from the gradients), `contact_masks` (N x 120 x 160, bool) and `mm_per_pixel`. The method must write `{output}/poses.npy`: N x 4 x 4 rigid transforms, sensor pose of each frame in a common object-fixed frame, translations in mm (they are re-expressed relative to frame 0 before scoring). It may write `{output}/loops.json` = `{"loops": [{"i": int, "j": int, "T_ij": 4x4}]}` where `T_ij` is the pose of frame j expressed in frame i (mm); these are the frame-pair relations checked by `false_loop_excess`. Any other file is ignored. Every directory under `checkpoints/` that holds model or prediction artifacts but no `predict.json` is scored as a failed method. The test runs inference only; anything a method needs (trained weights, configs) must already be on disk.
 
 ---
 
@@ -1025,6 +1024,85 @@ Report the tracking and revisit metrics for both the candidate method and the fi
 ### [2026-06-04 10:16] - core_claim
 - Fixed the scoring metadata that caused validation attempt 1/3 to fail: `loop_closure_quality` now uses `loop_span_rotation_mae_deg` as its primary metric instead of the small-scale synthetic translation metric.
 - Re-ran `python validate.py --compare`; all scoring, split, method-separation, and portability checks pass.
+
+</details>
+
+### Iteration 11: claude-opus-5-5 (hardener)
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 53m | **GPU**: 0.0h
+- **Jobs**: 58 total (43 completed, 11 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-31 18:25] - method_runs
+- Packaged a scaled GelSLAM implementation with tactile geometry extraction, NormalFlow-style registration, keyframe selection, loop verification, pose graph optimization, and fused reconstruction diagnostics.
+- Verified that the baseline, method, evaluator, and structural validation run end-to-end in the container on the synthetic tactile benchmark.
+
+### [2026-06-04 08:28] - core_claim
+- Reproduced the core tracking claim on the 144-frame scaled tactile benchmark: scaled GelSLAM improves both rotation and translation MAE over the NormalFlow baseline.
+- Reproduced the loop-closure safety constraint on the same benchmark: the accepted GelSLAM loop is valid and the false-loop rate is 0.0.
+- `python validate.py --compare` passes, including train/test split checks and method/evaluation import separation.
+
+### [2026-06-04 08:33] - method_runs
+- Continuation audit reset the milestone to `method_runs` and rechecked method fidelity, evaluator independence, and scoring completeness.
+- Fixed the scoring-contract wording so the primary target matches `scripts/evaluate.sh`: the full fixed closed-loop synthetic sequence, with train/test slice scores treated as diagnostics.
+- Submitting a CPU container job to regenerate artifacts, run the evaluator, and determine whether `core_claim` can be restored from fresh results.
+
+### [2026-06-04 08:37] - core_claim
+- CPU container job `6a7582cb-f64` completed with exit code 0 and regenerated the full reproduction path from `scripts/run.sh`.
+- Restored the core tracking claim on the 144-frame scaled tactile benchmark: GelSLAM scored 5.713 deg / 0.703 mm versus NormalFlow at 6.086 deg / 0.948 mm.
+- Restored the loop-closure safety constraint: GelSLAM accepted one loop, the loop was valid, and the false-loop rate was 0.0.
+- `python validate.py --compare` passed in the container and locally after the job.
+
+### [2026-06-04 09:00] - core_claim
+- Hardened the full-sequence evaluator so `scoring/scores.json` emits every metric declared in `scoring/reference.json`, matching the train/test evaluator contract.
+- Updated `scripts/run.sh` to regenerate the synthetic benchmark, NormalFlow baseline, scaled GelSLAM artifacts, full scores, train/test scores, and validator comparison in one CPU job.
+- Local syntax compilation passed; evaluator execution requires the container NumPy/SciPy/OpenCV overlay, so a CPU test job is submitted for fresh end-to-end validation.
+
+### [2026-06-04 09:13] - core_claim
+- CPU verification job `b9542f1c-97a` completed with exit code 0.
+- The job regenerated the benchmark and artifacts, emitted complete full/train/test scores, checked full metric coverage, and passed `python validate.py --compare`.
+- Final verification report written; workspace judged ready for scaled gym use.
+
+### [2026-06-04 09:20] - method_runs
+- Independent method-fidelity audit found that the previous `core_claim` path depended on planarizing poses, special final-anchor loop handling, and non-paper odometry gates.
+- Reset the milestone to `method_runs`: the implementation still runs recognizable GelSLAM components, but a higher milestone needs results from a more faithful scaled SE(3) procedure.
+- Patched the runnable path to use full SE(3) pose graph variables, remove planar projection from method and baseline, remove final-anchor/odometry loop shortcuts, and generate the default synthetic benchmark in 6DoF mode.
+
+### [2026-06-04 09:28] - method_runs
+- Final verification found that the checked-in scores and checkpoint artifacts are stale relative to the current 6DoF runnable path.
+- Local structural validation passes on the existing artifacts, and optional download URLs were verified, but `core_claim` cannot be restored without a fresh container run from the current code.
+- Keeping `action: submit` for a CPU validation job to regenerate the benchmark, baseline, method outputs, full/train/test scores, and validator comparison.
+
+### [2026-06-04 09:50] - method_runs
+- CPU job `1d21151c-831` completed the current 6DoF path end to end and passed structural validation, confirming the packaged environment still runs.
+- The regenerated scores do not support `core_claim`: GelSLAM reduced translation drift versus NormalFlow but had much worse rotation error and accepted three false loop closures.
+- Patched the NormalFlow registration objective used by both the method and baseline with a target-height consistency residual so the scaled 6DoF renderer constrains z, roll, and pitch instead of relying on normal direction alone.
+
+### [2026-06-04 09:57] - method_runs
+- CPU job `bf082aab-738` verified the depth-aware 6DoF path in the container, but the result still does not support `core_claim`: NormalFlow scored 10.403 deg / 0.694 mm and GelSLAM scored 19.096 deg / 1.497 mm.
+- The method accepted one loop and it was false by the evaluator's ground-truth loop check, leaving valid-loop rate 0.0 and false-loop rate 1.0.
+- Tightened loop insertion by requiring stronger SIFT support and consistency with accumulated odometry before a loop edge can enter the pose graph.
+
+### [2026-06-04 10:03] - method_runs
+- CPU job `27442669-8d0` completed the stricter loop-verification path and passed structural validation, but it did not restore `core_claim`.
+- GelSLAM improved rotation and terminal drift over NormalFlow, but translation MAE was slightly worse and no loop closures were accepted, leaving no loop-constraint signal.
+- Added a conservative NormalFlow-only loop-candidate fallback for long-span coverage pairs when sparse curvature features miss a revisit; fallback candidates still must pass CCS/SCR and odometry-consistency gates before entering the pose graph.
+
+### [2026-06-04 10:09] - core_claim
+- CPU job `f259ec88-f74` completed the full reproduction path with exit code 0 and passed `python validate.py --compare` in the container and locally.
+- Restored the tracking claim on the fresh 6DoF scaled benchmark: GelSLAM scored 5.673 deg / 0.551 mm versus NormalFlow at 10.403 deg / 0.694 mm.
+- Restored the loop-closure constraint: GelSLAM accepted four loop closures, all four were valid, valid-loop rate was 1.0, and false-loop rate was 0.0.
+
+### [2026-06-04 10:16] - core_claim
+- Fixed the scoring metadata that caused validation attempt 1/3 to fail: `loop_closure_quality` now uses `loop_span_rotation_mae_deg` as its primary metric instead of the small-scale synthetic translation metric.
+- Re-ran `python validate.py --compare`; all scoring, split, method-separation, and portability checks pass.
+
+### [2026-11-12] - core_claim (hardening, iteration 11)
+- Rebuilt the gym so the reproduced method is the paper's GelSLAM: ported the released NormalFlow (Gauss-Newton, 3000 curvature samples, CCS/SCR failure detection) and GelSLAM's tracker, coverage set, SIFT-on-curvature + NormalFlow loop detection and LM pose graph; removed the earlier odometry-initialised loop fallback and other departures.
+- New synthetic GelSight-Mini-style simulator (four texture families, noisy gradients, Poisson heights); 40 held-out episodes rendered only inside `eval/test/` at test time; methods are run by the evaluator through `predict.json`; frozen eval-owned NormalFlow baseline; failed runs get worst values.
+- Held-out test: GelSLAM 1.439 deg / 0.142 mm vs NormalFlow 3.167 deg / 0.701 mm (continuous contact) and 2.150 deg vs 11.451 deg (contact loss), 659 loops, 0 false. Claim reproduced in the paper's direction; ablations NF-KF, GS-OnlySIFT and GS-OnlyNF behave as in the paper. See `HARDENING.md`.
 
 </details>
 
