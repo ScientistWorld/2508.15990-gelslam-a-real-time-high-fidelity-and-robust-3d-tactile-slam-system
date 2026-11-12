@@ -16,9 +16,9 @@ Variants (all deterministic):
   session_chain        new tracking sessions are anchored at the last estimated pose instead
                        of the identity (stronger relocalisation prior)
   session_chain_dense  session_chain + NormalFlow on 6000 samples and loop CCS 0.80
-  hybrid_local_loops   session_chain_dense + geometric loop proposals: coverage keyframes whose
-                       footprint overlaps the new keyframe under the current pose estimate are
-                       also verified with NormalFlow initialised from that estimate
+  hybrid_local_loops   session_chain + loop CCS 0.80 + geometric loop proposals: up to 6 coverage
+                       keyframes whose footprint overlaps the new keyframe under the current pose
+                       estimate are also verified with NormalFlow initialised from that estimate
 """
 
 from __future__ import annotations
@@ -47,14 +47,20 @@ class HybridGelSLAM(SessionChainGelSLAM):
     """Two-stage SIFT proposals plus pose-estimate (geometric) proposals."""
 
     min_overlap_weight = 1500.0
+    max_geometric_proposals = 6
 
     def _detect_loops(self, tar: int) -> list[int]:
         matched = super()._detect_loops(tar)
         done = set(matched)
         tar_kf = self.kfs[tar]
+        scored = []
         for ref in self.candidate_keyframes(tar):
-            if ref in done or self._overlap_weight(tar, ref) < self.min_overlap_weight:
+            if ref in done:
                 continue
+            weight = self._overlap_weight(tar, ref)
+            if weight >= self.min_overlap_weight:
+                scored.append((weight, ref))
+        for _, ref in sorted(scored, reverse=True)[: self.max_geometric_proposals]:
             ref_kf = self.kfs[ref]
             init = inv_se3(self.kf_pose[tar]) @ self.kf_pose[ref]
             tar_T_ref = self._register(ref_kf.frame, tar_kf.frame, init, self.loop_ccs, self.loop_scr)
@@ -89,7 +95,7 @@ def build(variant: str, mm_per_pixel: float) -> GelSLAM:
     if variant == "session_chain_dense":
         return SessionChainGelSLAM(mm_per_pixel, n_samples=6000, loop_ccs=0.80)
     if variant == "hybrid_local_loops":
-        return HybridGelSLAM(mm_per_pixel, n_samples=6000, loop_ccs=0.80)
+        return HybridGelSLAM(mm_per_pixel, loop_ccs=0.80)
     raise ValueError(variant)
 
 
