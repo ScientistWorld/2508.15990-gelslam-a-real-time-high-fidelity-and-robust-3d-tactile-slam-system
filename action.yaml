@@ -1,8 +1,6 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: submit
-gpus: 0
-test: false
+action: done
 milestone: core_claim
-notes: "Rescore after evaluator-only false-loop metric change: rerun reference via reproduce.sh, re-aggregate cached variant/shortcut results, rank summaries, validate."
+notes: "Hardened gym: faithful GelSLAM/NormalFlow port; 40 held-out episodes rendered only in eval/test and run through predict.json; frozen baseline; worst-value failures; shortcuts closed except runtime reading of eval/test (documented); see HARDENING.md."
