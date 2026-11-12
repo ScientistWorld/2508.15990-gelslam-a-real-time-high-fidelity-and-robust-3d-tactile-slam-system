@@ -25,12 +25,12 @@
   "long_horizon_tracking:translation_mae_mm": 1.3471767549240556,
   "long_horizon_tracking:rotation_p95_deg": 37.59229186167722,
   "long_horizon_tracking:translation_p95_mm": 5.263572196388664,
-  "long_horizon_tracking:false_loop_rate": 0.010607389202005688,
+  "long_horizon_tracking:false_loop_excess": 0.004510174176001518,
   "relocalization_after_contact_loss:rotation_mae_deg": 9.596207826128836,
   "relocalization_after_contact_loss:translation_mae_mm": 1.3038336277812859,
   "relocalization_after_contact_loss:rotation_p95_deg": 31.706574714745056,
   "relocalization_after_contact_loss:translation_p95_mm": 4.083686307458233,
-  "relocalization_after_contact_loss:false_loop_rate": 0.016649796254623546
+  "relocalization_after_contact_loss:false_loop_excess": 0.012207963141707759
  },
  "rows": [
   {
@@ -43,14 +43,14 @@
      "translation_mae_mm": 1.4919033669056371e-15,
      "rotation_p95_deg": 3.2053064530645565e-15,
      "translation_p95_mm": 8.189353020564573e-15,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 1.2626936533403447e-15,
      "translation_mae_mm": 1.2964313853816718e-15,
      "rotation_p95_deg": 3.2053064530645565e-15,
      "translation_p95_mm": 8.040651784350718e-15,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -95,14 +95,14 @@
      "translation_mae_mm": 0.14217245365576822,
      "rotation_p95_deg": 4.319224200436567,
      "translation_p95_mm": 0.6191144943673926,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 1.4010300801411395,
      "translation_mae_mm": 0.29610182426032483,
      "rotation_p95_deg": 4.10502647436159,
      "translation_p95_mm": 0.6823892649184864,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -147,14 +147,14 @@
      "translation_mae_mm": 0.1418456329313879,
      "rotation_p95_deg": 4.2883171114528915,
      "translation_p95_mm": 0.4922565006341274,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 2.11583691877264,
      "translation_mae_mm": 0.39724398109693965,
      "rotation_p95_deg": 32.050698859802814,
      "translation_p95_mm": 10.918708805844412,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -199,14 +199,14 @@
      "translation_mae_mm": 0.1419526040061766,
      "rotation_p95_deg": 4.294562713525054,
      "translation_p95_mm": 0.48418592177184333,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 2.1272760218030764,
      "translation_mae_mm": 0.39928301215373807,
      "rotation_p95_deg": 32.050698859802814,
      "translation_p95_mm": 10.918708805844412,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -251,14 +251,14 @@
      "translation_mae_mm": 0.14228978032903844,
      "rotation_p95_deg": 4.294562713525054,
      "translation_p95_mm": 0.49606073738809936,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 2.1500371506874463,
      "translation_mae_mm": 0.4011010747909716,
      "rotation_p95_deg": 32.050698859802814,
      "translation_p95_mm": 10.918708805844412,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {},
@@ -274,14 +274,14 @@
      "translation_mae_mm": 0.14228978032903844,
      "rotation_p95_deg": 4.294562713525054,
      "translation_p95_mm": 0.49606073738809936,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 2.1500371506874463,
      "translation_mae_mm": 0.4011010747909716,
      "rotation_p95_deg": 32.050698859802814,
      "translation_p95_mm": 10.918708805844412,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -326,14 +326,14 @@
      "translation_mae_mm": 0.14228978032903844,
      "rotation_p95_deg": 4.294562713525054,
      "translation_p95_mm": 0.49606073738809936,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 2.1500371506874463,
      "translation_mae_mm": 0.4011010747909716,
      "rotation_p95_deg": 32.050698859802814,
      "translation_p95_mm": 10.918708805844412,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -378,14 +378,14 @@
      "translation_mae_mm": 0.14228978032903844,
      "rotation_p95_deg": 4.294562713525054,
      "translation_p95_mm": 0.49606073738809936,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 2.1500371506874463,
      "translation_mae_mm": 0.4011010747909716,
      "rotation_p95_deg": 32.050698859802814,
      "translation_p95_mm": 10.918708805844412,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -421,75 +421,23 @@
    "source": "shortcuts_test.json"
   },
   {
-   "name": "session_chain",
-   "status": "scored",
-   "rank_gain": -0.058955902397692564,
-   "values": {
-    "long_horizon_tracking": {
-     "rotation_mae_deg": 1.4707508764421353,
-     "translation_mae_mm": 0.14221179143880525,
-     "rotation_p95_deg": 4.106631301602538,
-     "translation_p95_mm": 0.4661943465132082,
-     "false_loop_rate": 0.0
-    },
-    "relocalization_after_contact_loss": {
-     "rotation_mae_deg": 1.8353904799442424,
-     "translation_mae_mm": 0.5059820657013608,
-     "rotation_p95_deg": 28.62306380065496,
-     "translation_p95_mm": 12.394817638620799,
-     "false_loop_rate": 0.0
-    }
-   },
-   "paired": {
-    "long_horizon_tracking:rotation_mae_deg": {
-     "mean_diff": 0.03175666666666673,
-     "se": 0.03175666666666673,
-     "n_better": 0,
-     "n_worse": 1,
-     "n": 24
-    },
-    "long_horizon_tracking:translation_mae_mm": {
-     "mean_diff": -7.791666666665902e-05,
-     "se": 7.791666666665902e-05,
-     "n_better": 1,
-     "n_worse": 0,
-     "n": 24
-    },
-    "relocalization_after_contact_loss:rotation_mae_deg": {
-     "mean_diff": -0.31464625,
-     "se": 0.6913724613157001,
-     "n_better": 1,
-     "n_worse": 1,
-     "n": 16
-    },
-    "relocalization_after_contact_loss:translation_mae_mm": {
-     "mean_diff": 0.10488125000000001,
-     "se": 0.07197044819967777,
-     "n_better": 0,
-     "n_worse": 2,
-     "n": 16
-    }
-   },
-   "source": "variants_test.json"
-  },
-  {
    "name": "hybrid_local_loops",
    "status": "scored",
-   "rank_gain": -0.09273560298323305,
+   "rank_gain": -0.03989619387333941,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 1.4194904304734948,
      "translation_mae_mm": 0.13247119431268095,
      "rotation_p95_deg": 4.009223412416568,
      "translation_p95_mm": 0.420435001533651,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 1.7825308548224028,
      "translation_mae_mm": 0.4905866103353743,
      "rotation_p95_deg": 28.339222770700008,
      "translation_p95_mm": 12.382046980874291,
-     "false_loop_rate": 0.004398826979472141
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -525,23 +473,75 @@
    "source": "variants_test.json"
   },
   {
+   "name": "session_chain",
+   "status": "scored",
+   "rank_gain": -0.058955902397692564,
+   "values": {
+    "long_horizon_tracking": {
+     "rotation_mae_deg": 1.4707508764421353,
+     "translation_mae_mm": 0.14221179143880525,
+     "rotation_p95_deg": 4.106631301602538,
+     "translation_p95_mm": 0.4661943465132082,
+     "false_loop_excess": 0.0
+    },
+    "relocalization_after_contact_loss": {
+     "rotation_mae_deg": 1.8353904799442424,
+     "translation_mae_mm": 0.5059820657013608,
+     "rotation_p95_deg": 28.62306380065496,
+     "translation_p95_mm": 12.394817638620799,
+     "false_loop_excess": 0.0
+    }
+   },
+   "paired": {
+    "long_horizon_tracking:rotation_mae_deg": {
+     "mean_diff": 0.03175666666666673,
+     "se": 0.03175666666666673,
+     "n_better": 0,
+     "n_worse": 1,
+     "n": 24
+    },
+    "long_horizon_tracking:translation_mae_mm": {
+     "mean_diff": -7.791666666665902e-05,
+     "se": 7.791666666665902e-05,
+     "n_better": 1,
+     "n_worse": 0,
+     "n": 24
+    },
+    "relocalization_after_contact_loss:rotation_mae_deg": {
+     "mean_diff": -0.31464625,
+     "se": 0.6913724613157001,
+     "n_better": 1,
+     "n_worse": 1,
+     "n": 16
+    },
+    "relocalization_after_contact_loss:translation_mae_mm": {
+     "mean_diff": 0.10488125000000001,
+     "se": 0.07197044819967777,
+     "n_better": 0,
+     "n_worse": 2,
+     "n": 16
+    }
+   },
+   "source": "variants_test.json"
+  },
+  {
    "name": "sc_self_derived_loops",
    "status": "scored",
-   "rank_gain": -1.8025985198497305,
+   "rank_gain": -1.695283887888234,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 1.4389941638954198,
      "translation_mae_mm": 0.14228978032903844,
      "rotation_p95_deg": 4.294562713525054,
      "translation_p95_mm": 0.49606073738809936,
-     "false_loop_rate": 0.032021347565043365
+     "false_loop_excess": 0.012021347565043364
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 2.1500371506874463,
      "translation_mae_mm": 0.4011010747909716,
      "rotation_p95_deg": 32.050698859802814,
      "translation_p95_mm": 10.918708805844412,
-     "false_loop_rate": 0.07467144563918758
+     "false_loop_excess": 0.05467144563918758
     }
    },
    "paired": {
@@ -586,14 +586,14 @@
      "translation_mae_mm": 0.7006527123393953,
      "rotation_p95_deg": 14.614924587735011,
      "translation_p95_mm": 3.968794510862936,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 11.451145472699565,
      "translation_mae_mm": 2.806023645153234,
      "rotation_p95_deg": 62.40266851803462,
      "translation_p95_mm": 13.624579015039714,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -638,14 +638,14 @@
      "translation_mae_mm": 0.26199678909275814,
      "rotation_p95_deg": 6.444970732247415,
      "translation_p95_mm": 1.0713676632025397,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 19.487601919742733,
      "translation_mae_mm": 3.0669715334912073,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 16.663811655833733,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -683,21 +683,21 @@
   {
    "name": "only_nf_exhaustive",
    "status": "scored",
-   "rank_gain": -3.272565683764527,
+   "rank_gain": -3.246633040978169,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 2.111275778792388,
      "translation_mae_mm": 0.23457384135191695,
      "rotation_p95_deg": 4.075919825436089,
      "translation_p95_mm": 0.4509500967535137,
-     "false_loop_rate": 0.03691275167785235
+     "false_loop_excess": 0.01691275167785235
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 19.408451016824337,
      "translation_mae_mm": 3.027328355299159,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 16.66498117100914,
-     "false_loop_rate": 0.008902077151335312
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -742,14 +742,14 @@
      "translation_mae_mm": 2.942329401439969,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 10.757851910626275,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 21.7721346365512,
      "translation_mae_mm": 2.8190983494637276,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 10.396817722391987,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -794,14 +794,14 @@
      "translation_mae_mm": 2.942329401439969,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 10.757851910626275,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 21.7721346365512,
      "translation_mae_mm": 2.8190983494637276,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 10.396817722391987,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -846,14 +846,14 @@
      "translation_mae_mm": 2.942329401439969,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 10.757851910626275,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 21.7721346365512,
      "translation_mae_mm": 2.8190983494637276,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 10.396817722391987,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -898,14 +898,14 @@
      "translation_mae_mm": 2.942329401439969,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 10.757851910626275,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 21.7721346365512,
      "translation_mae_mm": 2.8190983494637276,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 10.396817722391987,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -950,14 +950,14 @@
      "translation_mae_mm": 4.132001043574981,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 17.60279924273035,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 26.618028032857893,
      "translation_mae_mm": 3.6657608872086396,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 14.710472781737547,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -995,21 +995,21 @@
   {
    "name": "only_sift",
    "status": "failed (false-loop constraint failed: 619/807 unique loop constraints disagree with ground truth ()",
-   "rank_gain": -74.71613328481595,
+   "rank_gain": -115.66284976789149,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     }
    },
    "paired": {
@@ -1047,21 +1047,21 @@
   {
    "name": "sc_empty_predictions",
    "status": "failed (heldout_seed_continuous_0: poses.npy has shape (0, 4, 4), expected (400, 4, 4))",
-   "rank_gain": -74.71613328481595,
+   "rank_gain": -115.66284976789149,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     }
    },
    "paired": {},
@@ -1070,21 +1070,21 @@
   {
    "name": "sc_impossible_translation",
    "status": "failed (heldout_seed_continuous_0: pose translation outside the physically possible range)",
-   "rank_gain": -74.71613328481595,
+   "rank_gain": -115.66284976789149,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     }
    },
    "paired": {},
@@ -1093,21 +1093,21 @@
   {
    "name": "sc_invalid_spec",
    "status": "failed (invalid predict.json: 'command' must contain the {input} and {output} placeholders)",
-   "rank_gain": -74.71613328481595,
+   "rank_gain": -115.66284976789149,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     }
    },
    "paired": {},
@@ -1116,21 +1116,21 @@
   {
    "name": "sc_nan_loops",
    "status": "failed (false-loop constraint failed: 15995/16654 unique loop constraints disagree with ground tru)",
-   "rank_gain": -74.71613328481595,
+   "rank_gain": -115.66284976789149,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     }
    },
    "paired": {
@@ -1168,21 +1168,21 @@
   {
    "name": "sc_nan_predictions",
    "status": "failed (heldout_seed_continuous_0: non-finite pose values)",
-   "rank_gain": -74.71613328481595,
+   "rank_gain": -115.66284976789149,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     }
    },
    "paired": {},
@@ -1191,21 +1191,21 @@
   {
    "name": "sc_orphan_artifacts",
    "status": "failed (artifacts without predict.json: the method cannot be run on held-out inputs)",
-   "rank_gain": -74.71613328481595,
+   "rank_gain": -115.66284976789149,
    "values": {
     "long_horizon_tracking": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     }
    },
    "paired": {},

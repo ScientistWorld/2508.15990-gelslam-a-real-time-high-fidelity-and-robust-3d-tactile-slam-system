@@ -175,14 +175,14 @@
           "translation_mae_mm": 0.7006527123393953,
           "rotation_p95_deg": 14.614924587735011,
           "translation_p95_mm": 3.968794510862936,
-          "false_loop_rate": 0.0
+          "false_loop_excess": 0.0
         },
         "gelslam_online": {
           "rotation_mae_deg": 1.4389941638954198,
           "translation_mae_mm": 0.14228978032903844,
           "rotation_p95_deg": 4.294562713525054,
           "translation_p95_mm": 0.49606073738809936,
-          "false_loop_rate": 0.0
+          "false_loop_excess": 0.0
         }
       }
     },
@@ -193,14 +193,14 @@
           "translation_mae_mm": 2.806023645153234,
           "rotation_p95_deg": 62.40266851803462,
           "translation_p95_mm": 13.624579015039714,
-          "false_loop_rate": 0.0
+          "false_loop_excess": 0.0
         },
         "gelslam_online": {
           "rotation_mae_deg": 2.1500371506874463,
           "translation_mae_mm": 0.4011010747909716,
           "rotation_p95_deg": 32.050698859802814,
           "translation_p95_mm": 10.918708805844412,
-          "false_loop_rate": 0.0
+          "false_loop_excess": 0.0
         }
       }
     }
@@ -214,280 +214,280 @@
           "translation_mae_mm": 0.36859,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.13
+          "seconds": 3.3
         },
         "heldout_seed_continuous_1": {
           "rotation_mae_deg": 2.47324,
           "translation_mae_mm": 0.19865,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.16
+          "seconds": 3.53
         },
         "heldout_seed_continuous_2": {
           "rotation_mae_deg": 1.93733,
           "translation_mae_mm": 0.20687,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.56
+          "seconds": 4.8
         },
         "heldout_fabric_continuous_0": {
           "rotation_mae_deg": 2.24291,
           "translation_mae_mm": 0.51277,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.71
+          "seconds": 7.4
         },
         "heldout_fabric_continuous_1": {
           "rotation_mae_deg": 2.00214,
           "translation_mae_mm": 0.7533,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.7
+          "seconds": 4.56
         },
         "heldout_fabric_continuous_2": {
           "rotation_mae_deg": 2.39081,
           "translation_mae_mm": 0.62612,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 3.77
+          "seconds": 5.92
         },
         "heldout_wood_continuous_0": {
           "rotation_mae_deg": 2.89926,
           "translation_mae_mm": 0.9723,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.29
+          "seconds": 4.38
         },
         "heldout_wood_continuous_1": {
           "rotation_mae_deg": 3.11709,
           "translation_mae_mm": 0.95594,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.49
+          "seconds": 5.52
         },
         "heldout_wood_continuous_2": {
           "rotation_mae_deg": 3.2448,
           "translation_mae_mm": 1.09001,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.5
+          "seconds": 4.23
         },
         "heldout_rock_continuous_0": {
           "rotation_mae_deg": 4.16672,
           "translation_mae_mm": 1.43709,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.59
+          "seconds": 4.01
         },
         "heldout_rock_continuous_1": {
           "rotation_mae_deg": 5.13769,
           "translation_mae_mm": 1.1804,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 7.27
+          "seconds": 4.44
         },
         "heldout_rock_continuous_2": {
           "rotation_mae_deg": 3.51549,
           "translation_mae_mm": 0.93019,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 3.95
+          "seconds": 4.29
         },
         "heldout_seed_contact_loss_0": {
           "rotation_mae_deg": 26.59248,
           "translation_mae_mm": 4.75385,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.43
+          "seconds": 4.38
         },
         "heldout_seed_contact_loss_1": {
           "rotation_mae_deg": 8.2589,
           "translation_mae_mm": 3.17353,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.27
+          "seconds": 4.52
         },
         "heldout_fabric_contact_loss_0": {
           "rotation_mae_deg": 8.45324,
           "translation_mae_mm": 3.21594,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.34
+          "seconds": 4.04
         },
         "heldout_fabric_contact_loss_1": {
           "rotation_mae_deg": 12.35321,
           "translation_mae_mm": 3.00715,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.72
+          "seconds": 4.33
         },
         "heldout_wood_contact_loss_0": {
           "rotation_mae_deg": 6.47288,
           "translation_mae_mm": 2.25053,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.25
+          "seconds": 6.61
         },
         "heldout_wood_contact_loss_1": {
           "rotation_mae_deg": 15.77673,
           "translation_mae_mm": 3.27042,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.53
+          "seconds": 5.19
         },
         "heldout_rock_contact_loss_0": {
           "rotation_mae_deg": 7.88366,
           "translation_mae_mm": 1.97959,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.4
+          "seconds": 3.73
         },
         "heldout_rock_contact_loss_1": {
           "rotation_mae_deg": 7.57821,
           "translation_mae_mm": 2.86839,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.4
+          "seconds": 4.14
         },
         "heldout_seed_continuous_3": {
           "rotation_mae_deg": 2.44164,
           "translation_mae_mm": 0.33105,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.49
+          "seconds": 3.89
         },
         "heldout_seed_continuous_4": {
           "rotation_mae_deg": 4.29799,
           "translation_mae_mm": 0.38567,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.13
+          "seconds": 3.49
         },
         "heldout_seed_continuous_5": {
           "rotation_mae_deg": 2.81051,
           "translation_mae_mm": 0.18755,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.28
+          "seconds": 3.74
         },
         "heldout_fabric_continuous_3": {
           "rotation_mae_deg": 1.44578,
           "translation_mae_mm": 0.51702,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 3.61
+          "seconds": 2.96
         },
         "heldout_fabric_continuous_4": {
           "rotation_mae_deg": 1.51285,
           "translation_mae_mm": 0.49511,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 3.84
+          "seconds": 3.28
         },
         "heldout_fabric_continuous_5": {
           "rotation_mae_deg": 1.86069,
           "translation_mae_mm": 0.54971,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.61
+          "seconds": 3.68
         },
         "heldout_wood_continuous_3": {
           "rotation_mae_deg": 2.9404,
           "translation_mae_mm": 0.98575,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.51
+          "seconds": 3.71
         },
         "heldout_wood_continuous_4": {
           "rotation_mae_deg": 2.36624,
           "translation_mae_mm": 0.92727,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.05
+          "seconds": 3.43
         },
         "heldout_wood_continuous_5": {
           "rotation_mae_deg": 3.53156,
           "translation_mae_mm": 0.76299,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.46
+          "seconds": 3.79
         },
         "heldout_rock_continuous_3": {
           "rotation_mae_deg": 2.96851,
           "translation_mae_mm": 0.46583,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.57
+          "seconds": 3.7
         },
         "heldout_rock_continuous_4": {
           "rotation_mae_deg": 5.54809,
           "translation_mae_mm": 1.02816,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.44
+          "seconds": 3.36
         },
         "heldout_rock_continuous_5": {
           "rotation_mae_deg": 6.07422,
           "translation_mae_mm": 0.94734,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 3.98
+          "seconds": 3.38
         },
         "heldout_seed_contact_loss_2": {
           "rotation_mae_deg": 7.7095,
           "translation_mae_mm": 1.71109,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.59
+          "seconds": 3.89
         },
         "heldout_seed_contact_loss_3": {
           "rotation_mae_deg": 10.94794,
           "translation_mae_mm": 2.63257,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.02
+          "seconds": 3.47
         },
         "heldout_fabric_contact_loss_2": {
           "rotation_mae_deg": 10.06252,
           "translation_mae_mm": 2.44485,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.71
+          "seconds": 3.97
         },
         "heldout_fabric_contact_loss_3": {
           "rotation_mae_deg": 15.57602,
           "translation_mae_mm": 3.70641,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.08
+          "seconds": 3.63
         },
         "heldout_wood_contact_loss_2": {
           "rotation_mae_deg": 14.11763,
           "translation_mae_mm": 3.15558,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.56
+          "seconds": 3.89
         },
         "heldout_wood_contact_loss_3": {
           "rotation_mae_deg": 12.48264,
           "translation_mae_mm": 3.06536,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.61
+          "seconds": 3.85
         },
         "heldout_rock_contact_loss_2": {
           "rotation_mae_deg": 8.53439,
           "translation_mae_mm": 1.86416,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.16
+          "seconds": 3.72
         },
         "heldout_rock_contact_loss_3": {
           "rotation_mae_deg": 10.41838,
           "translation_mae_mm": 1.79697,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 4.14
+          "seconds": 3.88
         }
       }
     },
@@ -499,7 +499,7 @@
           "translation_mae_mm": 0.07565,
           "unique_loops": 7,
           "false_loops": 0,
-          "seconds": 6.51,
+          "seconds": 5.88,
           "method_summary": {
             "keyframes": 10,
             "coverage_keyframes": 6,
@@ -509,7 +509,7 @@
             "loops": 7,
             "pose_graph_solves": 5,
             "frames": 400,
-            "cpu_seconds": 4.482
+            "cpu_seconds": 4.142
           }
         },
         "heldout_seed_continuous_1": {
@@ -517,7 +517,7 @@
           "translation_mae_mm": 0.07425,
           "unique_loops": 5,
           "false_loops": 0,
-          "seconds": 6.34,
+          "seconds": 5.64,
           "method_summary": {
             "keyframes": 10,
             "coverage_keyframes": 8,
@@ -527,7 +527,7 @@
             "loops": 5,
             "pose_graph_solves": 4,
             "frames": 400,
-            "cpu_seconds": 4.293
+            "cpu_seconds": 4.094
           }
         },
         "heldout_seed_continuous_2": {
@@ -535,7 +535,7 @@
           "translation_mae_mm": 0.02005,
           "unique_loops": 11,
           "false_loops": 0,
-          "seconds": 6.92,
+          "seconds": 5.68,
           "method_summary": {
             "keyframes": 10,
             "coverage_keyframes": 7,
@@ -545,7 +545,7 @@
             "loops": 11,
             "pose_graph_solves": 6,
             "frames": 400,
-            "cpu_seconds": 4.692
+            "cpu_seconds": 4.307
           }
         },
         "heldout_fabric_continuous_0": {
@@ -553,7 +553,7 @@
           "translation_mae_mm": 0.05892,
           "unique_loops": 5,
           "false_loops": 0,
-          "seconds": 6.73,
+          "seconds": 6.09,
           "method_summary": {
             "keyframes": 9,
             "coverage_keyframes": 8,
@@ -563,7 +563,7 @@
             "loops": 5,
             "pose_graph_solves": 4,
             "frames": 400,
-            "cpu_seconds": 4.406
+            "cpu_seconds": 4.143
           }
         },
         "heldout_fabric_continuous_1": {
@@ -571,7 +571,7 @@
           "translation_mae_mm": 0.02651,
           "unique_loops": 18,
           "false_loops": 0,
-          "seconds": 7.17,
+          "seconds": 5.93,
           "method_summary": {
             "keyframes": 12,
             "coverage_keyframes": 9,
@@ -581,7 +581,7 @@
             "loops": 18,
             "pose_graph_solves": 8,
             "frames": 400,
-            "cpu_seconds": 4.802
+            "cpu_seconds": 4.473
           }
         },
         "heldout_fabric_continuous_2": {
@@ -589,7 +589,7 @@
           "translation_mae_mm": 0.04693,
           "unique_loops": 3,
           "false_loops": 0,
-          "seconds": 6.01,
+          "seconds": 4.62,
           "method_summary": {
             "keyframes": 6,
             "coverage_keyframes": 5,
@@ -599,7 +599,7 @@
             "loops": 3,
             "pose_graph_solves": 4,
             "frames": 400,
-            "cpu_seconds": 3.538
+            "cpu_seconds": 3.122
           }
         },
         "heldout_wood_continuous_0": {
@@ -607,7 +607,7 @@
           "translation_mae_mm": 0.12316,
           "unique_loops": 4,
           "false_loops": 0,
-          "seconds": 7.85,
+          "seconds": 7.18,
           "method_summary": {
             "keyframes": 15,
             "coverage_keyframes": 9,
@@ -617,7 +617,7 @@
             "loops": 4,
             "pose_graph_solves": 5,
             "frames": 400,
-            "cpu_seconds": 5.435
+            "cpu_seconds": 5.243
           }
         },
         "heldout_wood_continuous_1": {
@@ -625,7 +625,7 @@
           "translation_mae_mm": 0.09832,
           "unique_loops": 0,
           "false_loops": 0,
-          "seconds": 6.6,
+          "seconds": 6.04,
           "method_summary": {
             "keyframes": 8,
             "coverage_keyframes": 7,
@@ -635,7 +635,7 @@
             "loops": 0,
             "pose_graph_solves": 0,
             "frames": 400,
-            "cpu_seconds": 4.178
+            "cpu_seconds": 4.272
           }
         },
         "heldout_wood_continuous_2": {
@@ -643,7 +643,7 @@
           "translation_mae_mm": 0.1051,
           "unique_loops": 1,
           "false_loops": 0,
-          "seconds": 11.34,
+          "seconds": 5.69,
           "method_summary": {
             "keyframes": 8,
             "coverage_keyframes": 7,
@@ -653,7 +653,7 @@
             "loops": 1,
             "pose_graph_solves": 2,
             "frames": 400,
-            "cpu_seconds": 4.462
+            "cpu_seconds": 3.921
           }
         },
         "heldout_rock_continuous_0": {
@@ -661,7 +661,7 @@
           "translation_mae_mm": 0.05128,
           "unique_loops": 1,
           "false_loops": 0,
-          "seconds": 17.41,
+          "seconds": 5.05,
           "method_summary": {
             "keyframes": 7,
             "coverage_keyframes": 6,
@@ -671,7 +671,7 @@
             "loops": 1,
             "pose_graph_solves": 2,
             "frames": 400,
-            "cpu_seconds": 3.945
+            "cpu_seconds": 3.28
           }
         },
         "heldout_rock_continuous_1": {
@@ -679,7 +679,7 @@
           "translation_mae_mm": 0.02284,
           "unique_loops": 11,
           "false_loops": 0,
-          "seconds": 6.86,
+          "seconds": 5.73,
           "method_summary": {
             "keyframes": 8,
             "coverage_keyframes": 7,
@@ -689,7 +689,7 @@
             "loops": 11,
             "pose_graph_solves": 6,
             "frames": 400,
-            "cpu_seconds": 4.458
+            "cpu_seconds": 4.016
           }
         },
         "heldout_rock_continuous_2": {
@@ -697,7 +697,7 @@
           "translation_mae_mm": 0.02243,
           "unique_loops": 14,
           "false_loops": 0,
-          "seconds": 6.19,
+          "seconds": 5.42,
           "method_summary": {
             "keyframes": 9,
             "coverage_keyframes": 8,
@@ -707,7 +707,7 @@
             "loops": 14,
             "pose_graph_solves": 8,
             "frames": 400,
-            "cpu_seconds": 4.031
+            "cpu_seconds": 3.729
           }
         },
         "heldout_seed_contact_loss_0": {
@@ -715,7 +715,7 @@
           "translation_mae_mm": 0.03037,
           "unique_loops": 12,
           "false_loops": 0,
-          "seconds": 7.02,
+          "seconds": 5.93,
           "method_summary": {
             "keyframes": 13,
             "coverage_keyframes": 11,
@@ -725,7 +725,7 @@
             "loops": 12,
             "pose_graph_solves": 7,
             "frames": 400,
-            "cpu_seconds": 5.165
+            "cpu_seconds": 4.844
           }
         },
         "heldout_seed_contact_loss_1": {
@@ -733,7 +733,7 @@
           "translation_mae_mm": 0.02728,
           "unique_loops": 20,
           "false_loops": 0,
-          "seconds": 8.55,
+          "seconds": 6.19,
           "method_summary": {
             "keyframes": 17,
             "coverage_keyframes": 12,
@@ -743,7 +743,7 @@
             "loops": 20,
             "pose_graph_solves": 13,
             "frames": 400,
-            "cpu_seconds": 11.181
+            "cpu_seconds": 7.543
           }
         },
         "heldout_fabric_contact_loss_0": {
@@ -751,7 +751,7 @@
           "translation_mae_mm": 0.03086,
           "unique_loops": 169,
           "false_loops": 0,
-          "seconds": 73.78,
+          "seconds": 16.64,
           "method_summary": {
             "keyframes": 47,
             "coverage_keyframes": 15,
@@ -761,7 +761,7 @@
             "loops": 169,
             "pose_graph_solves": 46,
             "frames": 400,
-            "cpu_seconds": 263.173
+            "cpu_seconds": 65.192
           }
         },
         "heldout_fabric_contact_loss_1": {
@@ -769,7 +769,7 @@
           "translation_mae_mm": 0.02328,
           "unique_loops": 39,
           "false_loops": 0,
-          "seconds": 7.61,
+          "seconds": 6.49,
           "method_summary": {
             "keyframes": 17,
             "coverage_keyframes": 9,
@@ -779,7 +779,7 @@
             "loops": 39,
             "pose_graph_solves": 15,
             "frames": 400,
-            "cpu_seconds": 5.969
+            "cpu_seconds": 5.482
           }
         },
         "heldout_wood_contact_loss_0": {
@@ -787,7 +787,7 @@
           "translation_mae_mm": 3.35683,
           "unique_loops": 1,
           "false_loops": 0,
-          "seconds": 7.04,
+          "seconds": 5.94,
           "method_summary": {
             "keyframes": 15,
             "coverage_keyframes": 15,
@@ -797,7 +797,7 @@
             "loops": 1,
             "pose_graph_solves": 2,
             "frames": 400,
-            "cpu_seconds": 4.907
+            "cpu_seconds": 4.455
           }
         },
         "heldout_wood_contact_loss_1": {
@@ -805,7 +805,7 @@
           "translation_mae_mm": 2.42679,
           "unique_loops": 3,
           "false_loops": 0,
-          "seconds": 6.79,
+          "seconds": 5.65,
           "method_summary": {
             "keyframes": 12,
             "coverage_keyframes": 12,
@@ -815,7 +815,7 @@
             "loops": 3,
             "pose_graph_solves": 4,
             "frames": 400,
-            "cpu_seconds": 4.656
+            "cpu_seconds": 3.971
           }
         },
         "heldout_rock_contact_loss_0": {
@@ -823,7 +823,7 @@
           "translation_mae_mm": 0.07068,
           "unique_loops": 27,
           "false_loops": 0,
-          "seconds": 35.91,
+          "seconds": 8.75,
           "method_summary": {
             "keyframes": 37,
             "coverage_keyframes": 12,
@@ -833,7 +833,7 @@
             "loops": 27,
             "pose_graph_solves": 17,
             "frames": 400,
-            "cpu_seconds": 120.932
+            "cpu_seconds": 25.025
           }
         },
         "heldout_rock_contact_loss_1": {
@@ -841,7 +841,7 @@
           "translation_mae_mm": 0.054,
           "unique_loops": 14,
           "false_loops": 0,
-          "seconds": 11.9,
+          "seconds": 6.71,
           "method_summary": {
             "keyframes": 21,
             "coverage_keyframes": 11,
@@ -851,7 +851,7 @@
             "loops": 14,
             "pose_graph_solves": 8,
             "frames": 400,
-            "cpu_seconds": 24.613
+            "cpu_seconds": 8.066
           }
         },
         "heldout_seed_continuous_3": {
@@ -859,7 +859,7 @@
           "translation_mae_mm": 0.02305,
           "unique_loops": 6,
           "false_loops": 0,
-          "seconds": 6.57,
+          "seconds": 5.74,
           "method_summary": {
             "keyframes": 8,
             "coverage_keyframes": 7,
@@ -869,7 +869,7 @@
             "loops": 6,
             "pose_graph_solves": 6,
             "frames": 400,
-            "cpu_seconds": 4.314
+            "cpu_seconds": 3.99
           }
         },
         "heldout_seed_continuous_4": {
@@ -877,7 +877,7 @@
           "translation_mae_mm": 0.06961,
           "unique_loops": 8,
           "false_loops": 0,
-          "seconds": 6.7,
+          "seconds": 5.54,
           "method_summary": {
             "keyframes": 15,
             "coverage_keyframes": 12,
@@ -887,7 +887,7 @@
             "loops": 8,
             "pose_graph_solves": 6,
             "frames": 400,
-            "cpu_seconds": 4.598
+            "cpu_seconds": 4.219
           }
         },
         "heldout_seed_continuous_5": {
@@ -895,7 +895,7 @@
           "translation_mae_mm": 2.04962,
           "unique_loops": 13,
           "false_loops": 0,
-          "seconds": 7.16,
+          "seconds": 5.69,
           "method_summary": {
             "keyframes": 14,
             "coverage_keyframes": 8,
@@ -905,7 +905,7 @@
             "loops": 13,
             "pose_graph_solves": 6,
             "frames": 400,
-            "cpu_seconds": 4.918
+            "cpu_seconds": 4.323
           }
         },
         "heldout_fabric_continuous_3": {
@@ -913,7 +913,7 @@
           "translation_mae_mm": 0.03127,
           "unique_loops": 11,
           "false_loops": 0,
-          "seconds": 5.91,
+          "seconds": 5.04,
           "method_summary": {
             "keyframes": 8,
             "coverage_keyframes": 6,
@@ -923,7 +923,7 @@
             "loops": 11,
             "pose_graph_solves": 6,
             "frames": 400,
-            "cpu_seconds": 3.794
+            "cpu_seconds": 3.417
           }
         },
         "heldout_fabric_continuous_4": {
@@ -931,7 +931,7 @@
           "translation_mae_mm": 0.06456,
           "unique_loops": 2,
           "false_loops": 0,
-          "seconds": 5.44,
+          "seconds": 3.92,
           "method_summary": {
             "keyframes": 4,
             "coverage_keyframes": 4,
@@ -941,7 +941,7 @@
             "loops": 2,
             "pose_graph_solves": 3,
             "frames": 400,
-            "cpu_seconds": 3.186
+            "cpu_seconds": 2.501
           }
         },
         "heldout_fabric_continuous_5": {
@@ -949,7 +949,7 @@
           "translation_mae_mm": 0.02411,
           "unique_loops": 11,
           "false_loops": 0,
-          "seconds": 6.6,
+          "seconds": 5.68,
           "method_summary": {
             "keyframes": 10,
             "coverage_keyframes": 8,
@@ -959,7 +959,7 @@
             "loops": 11,
             "pose_graph_solves": 7,
             "frames": 400,
-            "cpu_seconds": 4.466
+            "cpu_seconds": 4.062
           }
         },
         "heldout_wood_continuous_3": {
@@ -967,7 +967,7 @@
           "translation_mae_mm": 0.06502,
           "unique_loops": 3,
           "false_loops": 0,
-          "seconds": 6.21,
+          "seconds": 5.43,
           "method_summary": {
             "keyframes": 8,
             "coverage_keyframes": 7,
@@ -977,7 +977,7 @@
             "loops": 3,
             "pose_graph_solves": 4,
             "frames": 400,
-            "cpu_seconds": 4.118
+            "cpu_seconds": 3.603
           }
         },
         "heldout_wood_continuous_4": {
@@ -985,7 +985,7 @@
           "translation_mae_mm": 0.09795,
           "unique_loops": 1,
           "false_loops": 0,
-          "seconds": 6.15,
+          "seconds": 5.24,
           "method_summary": {
             "keyframes": 8,
             "coverage_keyframes": 7,
@@ -995,7 +995,7 @@
             "loops": 1,
             "pose_graph_solves": 2,
             "frames": 400,
-            "cpu_seconds": 3.7
+            "cpu_seconds": 3.544
           }
         },
         "heldout_wood_continuous_5": {
@@ -1003,7 +1003,7 @@
           "translation_mae_mm": 0.08384,
           "unique_loops": 6,
           "false_loops": 0,
-          "seconds": 6.75,
+          "seconds": 5.13,
           "method_summary": {
             "keyframes": 10,
             "coverage_keyframes": 8,
@@ -1013,7 +1013,7 @@
             "loops": 6,
             "pose_graph_solves": 6,
             "frames": 400,
-            "cpu_seconds": 4.506
+            "cpu_seconds": 3.516
           }
         },
         "heldout_rock_continuous_3": {
@@ -1021,7 +1021,7 @@
           "translation_mae_mm": 0.0374,
           "unique_loops": 17,
           "false_loops": 0,
-          "seconds": 6.8,
+          "seconds": 5.93,
           "method_summary": {
             "keyframes": 12,
             "coverage_keyframes": 7,
@@ -1031,7 +1031,7 @@
             "loops": 17,
             "pose_graph_solves": 9,
             "frames": 400,
-            "cpu_seconds": 4.544
+            "cpu_seconds": 4.205
           }
         },
         "heldout_rock_continuous_4": {
@@ -1039,7 +1039,7 @@
           "translation_mae_mm": 0.0961,
           "unique_loops": 8,
           "false_loops": 0,
-          "seconds": 6.3,
+          "seconds": 5.28,
           "method_summary": {
             "keyframes": 12,
             "coverage_keyframes": 10,
@@ -1049,7 +1049,7 @@
             "loops": 8,
             "pose_graph_solves": 5,
             "frames": 400,
-            "cpu_seconds": 4.131
+            "cpu_seconds": 3.656
           }
         },
         "heldout_rock_continuous_5": {
@@ -1057,7 +1057,7 @@
           "translation_mae_mm": 0.04695,
           "unique_loops": 11,
           "false_loops": 0,
-          "seconds": 6.17,
+          "seconds": 5.38,
           "method_summary": {
             "keyframes": 10,
             "coverage_keyframes": 7,
@@ -1067,7 +1067,7 @@
             "loops": 11,
             "pose_graph_solves": 5,
             "frames": 400,
-            "cpu_seconds": 4.111
+            "cpu_seconds": 3.804
           }
         },
         "heldout_seed_contact_loss_2": {
@@ -1075,7 +1075,7 @@
           "translation_mae_mm": 0.02288,
           "unique_loops": 23,
           "false_loops": 0,
-          "seconds": 7.3,
+          "seconds": 5.94,
           "method_summary": {
             "keyframes": 12,
             "coverage_keyframes": 9,
@@ -1085,7 +1085,7 @@
             "loops": 23,
             "pose_graph_solves": 9,
             "frames": 400,
-            "cpu_seconds": 5.409
+            "cpu_seconds": 4.606
           }
         },
         "heldout_seed_contact_loss_3": {
@@ -1093,7 +1093,7 @@
           "translation_mae_mm": 0.03321,
           "unique_loops": 25,
           "false_loops": 0,
-          "seconds": 7.13,
+          "seconds": 6.04,
           "method_summary": {
             "keyframes": 11,
             "coverage_keyframes": 6,
@@ -1103,7 +1103,7 @@
             "loops": 25,
             "pose_graph_solves": 10,
             "frames": 400,
-            "cpu_seconds": 5.204
+            "cpu_seconds": 4.744
           }
         },
         "heldout_fabric_contact_loss_2": {
@@ -1111,7 +1111,7 @@
           "translation_mae_mm": 0.04132,
           "unique_loops": 42,
           "false_loops": 0,
-          "seconds": 13.5,
+          "seconds": 6.79,
           "method_summary": {
             "keyframes": 21,
             "coverage_keyframes": 10,
@@ -1121,7 +1121,7 @@
             "loops": 42,
             "pose_graph_solves": 19,
             "frames": 400,
-            "cpu_seconds": 30.005
+            "cpu_seconds": 9.538
           }
         },
         "heldout_fabric_contact_loss_3": {
@@ -1129,7 +1129,7 @@
           "translation_mae_mm": 0.05614,
           "unique_loops": 50,
           "false_loops": 0,
-          "seconds": 12.99,
+          "seconds": 7.51,
           "method_summary": {
             "keyframes": 21,
             "coverage_keyframes": 9,
@@ -1139,7 +1139,7 @@
             "loops": 50,
             "pose_graph_solves": 18,
             "frames": 400,
-            "cpu_seconds": 26.236
+            "cpu_seconds": 12.438
           }
         },
         "heldout_wood_contact_loss_2": {
@@ -1147,7 +1147,7 @@
           "translation_mae_mm": 0.06775,
           "unique_loops": 7,
           "false_loops": 0,
-          "seconds": 7.57,
+          "seconds": 6.13,
           "method_summary": {
             "keyframes": 15,
             "coverage_keyframes": 10,
@@ -1157,7 +1157,7 @@
             "loops": 7,
             "pose_graph_solves": 6,
             "frames": 400,
-            "cpu_seconds": 5.337
+            "cpu_seconds": 4.779
           }
         },
         "heldout_wood_contact_loss_3": {
@@ -1165,7 +1165,7 @@
           "translation_mae_mm": 0.04255,
           "unique_loops": 13,
           "false_loops": 0,
-          "seconds": 6.66,
+          "seconds": 6.41,
           "method_summary": {
             "keyframes": 12,
             "coverage_keyframes": 9,
@@ -1175,7 +1175,7 @@
             "loops": 13,
             "pose_graph_solves": 8,
             "frames": 400,
-            "cpu_seconds": 4.391
+            "cpu_seconds": 4.119
           }
         },
         "heldout_rock_contact_loss_2": {
@@ -1183,7 +1183,7 @@
           "translation_mae_mm": 0.03101,
           "unique_loops": 18,
           "false_loops": 0,
-          "seconds": 7.11,
+          "seconds": 6.03,
           "method_summary": {
             "keyframes": 13,
             "coverage_keyframes": 8,
@@ -1193,7 +1193,7 @@
             "loops": 18,
             "pose_graph_solves": 10,
             "frames": 400,
-            "cpu_seconds": 4.708
+            "cpu_seconds": 4.185
           }
         },
         "heldout_rock_contact_loss_3": {
@@ -1201,7 +1201,7 @@
           "translation_mae_mm": 0.10265,
           "unique_loops": 19,
           "false_loops": 0,
-          "seconds": 66.23,
+          "seconds": 11.17,
           "method_summary": {
             "keyframes": 68,
             "coverage_keyframes": 17,
@@ -1211,7 +1211,7 @@
             "loops": 19,
             "pose_graph_solves": 17,
             "frames": 400,
-            "cpu_seconds": 243.817
+            "cpu_seconds": 37.801
           }
         }
       }

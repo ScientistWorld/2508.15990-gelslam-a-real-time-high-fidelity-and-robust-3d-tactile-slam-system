@@ -12,12 +12,12 @@
   "long_horizon_tracking:translation_mae_mm": 0.21155748304418814,
   "long_horizon_tracking:rotation_p95_deg": 4.384935120439931,
   "long_horizon_tracking:translation_p95_mm": 1.1364350153215477,
-  "long_horizon_tracking:false_loop_rate": 0.0,
+  "long_horizon_tracking:false_loop_excess": 0.0,
   "relocalization_after_contact_loss:rotation_mae_deg": 6.5518035853002585,
   "relocalization_after_contact_loss:translation_mae_mm": 1.1964557016367203,
   "relocalization_after_contact_loss:rotation_p95_deg": 24.08616119758829,
   "relocalization_after_contact_loss:translation_p95_mm": 4.2116888625260165,
-  "relocalization_after_contact_loss:false_loop_rate": 0.0
+  "relocalization_after_contact_loss:false_loop_excess": 0.0
  },
  "rows": [
   {
@@ -30,14 +30,14 @@
      "translation_mae_mm": 0.03833889689704513,
      "rotation_p95_deg": 2.392397415575904,
      "translation_p95_mm": 0.18357590818124092,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 1.5726194972069776,
      "translation_mae_mm": 0.2873513499131981,
      "rotation_p95_deg": 27.364724988084816,
      "translation_p95_mm": 3.7817734278726913,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -82,14 +82,14 @@
      "translation_mae_mm": 0.054158205071256765,
      "rotation_p95_deg": 2.4275848204047805,
      "translation_p95_mm": 0.31977303303713583,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 3.1910781082988104,
      "translation_mae_mm": 0.446330619924921,
      "rotation_p95_deg": 69.8079256847738,
      "translation_p95_mm": 7.07881804089741,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -134,14 +134,14 @@
      "translation_mae_mm": 0.054689345193116204,
      "rotation_p95_deg": 2.44202198400689,
      "translation_p95_mm": 0.3214457211364792,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 3.341675129059549,
      "translation_mae_mm": 0.48547089887599887,
      "rotation_p95_deg": 69.8079256847738,
      "translation_p95_mm": 7.07881804089741,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {},
@@ -157,14 +157,14 @@
      "translation_mae_mm": 0.03643914111972419,
      "rotation_p95_deg": 2.3738037260141005,
      "translation_p95_mm": 0.18010566479790005,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 17.242553106766813,
      "translation_mae_mm": 3.013330291816108,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 14.990936809893311,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -209,14 +209,14 @@
      "translation_mae_mm": 0.0899295111121339,
      "rotation_p95_deg": 3.511166889473886,
      "translation_p95_mm": 0.4436575478052613,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 17.26228661810064,
      "translation_mae_mm": 3.030431947073338,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 14.990936810391085,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -261,14 +261,14 @@
      "translation_mae_mm": 0.62042846415155,
      "rotation_p95_deg": 14.34559317202496,
      "translation_p95_mm": 3.3294521400670645,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 7.1504413894568515,
      "translation_mae_mm": 2.1079152428598684,
      "rotation_p95_deg": 37.18105250610163,
      "translation_p95_mm": 11.030203076936969,
-     "false_loop_rate": 0.0
+     "false_loop_excess": 0.0
     }
    },
    "paired": {
@@ -313,14 +313,14 @@
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     },
     "relocalization_after_contact_loss": {
      "rotation_mae_deg": 90.0,
      "translation_mae_mm": 30.0,
      "rotation_p95_deg": 90.0,
      "translation_p95_mm": 30.0,
-     "false_loop_rate": 1.0
+     "false_loop_excess": 0.98
     }
    },
    "paired": {

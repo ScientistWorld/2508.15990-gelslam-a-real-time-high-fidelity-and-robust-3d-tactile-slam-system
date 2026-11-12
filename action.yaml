@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Resume hardening audit (cached per-episode results kept; hybrid variant now uses paper sample count): variants, shortcuts, final reference rerun, train variants, summaries."
+notes: "Rescore after evaluator-only false-loop metric change: rerun reference via reproduce.sh, re-aggregate cached variant/shortcut results, rank summaries, validate."
