@@ -89,15 +89,15 @@ def main() -> None:
     out_prefix.parent.mkdir(parents=True, exist_ok=True)
     Path(str(out_prefix) + ".json").write_text(json.dumps({"cohort": cohort, "stds": {f"{k[0]}:{k[1]}": v for k, v in stds.items()},
                                                            "rows": rows}, indent=1))
-    lines = ["| method | status | rank gain | E1 rot MAE | E1 trans MAE | E1 rot p95 | E1 false loops | E2 rot MAE | E2 trans MAE | E2 rot p95 | E2 false loops |",
+    lines = ["| method | status | rank gain | E1 rot MAE | E1 trans MAE | E1 rot p95 | E1 false-loop excess | E2 rot MAE | E2 trans MAE | E2 rot p95 | E2 false-loop excess |",
              "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for r in rows:
         e1 = r["values"].get("long_horizon_tracking", {})
         e2 = r["values"].get("relocalization_after_contact_loss", {})
         fmt = lambda d, k: f"{d[k]:.4f}" if k in d else "-"
         lines.append(f"| {r['name']} | {r['status'][:60]} | {r['rank_gain']:+.3f} | {fmt(e1,'rotation_mae_deg')} | {fmt(e1,'translation_mae_mm')} | "
-                     f"{fmt(e1,'rotation_p95_deg')} | {fmt(e1,'false_loop_rate')} | {fmt(e2,'rotation_mae_deg')} | {fmt(e2,'translation_mae_mm')} | "
-                     f"{fmt(e2,'rotation_p95_deg')} | {fmt(e2,'false_loop_rate')} |")
+                     f"{fmt(e1,'rotation_p95_deg')} | {fmt(e1,'false_loop_excess')} | {fmt(e2,'rotation_mae_deg')} | {fmt(e2,'translation_mae_mm')} | "
+                     f"{fmt(e2,'rotation_p95_deg')} | {fmt(e2,'false_loop_excess')} |")
     lines.append("")
     lines.append("Paired per-episode differences vs reference (negative = better): mean ± SE, better/worse episodes")
     for r in rows:

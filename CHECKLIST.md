@@ -1,33 +1,23 @@
 # Reproduction Checklist
 
 ## Briefing
-
-- [x] `briefing/problem.md` documents the method-agnostic task
-- [x] `briefing/evaluation.md` documents metrics and protocol
-- [x] `briefing/method.md` documents GelSLAM's actual computational procedure
-- [x] `briefing/overview.md` summarizes the paper and scaled reproduction scope
+- [x] `briefing/problem.md`, `briefing/evaluation.md` describe the task, metrics and method contract without the paper's method
+- [x] `briefing/method.md` documents GelSLAM's computational steps as implemented
+- [x] `briefing/overview.md` summarises the paper and the scaled benchmark
 
 ## Scoring
+- [x] `scoring/reference.json`: two experiments, paper Table IV values, `_paper_context` for unscaled numbers
+- [x] `scoring/TARGETS.md`, `CONSTRAINTS.md`, `DIRECTION.md`, `EXPERIMENTS.md` match the hardened gym
+- [x] `scoring/scores.json`, `scores_train.json`, `scores_test.json` regenerated from the final code (reference + frozen baseline)
 
-- [x] `scoring/reference.json` records paper-anchored reference values
-- [x] `scoring/TARGETS.md` lists primary and constraint targets
-- [x] `scoring/CONSTRAINTS.md` lists benchmark constraints for future scientists
-- [x] `scoring/DIRECTION.md` scopes future research directions
-- [x] `scoring/EXPERIMENTS.md` explains experiment purpose without method details
-- [x] `scoring/scores.json` records reproduced run outputs
+## Code and scripts
+- [x] `method/gelslam_sim/`: NormalFlow port, tracking/keyframes/sessions, coverage set, SIFT-curvature + NormalFlow loop detection, LM pose graph
+- [x] Eval-owned frozen NormalFlow baseline in `eval/train/` and `eval/test/`; public copy in `baseline/`
+- [x] `scripts/evaluate_test.sh` (no arguments) runs every registered method on hidden inputs
+- [x] `scripts/run.sh` reproduces the reference end to end; `redteam/hardening/audit.sh` reruns the audit
+- [x] `python validate.py` passes
 
-## Code And Scripts
-
-- [x] Method code implements GelSLAM-style tracking computational steps
-- [x] Full 6DoF tracking and reconstruction path is implemented for the scaled benchmark
-- [ ] Full 6DoF tracking and reconstruction path has been validated in the container
-- [x] NormalFlow baseline is available for the same synthetic benchmark
-- [x] Evaluation code reports all required metrics
-- [x] `scripts/run.sh` regenerates the benchmark, baseline, method outputs, and scores before validation
-
-## Documentation Integrity
-
-- [x] Synthetic benchmark is explicitly described as scaled substitute data
-- [x] Documentation states that the GelSLAM computational procedure must be preserved
-- [x] Benefit metrics and constraint metrics are both represented
-- [x] Paper Table II, Table IV, and Table VI values are captured where relevant
+## Integrity
+- [x] Test inputs/ground truth only in `eval/test/`, produced at test time
+- [x] Every scored number recomputed from raw outputs; failures get worst values
+- [x] Benefit metrics and a constraint metric (false-loop excess + gate) in both experiments

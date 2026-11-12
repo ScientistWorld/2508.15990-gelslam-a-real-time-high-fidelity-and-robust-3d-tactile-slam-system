@@ -68,5 +68,10 @@
 - Fixed the scoring metadata that caused validation attempt 1/3 to fail: `loop_closure_quality` now uses `loop_span_rotation_mae_deg` as its primary metric instead of the small-scale synthetic translation metric.
 - Re-ran `python validate.py --compare`; all scoring, split, method-separation, and portability checks pass.
 
+### [2026-11-12] - core_claim (hardening, iteration 11)
+- Rebuilt the gym so the reproduced method is the paper's GelSLAM: ported the released NormalFlow (Gauss-Newton, 3000 curvature samples, CCS/SCR failure detection) and GelSLAM's tracker, coverage set, SIFT-on-curvature + NormalFlow loop detection and LM pose graph; removed the earlier odometry-initialised loop fallback and other departures.
+- New synthetic GelSight-Mini-style simulator (four texture families, noisy gradients, Poisson heights); 40 held-out episodes rendered only inside `eval/test/` at test time; methods are run by the evaluator through `predict.json`; frozen eval-owned NormalFlow baseline; failed runs get worst values.
+- Held-out test: GelSLAM 1.439 deg / 0.142 mm vs NormalFlow 3.167 deg / 0.701 mm (continuous contact) and 2.150 deg vs 11.451 deg (contact loss), 659 loops, 0 false. Claim reproduced in the paper's direction; ablations NF-KF, GS-OnlySIFT and GS-OnlyNF behave as in the paper. See `HARDENING.md`.
+
 ## Stop Justification
 - Completed at milestone `core_claim`.

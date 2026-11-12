@@ -1,31 +1,31 @@
-| method | status | rank gain | E1 rot MAE | E1 trans MAE | E1 rot p95 | E1 false loops | E2 rot MAE | E2 trans MAE | E2 rot p95 | E2 false loops |
+| method | status | rank gain | E1 rot MAE | E1 trans MAE | E1 rot p95 | E1 false-loop excess | E2 rot MAE | E2 trans MAE | E2 rot p95 | E2 false-loop excess |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| sc_read_hidden_test | scored | +1.004 | 0.0000 | 0.0000 | 0.0000 | - | 0.0000 | 0.0000 | 0.0000 | - |
-| session_chain_dense | scored | +0.597 | 1.4803 | 0.1422 | 4.3192 | - | 1.4010 | 0.2961 | 4.1050 | - |
-| exhaustive_two_stage | scored | +0.004 | 1.4233 | 0.1418 | 4.2883 | - | 2.1158 | 0.3972 | 32.0507 | - |
-| loop_ccs_070 | scored | +0.002 | 1.4389 | 0.1420 | 4.2946 | - | 2.1273 | 0.3993 | 32.0507 | - |
-| gelslam_online | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | - | 2.1500 | 0.4011 | 32.0507 | - |
-| reference_seed1 | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | - | 2.1500 | 0.4011 | 32.0507 | - |
-| sc_baseline_replacement | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | - | 2.1500 | 0.4011 | 32.0507 | - |
-| sc_duplicate_loops | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | - | 2.1500 | 0.4011 | 32.0507 | - |
-| hybrid_local_loops | scored | -0.040 | 1.4195 | 0.1325 | 4.0092 | - | 1.7825 | 0.4906 | 28.3392 | - |
-| session_chain | scored | -0.059 | 1.4708 | 0.1422 | 4.1066 | - | 1.8354 | 0.5060 | 28.6231 | - |
-| sc_self_derived_loops | scored | -1.695 | 1.4390 | 0.1423 | 4.2946 | - | 2.1500 | 0.4011 | 32.0507 | - |
-| normalflow | scored | -1.964 | 3.1665 | 0.7007 | 14.6149 | - | 11.4511 | 2.8060 | 62.4027 | - |
-| nf_kf | scored | -2.190 | 2.0712 | 0.2620 | 6.4450 | - | 19.4876 | 3.0670 | 90.0000 | - |
-| only_nf_exhaustive | scored | -3.247 | 2.1113 | 0.2346 | 4.0759 | - | 19.4085 | 3.0273 | 90.0000 | - |
-| sc_constant | scored | -5.375 | 22.2543 | 2.9423 | 90.0000 | - | 21.7721 | 2.8191 | 90.0000 | - |
-| sc_forged_scores | scored | -5.375 | 22.2543 | 2.9423 | 90.0000 | - | 21.7721 | 2.8191 | 90.0000 | - |
-| sc_generator_replay | scored | -5.375 | 22.2543 | 2.9423 | 90.0000 | - | 21.7721 | 2.8191 | 90.0000 | - |
-| sc_gt_replacement | scored | -5.375 | 22.2543 | 2.9423 | 90.0000 | - | 21.7721 | 2.8191 | 90.0000 | - |
-| sc_labels_copy | scored | -7.224 | 28.3849 | 4.1320 | 90.0000 | - | 26.6180 | 3.6658 | 90.0000 | - |
-| only_sift | failed (false-loop constraint failed: 619/807 unique loop co | -115.663 | 90.0000 | 30.0000 | 90.0000 | - | 90.0000 | 30.0000 | 90.0000 | - |
-| sc_empty_predictions | failed (heldout_seed_continuous_0: poses.npy has shape (0, 4 | -115.663 | 90.0000 | 30.0000 | 90.0000 | - | 90.0000 | 30.0000 | 90.0000 | - |
-| sc_impossible_translation | failed (heldout_seed_continuous_0: pose translation outside  | -115.663 | 90.0000 | 30.0000 | 90.0000 | - | 90.0000 | 30.0000 | 90.0000 | - |
-| sc_invalid_spec | failed (invalid predict.json: 'command' must contain the {in | -115.663 | 90.0000 | 30.0000 | 90.0000 | - | 90.0000 | 30.0000 | 90.0000 | - |
-| sc_nan_loops | failed (false-loop constraint failed: 15995/16654 unique loo | -115.663 | 90.0000 | 30.0000 | 90.0000 | - | 90.0000 | 30.0000 | 90.0000 | - |
-| sc_nan_predictions | failed (heldout_seed_continuous_0: non-finite pose values) | -115.663 | 90.0000 | 30.0000 | 90.0000 | - | 90.0000 | 30.0000 | 90.0000 | - |
-| sc_orphan_artifacts | failed (artifacts without predict.json: the method cannot be | -115.663 | 90.0000 | 30.0000 | 90.0000 | - | 90.0000 | 30.0000 | 90.0000 | - |
+| sc_read_hidden_test | scored | +1.004 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
+| session_chain_dense | scored | +0.597 | 1.4803 | 0.1422 | 4.3192 | 0.0000 | 1.4010 | 0.2961 | 4.1050 | 0.0000 |
+| exhaustive_two_stage | scored | +0.004 | 1.4233 | 0.1418 | 4.2883 | 0.0000 | 2.1158 | 0.3972 | 32.0507 | 0.0000 |
+| loop_ccs_070 | scored | +0.002 | 1.4389 | 0.1420 | 4.2946 | 0.0000 | 2.1273 | 0.3993 | 32.0507 | 0.0000 |
+| gelslam_online | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | 0.0000 | 2.1500 | 0.4011 | 32.0507 | 0.0000 |
+| reference_seed1 | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | 0.0000 | 2.1500 | 0.4011 | 32.0507 | 0.0000 |
+| sc_baseline_replacement | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | 0.0000 | 2.1500 | 0.4011 | 32.0507 | 0.0000 |
+| sc_duplicate_loops | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | 0.0000 | 2.1500 | 0.4011 | 32.0507 | 0.0000 |
+| hybrid_local_loops | scored | -0.040 | 1.4195 | 0.1325 | 4.0092 | 0.0000 | 1.7825 | 0.4906 | 28.3392 | 0.0000 |
+| session_chain | scored | -0.059 | 1.4708 | 0.1422 | 4.1066 | 0.0000 | 1.8354 | 0.5060 | 28.6231 | 0.0000 |
+| sc_self_derived_loops | scored | -1.695 | 1.4390 | 0.1423 | 4.2946 | 0.0120 | 2.1500 | 0.4011 | 32.0507 | 0.0547 |
+| normalflow | scored | -1.964 | 3.1665 | 0.7007 | 14.6149 | 0.0000 | 11.4511 | 2.8060 | 62.4027 | 0.0000 |
+| nf_kf | scored | -2.190 | 2.0712 | 0.2620 | 6.4450 | 0.0000 | 19.4876 | 3.0670 | 90.0000 | 0.0000 |
+| only_nf_exhaustive | scored | -3.247 | 2.1113 | 0.2346 | 4.0759 | 0.0169 | 19.4085 | 3.0273 | 90.0000 | 0.0000 |
+| sc_constant | scored | -5.375 | 22.2543 | 2.9423 | 90.0000 | 0.0000 | 21.7721 | 2.8191 | 90.0000 | 0.0000 |
+| sc_forged_scores | scored | -5.375 | 22.2543 | 2.9423 | 90.0000 | 0.0000 | 21.7721 | 2.8191 | 90.0000 | 0.0000 |
+| sc_generator_replay | scored | -5.375 | 22.2543 | 2.9423 | 90.0000 | 0.0000 | 21.7721 | 2.8191 | 90.0000 | 0.0000 |
+| sc_gt_replacement | scored | -5.375 | 22.2543 | 2.9423 | 90.0000 | 0.0000 | 21.7721 | 2.8191 | 90.0000 | 0.0000 |
+| sc_labels_copy | scored | -7.224 | 28.3849 | 4.1320 | 90.0000 | 0.0000 | 26.6180 | 3.6658 | 90.0000 | 0.0000 |
+| only_sift | failed (false-loop constraint failed: 619/807 unique loop co | -115.663 | 90.0000 | 30.0000 | 90.0000 | 0.9800 | 90.0000 | 30.0000 | 90.0000 | 0.9800 |
+| sc_empty_predictions | failed (heldout_seed_continuous_0: poses.npy has shape (0, 4 | -115.663 | 90.0000 | 30.0000 | 90.0000 | 0.9800 | 90.0000 | 30.0000 | 90.0000 | 0.9800 |
+| sc_impossible_translation | failed (heldout_seed_continuous_0: pose translation outside  | -115.663 | 90.0000 | 30.0000 | 90.0000 | 0.9800 | 90.0000 | 30.0000 | 90.0000 | 0.9800 |
+| sc_invalid_spec | failed (invalid predict.json: 'command' must contain the {in | -115.663 | 90.0000 | 30.0000 | 90.0000 | 0.9800 | 90.0000 | 30.0000 | 90.0000 | 0.9800 |
+| sc_nan_loops | failed (false-loop constraint failed: 15995/16654 unique loo | -115.663 | 90.0000 | 30.0000 | 90.0000 | 0.9800 | 90.0000 | 30.0000 | 90.0000 | 0.9800 |
+| sc_nan_predictions | failed (heldout_seed_continuous_0: non-finite pose values) | -115.663 | 90.0000 | 30.0000 | 90.0000 | 0.9800 | 90.0000 | 30.0000 | 90.0000 | 0.9800 |
+| sc_orphan_artifacts | failed (artifacts without predict.json: the method cannot be | -115.663 | 90.0000 | 30.0000 | 90.0000 | 0.9800 | 90.0000 | 30.0000 | 90.0000 | 0.9800 |
 
 Paired per-episode differences vs reference (negative = better): mean ± SE, better/worse episodes
 - sc_read_hidden_test: long_-rot -1.4390±0.8611 (24/0); long_-tra -0.1423±0.0832 (24/0); reloc-rot -2.1500±1.1909 (16/0); reloc-tra -0.4011±0.2468 (16/0)

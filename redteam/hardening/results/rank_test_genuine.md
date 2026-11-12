@@ -1,16 +1,16 @@
-| method | status | rank gain | E1 rot MAE | E1 trans MAE | E1 rot p95 | E1 false loops | E2 rot MAE | E2 trans MAE | E2 rot p95 | E2 false loops |
+| method | status | rank gain | E1 rot MAE | E1 trans MAE | E1 rot p95 | E1 false-loop excess | E2 rot MAE | E2 trans MAE | E2 rot p95 | E2 false-loop excess |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| session_chain_dense | scored | +0.557 | 1.4803 | 0.1422 | 4.3192 | - | 1.4010 | 0.2961 | 4.1050 | - |
-| hybrid_local_loops | scored | +0.053 | 1.4195 | 0.1325 | 4.0092 | - | 1.7825 | 0.4906 | 28.3392 | - |
-| exhaustive_two_stage | scored | +0.024 | 1.4233 | 0.1418 | 4.2883 | - | 2.1158 | 0.3972 | 32.0507 | - |
-| loop_ccs_070 | scored | +0.006 | 1.4389 | 0.1420 | 4.2946 | - | 2.1273 | 0.3993 | 32.0507 | - |
-| gelslam_online | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | - | 2.1500 | 0.4011 | 32.0507 | - |
-| reference_seed1 | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | - | 2.1500 | 0.4011 | 32.0507 | - |
-| session_chain | scored | -0.067 | 1.4708 | 0.1422 | 4.1066 | - | 1.8354 | 0.5060 | 28.6231 | - |
-| nf_kf | scored | -3.882 | 2.0712 | 0.2620 | 6.4450 | - | 19.4876 | 3.0670 | 90.0000 | - |
-| only_nf_exhaustive | scored | -4.484 | 2.1113 | 0.2346 | 4.0759 | - | 19.4085 | 3.0273 | 90.0000 | - |
-| normalflow | scored | -7.161 | 3.1665 | 0.7007 | 14.6149 | - | 11.4511 | 2.8060 | 62.4027 | - |
-| only_sift | failed (false-loop constraint failed: 619/807 unique loop co | -293.807 | 90.0000 | 30.0000 | 90.0000 | - | 90.0000 | 30.0000 | 90.0000 | - |
+| session_chain_dense | scored | +0.557 | 1.4803 | 0.1422 | 4.3192 | 0.0000 | 1.4010 | 0.2961 | 4.1050 | 0.0000 |
+| hybrid_local_loops | scored | +0.053 | 1.4195 | 0.1325 | 4.0092 | 0.0000 | 1.7825 | 0.4906 | 28.3392 | 0.0000 |
+| exhaustive_two_stage | scored | +0.024 | 1.4233 | 0.1418 | 4.2883 | 0.0000 | 2.1158 | 0.3972 | 32.0507 | 0.0000 |
+| loop_ccs_070 | scored | +0.006 | 1.4389 | 0.1420 | 4.2946 | 0.0000 | 2.1273 | 0.3993 | 32.0507 | 0.0000 |
+| gelslam_online | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | 0.0000 | 2.1500 | 0.4011 | 32.0507 | 0.0000 |
+| reference_seed1 | scored | +0.000 | 1.4390 | 0.1423 | 4.2946 | 0.0000 | 2.1500 | 0.4011 | 32.0507 | 0.0000 |
+| session_chain | scored | -0.067 | 1.4708 | 0.1422 | 4.1066 | 0.0000 | 1.8354 | 0.5060 | 28.6231 | 0.0000 |
+| nf_kf | scored | -3.882 | 2.0712 | 0.2620 | 6.4450 | 0.0000 | 19.4876 | 3.0670 | 90.0000 | 0.0000 |
+| only_nf_exhaustive | scored | -4.484 | 2.1113 | 0.2346 | 4.0759 | 0.0169 | 19.4085 | 3.0273 | 90.0000 | 0.0000 |
+| normalflow | scored | -7.161 | 3.1665 | 0.7007 | 14.6149 | 0.0000 | 11.4511 | 2.8060 | 62.4027 | 0.0000 |
+| only_sift | failed (false-loop constraint failed: 619/807 unique loop co | -293.807 | 90.0000 | 30.0000 | 90.0000 | 0.9800 | 90.0000 | 30.0000 | 90.0000 | 0.9800 |
 
 Paired per-episode differences vs reference (negative = better): mean ± SE, better/worse episodes
 - session_chain_dense: long_-rot +0.0413±0.0601 (17/7); long_-tra -0.0001±0.0045 (16/8); reloc-rot -0.7490±1.0624 (10/6); reloc-tra -0.1050±0.1634 (9/7)

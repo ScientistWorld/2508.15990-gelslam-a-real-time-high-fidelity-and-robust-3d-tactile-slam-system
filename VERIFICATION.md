@@ -1,3 +1,5 @@
+> **Superseded.** This report describes the pre-hardening gym (single 144-frame stream, scaled_gelslam). The current gym, its verification runs and audit are documented in `HARDENING.md`.
+
 # Verification Report
 
 ## Initial Assessment
