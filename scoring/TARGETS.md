@@ -1,14 +1,14 @@
 # Evaluation Targets
 
-Every target corresponds to an experiment and metric in `scoring/reference.json` and is emitted for every method by `scripts/evaluate_test.sh` (ranked, 40 held-out episodes) and `scripts/evaluate_train.sh` (8 public episodes). The benchmark is a scaled synthetic substitute for the paper's real GelSight Mini data; reference.json keeps the paper's Table IV numbers, which are on a different scale.
+Every target corresponds to an experiment and metric in `scoring/reference.json` and is emitted for every method by `scripts/evaluate_test.sh` (ranked, 40 held-out episodes) and `scripts/evaluate_train.sh` (8 public episodes). The benchmark is a scaled synthetic substitute for the paper's real GelSight Mini data; reference.json keeps the paper's Table IV numbers under `_paper_results` (different scale) and lists the reproduced reference and baseline test scores under `results`.
 
 ## Primary: long_horizon_tracking (weight 0.6)
 
 Continuous-contact tracking over 400-frame episodes (paper Table IV).
 
-- **Primary metric:** `rotation_mae_deg` (lower is better, coefficient 1.0)
+- `rotation_mae_deg` (lower is better, coefficient 1.0)
 - `translation_mae_mm` (lower, 1.0)
-- `rotation_p95_deg` (lower, 0.4)
+- **Primary metric:** `rotation_p95_deg` (lower, 0.4); the headline label, since per-episode means are heavy-tailed (a rare unrecovered tracking loss dominates an episode). The rank uses every metric with its coefficient.
 - `translation_p95_mm` (lower, 0.4)
 - Constraint: `false_loop_excess` (lower, 0.5)
 

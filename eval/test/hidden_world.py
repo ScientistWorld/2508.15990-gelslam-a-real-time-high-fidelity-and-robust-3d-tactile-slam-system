@@ -19,8 +19,9 @@ distortion and per-pixel noise. Units: pixels on the 160x120 sensor grid
 (0.1268 mm per pixel, i.e. a 20.3 x 15.2 mm GelSight Mini resized by 1/2);
 ground-truth poses are returned in millimetres.
 
-This file is the public (training-side) simulator. Episode configurations for
-training are listed in data/train_episodes.json.
+Held-out copy of the simulator used by the hidden test. It only renders
+inputs and ground truth; method predictions (the poses.npy / loops.json outputs
+of every checkpoints/*/predict.json command) are read and scored by harness.py.
 """
 
 from __future__ import annotations
