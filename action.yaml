@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Resumable hardening audit: variants+brute force and 15 shortcuts on the 40-episode hidden test, final reference rerun from final code, train variants, rank/paired summaries (resubmit if preempted)."
+notes: "Resume hardening audit (cached per-episode results kept; hybrid variant now uses paper sample count): variants, shortcuts, final reference rerun, train variants, summaries."
