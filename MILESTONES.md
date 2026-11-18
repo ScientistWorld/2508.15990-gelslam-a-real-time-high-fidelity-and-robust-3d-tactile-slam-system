@@ -94,4 +94,4 @@
 - Exhaustive two-stage search still outranks the reference (+0.00250). More paired episodes resolved uncertainty but did not fix per-instance scan scale. This requested hardening condition remains unmet; the reproduction milestone stays `core_claim`.
 
 ## Stop Justification
-- The scaled tracking core claim and paired accuracy headroom are verified. Physical-sensor reconstruction, real-time performance, and the exhaustive-search scale requirement remain unestablished. This is a partial hardening result, not a full reproduction or a claim that every requested condition passed.
+- Completed at milestone `core_claim`.
