@@ -18,7 +18,7 @@ Per-frame errors are capped at 90 degrees and 30 mm. A run fails, and receives t
 ## Protocol
 
 - `scripts/evaluate_train.sh` (and `scripts/evaluate.sh`) render the 24 public training episodes listed in `data/train_episodes.json` (12 per experiment) with `data/tactile_sim.py`, run every registered method, and write `scoring/scores_train.json` (`scoring/scores.json`).
-- `scripts/evaluate_test.sh` takes no arguments. It renders 96 held-out episodes (48 continuous, 48 contact-loss; same families and parameter ranges, unpublished seeds) inside `eval/test/`, runs every registered method on them, and writes `scoring/scores_test.json`. Ground truth never leaves the evaluator process. This is the ranked score.
+- `scripts/evaluate_test.sh` takes no arguments. It renders 384 held-out episodes (192 continuous, 192 contact-loss; same families and parameter ranges, unpublished seeds) inside `eval/test/`, runs every registered method on them, and writes `scoring/scores_test.json`. Ground truth never leaves the evaluator process. This is the ranked score.
 - Both evaluators also score the eval-owned NormalFlow frame-to-frame baseline under the name `normalflow`.
 - Rendering and scoring are deterministic; every method sees identical inputs.
 

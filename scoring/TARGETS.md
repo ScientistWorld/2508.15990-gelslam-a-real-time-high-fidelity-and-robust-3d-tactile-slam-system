@@ -1,6 +1,6 @@
 # Evaluation Targets
 
-Every target corresponds to an experiment and metric in `scoring/reference.json` and is emitted for every method by `scripts/evaluate_test.sh` (ranked, 96 held-out episodes) and `scripts/evaluate_train.sh` (24 public episodes). The benchmark is a scaled synthetic substitute for the paper's real GelSight Mini data; reference.json keeps the paper's Table IV numbers under `_paper_results` (different scale) and lists the reproduced reference and baseline test scores under `results`.
+Every target corresponds to an experiment and metric in `scoring/reference.json` and is emitted for every method by `scripts/evaluate_test.sh` (ranked, 384 held-out episodes) and `scripts/evaluate_train.sh` (24 public episodes). The benchmark is a scaled synthetic substitute for the paper's real GelSight Mini data; reference.json keeps the paper's Table IV numbers under `_paper_results` (different scale) and lists the reproduced reference and baseline test scores under `results`.
 
 ## Primary: long_horizon_tracking (weight 0.6)
 

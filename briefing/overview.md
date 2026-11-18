@@ -7,7 +7,7 @@
 
 ## This Workspace
 
-A scaled synthetic substitute for the paper's tracking experiments. A simulated GelSight-Mini-style sensor slides over textured convex objects from four texture families. Two experiments are scored on 96 held-out episodes that exist only inside `eval/test/`: long-horizon tracking with continuous contact (paper Table IV) and tracking with periodic contact loss (paper Fig. 11). The frame-to-frame NormalFlow baseline is owned by the evaluator. Methods are run by the evaluator through a `predict.json` command, so the held-out inputs and ground truth never appear on disk before the test.
+A scaled synthetic substitute for the paper's tracking experiments. A simulated GelSight-Mini-style sensor slides over textured convex objects from four texture families. Two experiments are scored on 384 held-out episodes that exist only inside `eval/test/`: long-horizon tracking with continuous contact (paper Table IV) and tracking with periodic contact loss (paper Fig. 11). The frame-to-frame NormalFlow baseline is owned by the evaluator. Methods are run by the evaluator through a `predict.json` command, so the held-out inputs and ground truth never appear on disk before the test.
 
 ## Key Results From the Paper
 

@@ -340,14 +340,16 @@ def resume_fingerprint(root: Path, slice_name: str) -> str:
         digest.update((package + importlib.metadata.version(package)).encode())
     digest.update(sys.version.encode())
     paths = []
+    excluded = {"downloads", "results", "hardening_results", "scratch", "audit_raw", "resume", "__pycache__"}
     for directory in (root / "method", root / "data", root / "redteam" / "hardening", root / "eval" / slice_name):
-        for path in directory.rglob("*"):
-            relative = path.relative_to(directory)
-            if any(part in {"downloads", "results", "hardening_results", "scratch", "audit_raw", "resume", "__pycache__"}
-                   for part in relative.parts):
-                continue
-            if path.is_file() and path.suffix in {".py", ".json", ".sh"}:
-                paths.append(path)
+        for parent, dirs, files in os.walk(directory):
+            # Prune before descending into downloaded data and private raw
+            # checkpoints. Reading their directory trees does no useful work.
+            dirs[:] = [name for name in dirs if name not in excluded]
+            for name in files:
+                path = Path(parent) / name
+                if path.suffix in {".py", ".json", ".sh"} and path.is_file():
+                    paths.append(path)
     for path in sorted(paths):
         digest.update(path.relative_to(root).as_posix().encode())
         digest.update(path.read_bytes())

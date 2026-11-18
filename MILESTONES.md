@@ -79,3 +79,7 @@
 
 ## Stop Justification
 - Completed at milestone `core_claim`.
+
+### [2026-11-18] - core_claim (paired scale check)
+- Completed the combined hardening audit with all protocol checks passing and exact independent reference/baseline agreement. Both experiments reproduce the paper's tracking direction and loop-safety constraint.
+- Enlarging the same paired distribution from 96 to 384 episodes because the honest improvement's aggregate confidence interval still crosses zero. Exhaustive two-stage matching remains an efficiency limitation.

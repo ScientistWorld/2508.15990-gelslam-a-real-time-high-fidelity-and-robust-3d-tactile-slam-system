@@ -1,5 +1,5 @@
 #!/bin/bash
-# This validation job applies and checks all hardening changes together.
+# Finish the enlarged paired headroom audit, then the independent reference.
 set -euo pipefail
 cd /home/user
-bash redteam/hardening/audit_review.sh
+bash redteam/hardening/audit_scale.sh

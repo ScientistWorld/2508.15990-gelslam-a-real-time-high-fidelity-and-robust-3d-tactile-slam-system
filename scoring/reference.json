@@ -1,7 +1,7 @@
 {
   "experiments": {
     "long_horizon_tracking": {
-      "description": "Long-horizon 6DoF tactile tracking with continuous contact (paper Section V, Table IV). Held-out test: 48 synthetic GelSight-Mini-style episodes of 400 frames over four texture families, rendered only inside eval/test/. The scaled gym reference and frozen baseline are in results; unchanged real-data paper numbers are under _paper_results.",
+      "description": "Long-horizon 6DoF tactile tracking with continuous contact (paper Section V, Table IV). Held-out test: 192 synthetic GelSight-Mini-style episodes of 400 frames over four texture families, rendered only inside eval/test/. The scaled gym reference and frozen baseline are in results; unchanged real-data paper numbers are under _paper_results.",
       "weight": 0.6,
       "primary_metric": "rotation_p95_deg",
       "metrics": {
@@ -62,11 +62,11 @@
           "false_loop_excess": 0.0
         }
       },
-      "results_note": "results: reproduced reference and eval-owned baseline on the final 96-episode held-out test, regenerated end to end in isolation; same values as scoring/scores_test.json.",
+      "results_note": "results: reproduced reference and eval-owned baseline on the final 384-episode held-out test, regenerated end to end in isolation; same values as scoring/scores_test.json.",
       "primary_metric_note": "Primary label is the 95th-percentile rotation error: per-episode mean errors are heavy-tailed (a rare tracking loss that is never relocalised costs ~20 deg on one episode), so the tail metric is the stable headline across slices. Ranking uses every metric with the coefficients below; MAE keeps the largest coefficient."
     },
     "relocalization_after_contact_loss": {
-      "description": "Tracking after contact loss (paper Section V-E, Fig. 11: 25 frames removed after every 100 kept frames). Held-out test: 48 synthetic episodes of 400 kept frames over four texture families. Scaled gym measurements are under results; unchanged paper context is under _paper_results.",
+      "description": "Tracking after contact loss (paper Section V-E, Fig. 11: 25 frames removed after every 100 kept frames). Held-out test: 192 synthetic episodes of 400 kept frames over four texture families. Scaled gym measurements are under results; unchanged paper context is under _paper_results.",
       "weight": 0.4,
       "primary_metric": "rotation_mae_deg",
       "metrics": {
@@ -125,7 +125,7 @@
           "false_loop_excess": 0.0
         }
       },
-      "results_note": "results: reproduced reference and eval-owned baseline on the final 96-episode held-out test, regenerated end to end in isolation; same values as scoring/scores_test.json."
+      "results_note": "results: reproduced reference and eval-owned baseline on the final 384-episode held-out test, regenerated end to end in isolation; same values as scoring/scores_test.json."
     }
   },
   "_paper_context": {

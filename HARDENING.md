@@ -1,6 +1,6 @@
 # Hardening following REVIEW.md
 
-Validation is pending in the single combined CPU job. Historical before-values and fixes are recorded in [the preceding report](redteam/hardening/results/HARDENING_iteration11.md); the current iteration supersedes its open filesystem-access issue, scalar cache, and wall-clock timeouts.
+The combined job `384d3d42-aab` completed successfully. Historical before-values and fixes are recorded in [the preceding report](redteam/hardening/results/HARDENING_iteration11.md); the current iteration supersedes its open filesystem-access issue, scalar cache, and wall-clock timeouts. The completed 96-episode audit is preserved in [measurements](eval/test/hardening_results/audit96_measurements.md). A final enlargement to 384 episodes is pending because that audit did not resolve aggregate headroom beyond paired uncertainty.
 
 Changes applied together:
 
@@ -15,3 +15,9 @@ No paper training or tracking procedure was changed in the reference. Both exper
 Run: `bash redteam/hardening/audit.sh`. Scientific computation runs only in a submitted job.
 
 The first combined job was cancelled after six scheduler preemptions repeatedly restarted its completed calculations. The resubmission adds atomic private raw-output checkpoints, keyed by source, runtime, method artifacts and episode configuration. Recovery revalidates and rescores raw poses/relations against freshly rendered truth, and restores no metric or success verdict. Normal no-argument evaluation uses no checkpoint cache. Separate checkpoint namespaces preserve the independent final reference run. Scientific settings are unchanged.
+
+Completed checks: all filesystem, child-CPU, invalid-output, failure-matrix and raw-rescoring contracts passed. The independent reference and frozen baseline exactly matched the paired cohort (maximum difference 0 across every scored metric). Reference seeds 0 and 1 also matched exactly. The reference beats the baseline on both experiments: 0.5540 deg / 0.05170 mm versus 3.1564 deg / 0.69988 mm in continuous contact, and 1.6913 deg / 0.22309 mm versus 9.0191 deg / 2.27361 mm after contact loss. All 13 invalid or prohibited shortcut entries receive the full worst-value matrix; the three identity-fallback shortcuts lose substantially.
+
+The new `hybrid_dense_loops` variant improves all eight error metrics, with gain +0.03922 in the full audit cohort (+0.22089 among honest methods), but its paired whole-episode bootstrap 95% interval is [-0.00566, +0.23545]. The next job expands the same parameter distribution to 384 independent episodes, without changing the reference, coefficients or experiment weights. The 96 unchanged inputs reuse private raw predictions only after source-provenance checks; every metric is recomputed from those predictions and freshly rendered truth. Remaining inputs execute each method afresh. The final reference uses its separate independent namespace.
+
+The NormalFlow-only exhaustive search loses (-0.78886). Exhaustive two-stage matching still gains +0.02188 by retaining all keyframes. The test does not yet establish the coverage set's efficiency advantage; this remains an explicit limitation, not a closed shortcut. No claim that the hardening is complete is made by these interim measurements.

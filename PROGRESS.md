@@ -2,6 +2,15 @@
 
 ## 2026-11-18: final hardening after review
 
+Job `384d3d42-aab` finished with exit code 0. All protocol checks passed and the
+independent final reference and baseline matched their paired-cohort results
+exactly. The stronger revisit-registration variant improves all error metrics,
+but its paired aggregate 95% interval still includes zero on 96 episodes.
+The final scale check therefore expands to 384 independent episodes, retaining
+the same scientific settings and weights. Old raw predictions are rescored;
+new inputs run inference. Exhaustive two-stage matching's small positive gain
+remains an explicitly unresolved efficiency limitation.
+
 Prepared one combined CPU validation job after reading the paper, REDTEAM.md and
 REVIEW.md. The fixes replace elapsed-time limits with a fixed-thread CPU budget,
 restrict method filesystem access to public assets and its current input/output,
