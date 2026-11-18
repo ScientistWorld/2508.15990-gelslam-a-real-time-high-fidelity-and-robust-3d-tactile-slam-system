@@ -237,3 +237,6 @@ redteam/hardening/results/final_rerun_complete.txt
 # Evaluator-private transient inputs and paired audit arrays
 eval/*/scratch/
 eval/*/audit_raw/
+
+# Private raw-output checkpoints for scheduler preemption recovery
+eval/*/resume/

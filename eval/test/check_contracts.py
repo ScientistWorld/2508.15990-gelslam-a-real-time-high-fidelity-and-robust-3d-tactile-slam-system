@@ -83,6 +83,42 @@ importlib.import_module("method.gelslam_sim.run")
         assert all(set(m)==set(harness.METRICS) and m==harness.WORST for m in failure.values())
         # The old untrusted scalar cache has no read path.
         assert not hasattr(harness,'_cache_load')
+
+        # Recovery must avoid rerunning a completed command while recomputing
+        # every metric from raw predictions against the current private truth.
+        fixture = work / "recovery_fixture"
+        registration = fixture / "checkpoints" / "candidate"
+        registration.mkdir(parents=True)
+        (registration / "predict.json").write_text(json.dumps({"command": ["dummy", "{input}", "{output}"]}))
+        truth = np.tile(np.eye(4), (3, 1, 1))
+        calls = []
+        def command(method, inp, out, root, log):
+            calls.append(method["name"])
+            np.save(out / "poses.npy", np.tile(np.eye(4), (3, 1, 1)))
+            return {"seconds": 0.0, "cpu_seconds": 0.0}
+        original = harness.run_command
+        harness.run_command = command
+        def recovery():
+            return harness.evaluate("test", [{"name": "tiny", "contact_loss": False}],
+                lambda ep: {"poses_mm": truth, "gradients": None, "heights": None,
+                            "contact_masks": None, "mm_per_pixel": 1.0},
+                lambda data, path: path.touch(), lambda *args: np.tile(np.eye(4), (3, 1, 1)),
+                fixture / "scores.json", fixture, resume_dir=fixture / "eval/test/resume/unit")
+        try:
+            first = recovery()
+            truth[1:, 0, 3] = 0.3
+            second = recovery()
+            assert calls == ["candidate"], "completed raw prediction was executed twice"
+            exp = "long_horizon_tracking"
+            assert first["results"]["candidate"][exp]["translation_mae_mm"] == 0.0
+            assert second["results"]["candidate"][exp]["translation_mae_mm"] > 0.0, "cached scalar trusted"
+            source = fixture / "method"
+            source.mkdir()
+            (source / "algorithm.py").write_text("changed = True\n")
+            recovery()
+            assert calls == ["candidate", "candidate"], "changed source restored stale predictions"
+        finally:
+            harness.run_command = original
     print('Evaluation integrity contracts passed', flush=True)
 
 

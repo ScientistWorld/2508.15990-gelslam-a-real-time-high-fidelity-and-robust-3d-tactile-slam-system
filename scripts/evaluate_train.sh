@@ -11,4 +11,4 @@ cd /home/user
 export PYTHONPATH="/home/user:${PYTHONPATH:-}"
 mkdir -p scoring
 
-python eval/train/evaluate_train.py --output scoring/scores_train.json
+python eval/train/evaluate_train.py --output scoring/scores_train.json "$@"

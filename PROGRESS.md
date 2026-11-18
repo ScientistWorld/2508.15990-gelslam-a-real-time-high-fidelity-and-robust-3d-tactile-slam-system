@@ -12,6 +12,12 @@ whole-episode uncertainty, then reruns only the reference and frozen baseline to
 produce the final official scores. Results are pending; HARDENING.md will record
 the measured before/after comparisons and remaining limitations.
 
+The initial combined job `6300b902-118` progressed normally but was preempted six
+times, repeatedly losing completed work. It was cancelled to add atomic private
+raw-prediction checkpoints. The same audit is resubmitted with recovery; metrics
+are always recomputed and the final reference has an independent checkpoint
+namespace. No scientific settings or reference algorithm changed.
+
 ## What Works
 
 2026-06-04 fidelity reset: an independent method audit found that the previous

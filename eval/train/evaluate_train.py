@@ -39,6 +39,7 @@ def main() -> None:
     parser.add_argument("--output", default=None)
     parser.add_argument("--only", nargs="*", default=None, help="restrict to these episode names")
     parser.add_argument("--audit-dir", default=None, help="private directory for evaluator-generated paired diagnostics")
+    parser.add_argument("--resume-dir", default=None, help="private raw-output checkpoints for resuming preempted jobs; metrics are recomputed")
     args = parser.parse_args()
     root = Path(args.root).resolve()
     episodes = tactile_sim.load_episode_configs(Path(args.episodes) if args.episodes else root / "data" / "train_episodes.json")
@@ -55,6 +56,7 @@ def main() -> None:
         root,
         keep_outputs=True,
         audit_dir=Path(args.audit_dir) if args.audit_dir else None,
+        resume_dir=Path(args.resume_dir) if args.resume_dir else None,
     )
 
 

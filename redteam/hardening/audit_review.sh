@@ -40,17 +40,17 @@ p=Path('checkpoints/sc_orphan');p.mkdir();(p/'poses.npy').touch()
 p=Path('checkpoints/sc_invalid');p.mkdir();(p/'predict.json').write_text('{}')
 PY
 # Every candidate sees the exact same rendered observations. Methods run sequentially.
-python eval/test/evaluate_test.py --output "$RES/after_cohort_test.json" --audit-dir eval/test/audit_raw/cohort
+python eval/test/evaluate_test.py --output "$RES/after_cohort_test.json" --audit-dir eval/test/audit_raw/cohort --resume-dir eval/test/resume/cohort
 # Training needs only honest variants; unchanged shortcuts need no training replay.
 find checkpoints -maxdepth 1 -type d -name 'sc_*' -exec rm -rf {} +
-python eval/train/evaluate_train.py --output eval/train/hardening_results/after_cohort_train.json --audit-dir eval/train/audit_raw/cohort
+python eval/train/evaluate_train.py --output eval/train/hardening_results/after_cohort_train.json --audit-dir eval/train/audit_raw/cohort --resume-dir eval/train/resume/cohort
 # Reference and baseline rerun end to end with no other candidate registered or running.
 rm -rf checkpoints/*
-bash scripts/method.sh
+bash scripts/method.sh --resume-dir eval/train/resume/reference
 # method.sh already writes scores.json on the public episodes. The new train score is
 # produced by its official entry point too, never copied from an audit cohort.
-bash scripts/evaluate_train.sh
-bash scripts/evaluate_test.sh
+bash scripts/evaluate_train.sh --resume-dir eval/train/resume/reference
+bash scripts/evaluate_test.sh --resume-dir eval/test/resume/reference
 cp scoring/scores_test.json "$RES/after_reference_test.json"
 cp scoring/scores_train.json eval/train/hardening_results/after_reference_train.json
 python redteam/hardening/summarize_review.py

@@ -22,6 +22,8 @@ experiment.
 from __future__ import annotations
 
 import json
+import hashlib
+import importlib.metadata
 import os
 import re
 import shutil
@@ -331,6 +333,66 @@ def save_audit_errors(directory: Path, name: str, episode: str, row: dict) -> No
                         loops_unique=row["loops_unique"], loops_false=row["loops_false"])
 
 
+def resume_fingerprint(root: Path, slice_name: str) -> str:
+    """Invalidate raw-output checkpoints when source, data, or runtime changes."""
+    digest = hashlib.sha256()
+    for package in ("numpy", "scipy", "opencv-python-headless"):
+        digest.update((package + importlib.metadata.version(package)).encode())
+    digest.update(sys.version.encode())
+    paths = []
+    for directory in (root / "method", root / "data", root / "redteam" / "hardening", root / "eval" / slice_name):
+        for path in directory.rglob("*"):
+            relative = path.relative_to(directory)
+            if any(part in {"downloads", "results", "hardening_results", "scratch", "audit_raw", "resume", "__pycache__"}
+                   for part in relative.parts):
+                continue
+            if path.is_file() and path.suffix in {".py", ".json", ".sh"}:
+                paths.append(path)
+    for path in sorted(paths):
+        digest.update(path.relative_to(root).as_posix().encode())
+        digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
+def resume_location(directory: Path | None, fingerprint: str, method: dict | None, episode: dict) -> Path | None:
+    if directory is None:
+        return None
+    digest = hashlib.sha256(fingerprint.encode())
+    digest.update(json.dumps(episode, sort_keys=True).encode())
+    name = "normalflow" if method is None else method["name"]
+    if method is not None:
+        digest.update(json.dumps(method["command"]).encode())
+        for path in sorted(method["dir"].rglob("*")):
+            relative = path.relative_to(method["dir"])
+            if any(part.endswith("_outputs") or part == "__pycache__" for part in relative.parts):
+                continue
+            if path.is_file():
+                digest.update(relative.as_posix().encode())
+                with path.open("rb") as stream:
+                    for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                        digest.update(chunk)
+    return directory / digest.hexdigest() / name / episode["name"]
+
+
+def save_resume_raw(destination: Path | None, poses: np.ndarray, timing: dict, source: Path | None = None) -> None:
+    """Save only raw predictions and evaluator-owned execution diagnostics, atomically.
+
+    These files are inaccessible to methods. No metric, validity verdict, or
+    ground truth is restored: poses and relations are validated and scored again.
+    """
+    if destination is None:
+        return
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="raw_", dir=destination.parent) as td:
+        stage = Path(td) / "complete"
+        stage.mkdir()
+        np.save(stage / "poses.npy", poses)
+        if source is not None and (source / "loops.json").exists():
+            shutil.copyfile(source / "loops.json", stage / "loops.json")
+        (stage / "execution.json").write_text(json.dumps(timing))
+        os.replace(stage, destination)
+
+
 def evaluate(
     slice_name: str,
     episodes: list[dict],
@@ -341,10 +403,16 @@ def evaluate(
     root: Path,
     keep_outputs: bool = False,
     audit_dir: Path | None = None,
+    resume_dir: Path | None = None,
 ) -> dict:
     configure_cpu()
     if audit_dir is not None and not _within(audit_dir.resolve(), root / "eval" / slice_name):
         raise ValueError("audit diagnostics must remain within their evaluator slice")
+    if resume_dir is not None:
+        resume_dir = resume_dir.resolve()
+        if not _within(resume_dir, root / "eval" / slice_name / "resume"):
+            raise ValueError("raw resume checkpoints must remain in the private evaluator resume directory")
+    fingerprint = resume_fingerprint(root, slice_name) if resume_dir is not None else ""
     checkpoints = root / "checkpoints"
     methods = discover_methods(checkpoints)
     metadata = {
@@ -379,9 +447,17 @@ def evaluate(
             if baseline_state["error"] is None and "normalflow" in pending:
                 try:
                     start = time.monotonic()
-                    poses = frozen_baseline(data["gradients"], data["heights"], data["contact_masks"], data["mm_per_pixel"])
+                    saved = resume_location(resume_dir, fingerprint, None, episode)
+                    if saved is not None and saved.is_dir():
+                        poses = load_poses(saved, n_frames)
+                        timing = json.loads((saved / "execution.json").read_text())
+                        print(f"[{slice_name}] restoring raw normalflow on {episode['name']}", flush=True)
+                    else:
+                        poses = frozen_baseline(data["gradients"], data["heights"], data["contact_masks"], data["mm_per_pixel"])
+                        timing = {"seconds": time.monotonic() - start}
+                        save_resume_raw(saved, poses, timing)
                     row = pose_errors(np.asarray(poses, dtype=np.float64), gt)
-                    row.update({"loops_unique": 0, "loops_false": 0, "seconds": time.monotonic() - start})
+                    row.update({"loops_unique": 0, "loops_false": 0, **timing})
                     baseline_state["episodes"][episode["name"]] = row
                     if audit_dir is not None:
                         save_audit_errors(audit_dir, "normalflow", episode["name"], row)
@@ -400,9 +476,24 @@ def evaluate(
                 out_dir.mkdir(parents=True, exist_ok=True)
                 print(f"[{slice_name}] {method['name']} on {episode['name']}", flush=True)
                 try:
-                    timing = run_command(method, input_path, out_dir, root, tmp / "logs" / f"{method['name']}.log")
-                    row = pose_errors(load_poses(out_dir, n_frames), gt)
-                    loops = score_loops(out_dir, gt)
+                    saved = resume_location(resume_dir, fingerprint, method, episode)
+                    restoring = saved is not None and saved.is_dir()
+                    if restoring:
+                        timing = json.loads((saved / "execution.json").read_text())
+                        raw_dir = saved
+                        print(f"[{slice_name}] restoring raw {method['name']} on {episode['name']}", flush=True)
+                    else:
+                        timing = run_command(method, input_path, out_dir, root, tmp / "logs" / f"{method['name']}.log")
+                        raw_dir = out_dir
+                    poses = load_poses(raw_dir, n_frames)
+                    row = pose_errors(poses, gt)
+                    loops = score_loops(raw_dir, gt)
+                    if not restoring:
+                        save_resume_raw(saved, poses, timing, raw_dir)
+                    elif keep_outputs:
+                        shutil.copyfile(raw_dir / "poses.npy", out_dir / "poses.npy")
+                        if (raw_dir / "loops.json").exists():
+                            shutil.copyfile(raw_dir / "loops.json", out_dir / "loops.json")
                     row.update({"loops_unique": loops["unique"], "loops_false": loops["false"], **timing})
                     state["episodes"][episode["name"]] = row
                     if audit_dir is not None:

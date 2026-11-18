@@ -517,6 +517,7 @@ def main() -> None:
     parser.add_argument("--root", default=str(HERE.parents[1]))
     parser.add_argument("--output", default=None)
     parser.add_argument("--audit-dir", default=None, help="private directory for evaluator-generated paired diagnostics")
+    parser.add_argument("--resume-dir", default=None, help="private raw-output checkpoints for resuming preempted jobs; metrics are recomputed")
     args = parser.parse_args()
     root = Path(args.root).resolve()
     output = Path(args.output) if args.output else root / "scoring" / "scores_test.json"
@@ -530,6 +531,7 @@ def main() -> None:
         root,
         keep_outputs=False,
         audit_dir=Path(args.audit_dir) if args.audit_dir else None,
+        resume_dir=Path(args.resume_dir) if args.resume_dir else None,
     )
 
 

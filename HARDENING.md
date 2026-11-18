@@ -13,3 +13,5 @@ Changes applied together:
 No paper training or tracking procedure was changed in the reference. Both experiment weights and all metric coefficients stay unchanged. Paper-reported numbers under `_paper_results` and `_paper_context` stay unchanged. Reconstruction and real-time throughput remain outside this scaled tracking contract.
 
 Run: `bash redteam/hardening/audit.sh`. Scientific computation runs only in a submitted job.
+
+The first combined job was cancelled after six scheduler preemptions repeatedly restarted its completed calculations. The resubmission adds atomic private raw-output checkpoints, keyed by source, runtime, method artifacts and episode configuration. Recovery revalidates and rescores raw poses/relations against freshly rendered truth, and restores no metric or success verdict. Normal no-argument evaluation uses no checkpoint cache. Separate checkpoint namespaces preserve the independent final reference run. Scientific settings are unchanged.

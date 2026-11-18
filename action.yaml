@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Single combined final hardening audit: CPU/filesystem contracts, 96 paired hidden episodes, honest variants and affected shortcuts, 24 public episodes, then isolated end-to-end reference and fixed baseline with official scores and paired uncertainty."
+notes: "Resume-safe combined final hardening audit after repeated scheduler preemptions: CPU/filesystem contracts, 96 paired hidden episodes, honest variants and affected shortcuts, 24 public episodes, then isolated end-to-end reference and fixed baseline with official scores and paired uncertainty."

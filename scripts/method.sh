@@ -16,4 +16,4 @@ cat > checkpoints/gelslam_online/predict.json <<'JSON'
   "command": ["python", "-m", "method.gelslam_sim.run", "--input", "{input}", "--output", "{output}"]
 }
 JSON
-bash scripts/evaluate.sh
+bash scripts/evaluate.sh "$@"
