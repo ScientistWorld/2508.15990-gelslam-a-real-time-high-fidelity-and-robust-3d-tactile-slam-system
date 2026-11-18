@@ -1,6 +1,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: done
+action: pending
+gpus: 0
+test: false
 milestone: core_claim
-notes: "Hardened gym: faithful GelSLAM/NormalFlow port; 40 held-out episodes rendered only in eval/test and run through predict.json; frozen baseline; worst-value failures; paper numbers under _paper_results; validate.py passes in all modes; see HARDENING.md."
+notes: ""
