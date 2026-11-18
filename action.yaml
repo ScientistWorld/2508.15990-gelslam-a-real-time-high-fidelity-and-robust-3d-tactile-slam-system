@@ -1,5 +1,3 @@
-action: submit
-gpus: 0
-test: false
+action: done
 milestone: core_claim
-notes: "Finish the unchanged 384-episode paired audit after preemption: reuse source-verified raw outputs, complete missing inference first, verify exact truth-only rendering, checkpoint private truth and finished phases, then independently finish official reference/baseline scores and paired uncertainty."
+notes: "Packaged the verified 384-episode paired audit, exact independent reference scores and major shortcut fixes; exhaustive two-stage search still has a small advantage, documented as an unmet scaling requirement."

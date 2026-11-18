@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-18",
+  "structural_validation": "python3 validate.py: exit 0",
+  "shell_syntax": "scripts/*.sh and environment/setup.sh: pass",
+  "json_score_matrices": "pass",
+  "independent_reference_results": "exact",
+  "official_ranked_methods": [
+    "gelslam_online",
+    "normalflow"
+  ],
+  "heldout_episodes": 384,
+  "public_episodes": 24,
+  "failed_audit_rows": 13,
+  "hidden_seeds_outside_eval_test": [],
+  "paper_fields_unchanged_from": "c9c785e^",
+  "public_python_files_checked": 71,
+  "remaining_requirement": "Exhaustive two-stage search still outranks the reference; per-instance scaling condition is unmet."
+}

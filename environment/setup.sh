@@ -16,4 +16,5 @@
 
 set -e
 
-uv pip install --system numpy scipy opencv-python-headless
+# Versions used by the independent final reference and paired audit.
+uv pip install --system numpy==2.4.6 scipy==1.17.1 opencv-python-headless==4.13.0.92

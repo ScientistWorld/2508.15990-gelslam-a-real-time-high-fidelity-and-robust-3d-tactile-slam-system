@@ -7,7 +7,7 @@
 
 ## This Workspace
 
-A scaled synthetic substitute for the paper's tracking experiments. A simulated GelSight-Mini-style sensor slides over textured convex objects from four texture families. Two experiments are scored on 40 held-out episodes that exist only inside `eval/test/`: long-horizon tracking with continuous contact (paper Table IV) and tracking with periodic contact loss (paper Fig. 11). The frame-to-frame NormalFlow baseline is owned by the evaluator. Methods are run by the evaluator through a `predict.json` command, so the held-out inputs and ground truth never appear on disk before the test.
+A scaled synthetic substitute for the paper's tracking experiments. A simulated GelSight-Mini-style sensor slides over textured convex objects from four texture families. Two experiments are scored on 384 held-out episodes that exist only inside `eval/test/`: long-horizon tracking with continuous contact (paper Table IV) and tracking with periodic contact loss (paper Fig. 11). The frame-to-frame NormalFlow baseline is owned by the evaluator. Methods are run by the evaluator through a `predict.json` command, so the held-out inputs and ground truth never appear on disk before the test.
 
 ## Key Results From the Paper
 
@@ -16,7 +16,7 @@ A scaled synthetic substitute for the paper's tracking experiments. A simulated 
 - **Fig. 11:** after removing 25 frames every 100 frames, tracking error is nearly identical to the full episodes.
 - **Table VI (reconstruction, not scored here):** average Chamfer Distance 0.60 mm, normal cosine similarity 0.962.
 
-## Reproduced Results (held-out test, 40 episodes)
+## Reproduced Results (held-out test, 384 episodes)
 
 See `scoring/scores_test.json` and `HARDENING.md`. GelSLAM reduces the continuous-contact rotation/translation MAE of the NormalFlow baseline by more than half, relocalises after contact loss where the baseline cannot, and reports no false loops.
 
@@ -81,14 +81,14 @@ The benchmark is a scaled synthetic substitute for the paper's real long-horizon
 
 - **rotation_mae_deg**, **translation_mae_mm**: mean absolute error of the sensor pose relative to the first frame, averaged over the three rotation (Euler theta_x, theta_y, theta_z) or translation (x, y, z) axes and over frames, then over episodes. This is the statistic of the paper's Table IV. Lower is better. Coefficient 1.0 each.
 - **rotation_p95_deg**, **translation_p95_mm**: 95th percentile over all frames of the geodesic rotation error and of the translation-error norm. Lower is better. Coefficient 0.4 each.
-- **false_loop_excess**: constraint. Fraction of the method's reported frame-pair relations (deduplicated by frame pair) whose relative pose is off by more than 1 mm or 5 degrees from ground truth (malformed or non-finite records count as false), minus a 2% allowance for the verification tolerance, floored at 0. A method that reports no relations scores 0. Lower is better. Coefficient 0.5.
+- **false_loop_excess**: constraint. Fraction of the method's reported frame-pair relations (one record per frame pair) whose relative pose is off by more than 1 mm or 5 degrees from ground truth (each record must be well formed and finite), minus a 2% allowance for the verification tolerance, floored at 0. A method that reports no relations scores 0. Lower is better. Coefficient 0.5.
 
-Per-frame errors are capped at 90 degrees and 30 mm. A run fails, and receives the worst value of every metric in both experiments (90 deg, 30 mm, false-loop excess 0.98), if the method crashes or exceeds 15 minutes on an episode, writes poses of the wrong shape, non-finite or non-rigid poses, translations beyond 1 m, unreadable loop files or more than 50,000 loop records, or if more than 10% of its reported relations are false.
+Per-frame errors are capped at 90 degrees and 30 mm. A run fails, and receives the worst value of every metric in both experiments (90 deg, 30 mm, false-loop excess 0.98), if the method crashes or consumes more than 7200 CPU seconds on an episode, writes poses of the wrong shape, non-finite or non-rigid poses, translations beyond 1 m, unreadable, malformed, non-finite, impossible or duplicate loop records, or more than 50,000 loop records, or if more than 10% of its reported relations are false within either experiment.
 
 ## Protocol
 
-- `scripts/evaluate_train.sh` (and `scripts/evaluate.sh`) render the 8 public training episodes listed in `data/train_episodes.json` (4 per experiment) with `data/tactile_sim.py`, run every registered method, and write `scoring/scores_train.json` (`scoring/scores.json`).
-- `scripts/evaluate_test.sh` takes no arguments. It renders 40 held-out episodes (24 continuous, 16 contact-loss; same families and parameter ranges, unpublished seeds) inside `eval/test/`, runs every registered method on them, and writes `scoring/scores_test.json`. Ground truth never leaves the evaluator process. This is the ranked score.
+- `scripts/evaluate_train.sh` (and `scripts/evaluate.sh`) render the 24 public training episodes listed in `data/train_episodes.json` (12 per experiment) with `data/tactile_sim.py`, run every registered method, and write `scoring/scores_train.json` (`scoring/scores.json`).
+- `scripts/evaluate_test.sh` takes no arguments. It renders 384 held-out episodes (192 continuous, 192 contact-loss; same families and parameter ranges, unpublished seeds) inside `eval/test/`, runs every registered method on them, and writes `scoring/scores_test.json`. Ground truth is withheld from method processes. This is the ranked score.
 - Both evaluators also score the eval-owned NormalFlow frame-to-frame baseline under the name `normalflow`.
 - Rendering and scoring are deterministic; every method sees identical inputs.
 
@@ -102,6 +102,14 @@ Register a method by writing `checkpoints/<dir>/predict.json`:
 ```
 
 The command is run once per episode from the workspace root (PYTHONPATH includes the root), on one CPU core. `{input}` is an `.npz` with `gradients` (N x 120 x 160 x 2, surface gradients du, dv), `heights` (N x 120 x 160, height map in pixels integrated from the gradients), `contact_masks` (N x 120 x 160, bool) and `mm_per_pixel`. The method must write `{output}/poses.npy`: N x 4 x 4 rigid transforms, sensor pose of each frame in a common object-fixed frame, translations in mm (they are re-expressed relative to frame 0 before scoring). It may write `{output}/loops.json` = `{"loops": [{"i": int, "j": int, "T_ij": 4x4}]}` where `T_ij` is the pose of frame j expressed in frame i (mm); these are the frame-pair relations checked by `false_loop_excess`. Any other file is ignored. Every directory under `checkpoints/` that holds model or prediction artifacts but no `predict.json` is scored as a failed method. The test runs inference only; anything a method needs (trained weights, configs) must already be on disk.
+
+## Reproducible execution and ranking
+
+Numerical-library threads are fixed to one, and the evaluator and method have one-core CPU affinity. CPU consumption, including private child-process search, is budgeted; elapsed seconds are diagnostic only. No evaluator or reproduction script imposes a wall-clock deadline. The external job allocation may still preempt a job; incomplete runs retain complete worst-value score entries.
+
+Method commands run with a Landlock filesystem policy: their own source, public data and stored models are readable; only their current output directory is writable. The input observation file is readable. Hidden evaluator files, repository history, other scratch files and scoring files are not readable. Temporary method files belong under `$TMPDIR` (inside the output directory). Landlock support is required; unsupported kernels fail closed. The same interface and policy apply on train and test.
+
+Each metric contributes experiment weight times the magnitude of its coefficient times signed improvement over the reference, divided by its population standard deviation across all attempts being ranked (including failed runs). The sign comes solely from `higher_is_better`. A constant metric contributes zero. Failed methods receive every metric's worst value, so another metric cannot compensate for failure.
 
 ---
 
@@ -1109,9 +1117,10 @@ The command is run once per episode from the workspace root (PYTHONPATH includes
 
 ---
 
+---
+
 # Reproduction Milestones
 
 **Current: core_claim**
 
-## Stop Justification
-- Completed at milestone `core_claim`.
+The final 384-episode paired audit and independent reference run pass; the exhaustive-search scaling condition remains unmet. See `MILESTONES.md` and `HARDENING.md` for final evidence and limitations.

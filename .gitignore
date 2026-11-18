@@ -240,3 +240,5 @@ eval/*/audit_raw/
 
 # Private raw-output checkpoints for scheduler preemption recovery
 eval/*/resume/
+# Generated audit completion markers; never evaluation inputs.
+eval/test/hardening_results/scale_phases/

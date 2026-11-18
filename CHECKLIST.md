@@ -21,3 +21,6 @@
 - [x] Test inputs/ground truth only in `eval/test/`, produced at test time
 - [x] Every scored number recomputed from raw outputs; failures get worst values
 - [x] Benefit metrics and a constraint metric (false-loop excess + gate) in both experiments
+
+## Remaining hardening requirement
+- [ ] Scale individual scans until exhaustive two-stage search no longer outranks the reference. It still has a small positive gain on the final test; see `HARDENING.md`.

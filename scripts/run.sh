@@ -1,5 +1,6 @@
 #!/bin/bash
-# Complete the enlarged audit without repeating finished inference or phases.
+# Reproduce the reference end to end. Audit/recovery scripts are separate.
 set -euo pipefail
 cd /home/user
-bash scripts/resume_scale.sh
+bash scripts/reproduce.sh
+python validate.py

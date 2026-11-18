@@ -77,8 +77,6 @@
 - Preserved the paper-method implementation and paper-reported results. Prepared the combined CPU audit for the review's load-dependent deadline and unresolved headroom, together with runtime answer protection, raw-output-only scoring and strict invalid-output failure handling.
 - Final reference and baseline scores are pending the submitted job; no new empirical result is claimed yet.
 
-## Stop Justification
-- Completed at milestone `core_claim`.
 
 ### [2026-11-18] - core_claim (paired scale check)
 - Completed the combined hardening audit with all protocol checks passing and exact independent reference/baseline agreement. Both experiments reproduce the paper's tracking direction and loop-safety constraint.
@@ -87,3 +85,13 @@
 ### [2026-11-18] - core_claim (preemption recovery)
 - The enlarged audit saved substantial inference, but ten scheduler preemptions made repeated observation rendering dominate recovery. Cancelled it to repair recovery only; method, data distribution, scored quantities and coefficients are unchanged.
 - Added incomplete-input priority, exact truth-only rendering, private evaluator-owned truth checkpoints, and completed-phase markers. The combined resubmission verifies equivalence before reusing previous raw predictions. Final headroom and shortcut results remain pending.
+
+### [2026-11-18] - core_claim (completed paired audit)
+- Job `248ff24f-f19` finished with exit code 0. Both experiments reproduce the paper's tracking direction and preserve the loop-safety constraint on 384 held-out episodes; 24 public episodes use the same measurement and difficulty distribution.
+- Reference rotation/translation MAE: 0.569465 deg / 0.056820 mm with continuous contact, 1.173963 deg / 0.142607 mm after contact loss. Frozen baseline: 3.192370 / 0.713247 and 9.008843 / 2.463979. The serialized independent reference/baseline rerun matches all 20 scored numbers exactly.
+- The better variant improves all eight error metrics; normalized rank gain +0.01390 with paired 95% interval [+0.00808, +0.02530]. The weaker variant and simple baseline lose. Changed answer-access, comparison-editing, duplicate, cache-forgery and failure-omission attacks all fail with complete worst-value matrices.
+- Official scores contain only reference runs and the frozen baseline. Restored `scripts/run.sh` to reference reproduction and pinned the tested numerical packages. Results and remaining limitations are recorded in `HARDENING.md`.
+- Exhaustive two-stage search still outranks the reference (+0.00250). More paired episodes resolved uncertainty but did not fix per-instance scan scale. This requested hardening condition remains unmet; the reproduction milestone stays `core_claim`.
+
+## Stop Justification
+- The scaled tracking core claim and paired accuracy headroom are verified. Physical-sensor reconstruction, real-time performance, and the exhaustive-search scale requirement remain unestablished. This is a partial hardening result, not a full reproduction or a claim that every requested condition passed.

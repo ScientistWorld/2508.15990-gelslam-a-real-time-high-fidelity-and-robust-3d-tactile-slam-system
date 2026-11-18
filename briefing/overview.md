@@ -16,6 +16,6 @@ A scaled synthetic substitute for the paper's tracking experiments. A simulated 
 - **Fig. 11:** after removing 25 frames every 100 frames, tracking error is nearly identical to the full episodes.
 - **Table VI (reconstruction, not scored here):** average Chamfer Distance 0.60 mm, normal cosine similarity 0.962.
 
-## Reproduced Results (held-out test, 40 episodes)
+## Reproduced Results (held-out test, 384 episodes)
 
 See `scoring/scores_test.json` and `HARDENING.md`. GelSLAM reduces the continuous-contact rotation/translation MAE of the NormalFlow baseline by more than half, relocalises after contact loss where the baseline cannot, and reports no false loops.

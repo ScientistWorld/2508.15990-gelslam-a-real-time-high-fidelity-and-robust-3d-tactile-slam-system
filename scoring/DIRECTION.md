@@ -12,6 +12,8 @@ The reference leaves error on the table in both experiments: drift between revis
 
 Any tactile-only estimator that consumes the same observations and writes the standard outputs: alternative registration, representations, relation search, optimisation, robust estimation or learned components trained on public data.
 
+The scored contract measures tracking accuracy and relation safety on 400-frame episodes. It does not establish long-scan computational efficiency, real-time throughput, RGB calibration quality or object reconstruction quality. Exhaustively comparing earlier contacts can still improve accuracy within the present compute budget; the audit in `HARDENING.md` records this unresolved scale limitation.
+
 ## Out of Bounds
 
 - Reading or importing evaluator code, held-out configuration or ground truth.
