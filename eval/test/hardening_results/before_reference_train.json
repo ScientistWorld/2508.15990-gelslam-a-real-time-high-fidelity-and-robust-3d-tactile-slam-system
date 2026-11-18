@@ -1,0 +1,94 @@
+{
+  "_metadata": {
+    "slice": "train",
+    "episodes": [
+      {
+        "name": "train_seed_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_fabric_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_wood_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_rock_continuous",
+        "contact_loss": false
+      },
+      {
+        "name": "train_seed_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_fabric_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_wood_contact_loss",
+        "contact_loss": true
+      },
+      {
+        "name": "train_rock_contact_loss",
+        "contact_loss": true
+      }
+    ],
+    "methods_discovered": [
+      "gelslam_online"
+    ]
+  },
+  "experiments": {
+    "long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 3.0712553647833416,
+          "translation_mae_mm": 0.62042846415155,
+          "rotation_p95_deg": 14.34559317202496,
+          "translation_p95_mm": 3.3294521400670645,
+          "false_loop_excess": 0.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 0.6557496927358989,
+          "translation_mae_mm": 0.054689345193116204,
+          "rotation_p95_deg": 2.44202198400689,
+          "translation_p95_mm": 0.3214457211364792,
+          "false_loop_excess": 0.0
+        }
+      }
+    },
+    "relocalization_after_contact_loss": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 7.1504413894568515,
+          "translation_mae_mm": 2.1079152428598684,
+          "rotation_p95_deg": 37.18105250610163,
+          "translation_p95_mm": 11.030203076936969,
+          "false_loop_excess": 0.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 3.341675129059549,
+          "translation_mae_mm": 0.48547089887599887,
+          "rotation_p95_deg": 69.8079256847738,
+          "translation_p95_mm": 7.07881804089741,
+          "false_loop_excess": 0.0
+        }
+      }
+    }
+  },
+  "_diagnostics": {
+    "normalflow": {
+      "status": "scored",
+      "episodes_completed": 8,
+      "episode_wall_seconds_sum": 43.58,
+      "episode_wall_seconds_max": 11.78
+    },
+    "gelslam_online": {
+      "status": "scored",
+      "episodes_completed": 8,
+      "episode_wall_seconds_sum": 58.35,
+      "episode_wall_seconds_max": 13.09
+    }
+  }
+}

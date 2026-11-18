@@ -1,0 +1,222 @@
+{
+  "_metadata": {
+    "slice": "test",
+    "episodes": [
+      {
+        "name": "heldout_seed_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_3",
+        "contact_loss": true
+      }
+    ],
+    "methods_discovered": [
+      "gelslam_online"
+    ]
+  },
+  "experiments": {
+    "long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 3.1665362089972446,
+          "translation_mae_mm": 0.7006527123393953,
+          "rotation_p95_deg": 14.614924587735011,
+          "translation_p95_mm": 3.968794510862936,
+          "false_loop_excess": 0.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 1.4389941638954198,
+          "translation_mae_mm": 0.14228978032903844,
+          "rotation_p95_deg": 4.294562713525054,
+          "translation_p95_mm": 0.49606073738809936,
+          "false_loop_excess": 0.0
+        }
+      }
+    },
+    "relocalization_after_contact_loss": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 11.451145472699565,
+          "translation_mae_mm": 2.806023645153234,
+          "rotation_p95_deg": 62.40266851803462,
+          "translation_p95_mm": 13.624579015039714,
+          "false_loop_excess": 0.0
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 2.1500371506874463,
+          "translation_mae_mm": 0.4011010747909716,
+          "rotation_p95_deg": 32.050698859802814,
+          "translation_p95_mm": 10.918708805844412,
+          "false_loop_excess": 0.0
+        }
+      }
+    }
+  },
+  "_diagnostics": {
+    "normalflow": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 166.03,
+      "episode_wall_seconds_max": 7.4
+    },
+    "gelslam_online": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 251.27,
+      "episode_wall_seconds_max": 16.64
+    }
+  }
+}

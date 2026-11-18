@@ -56,6 +56,118 @@
       "seed": 1454,
       "frames": 400,
       "contact_loss": true
+    },
+    {
+      "name": "train_seed_continuous_1",
+      "family": "seed",
+      "seed": 10001,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_seed_continuous_2",
+      "family": "seed",
+      "seed": 10002,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_fabric_continuous_1",
+      "family": "fabric",
+      "seed": 10101,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_fabric_continuous_2",
+      "family": "fabric",
+      "seed": 10102,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_wood_continuous_1",
+      "family": "wood",
+      "seed": 10201,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_wood_continuous_2",
+      "family": "wood",
+      "seed": 10202,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_rock_continuous_1",
+      "family": "rock",
+      "seed": 10301,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_rock_continuous_2",
+      "family": "rock",
+      "seed": 10302,
+      "frames": 400,
+      "contact_loss": false
+    },
+    {
+      "name": "train_seed_contact_loss_1",
+      "family": "seed",
+      "seed": 11001,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_seed_contact_loss_2",
+      "family": "seed",
+      "seed": 11002,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_fabric_contact_loss_1",
+      "family": "fabric",
+      "seed": 11101,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_fabric_contact_loss_2",
+      "family": "fabric",
+      "seed": 11102,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_wood_contact_loss_1",
+      "family": "wood",
+      "seed": 11201,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_wood_contact_loss_2",
+      "family": "wood",
+      "seed": 11202,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_rock_contact_loss_1",
+      "family": "rock",
+      "seed": 11301,
+      "frames": 400,
+      "contact_loss": true
+    },
+    {
+      "name": "train_rock_contact_loss_2",
+      "family": "rock",
+      "seed": 11302,
+      "frames": 400,
+      "contact_loss": true
     }
   ]
 }

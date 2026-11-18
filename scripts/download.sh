@@ -4,13 +4,13 @@
 # The benchmark is synthetic: the evaluators render every episode on the fly
 # from code in data/ (training) and eval/test/ (held-out), so no external data
 # or model weights are required. This script optionally caches the rendered
-# public training episodes (about 100 MB each, 8 episodes) in
+# public training episodes (about 100 MB each, 24 episodes) in
 # data/downloads/train_episodes/ for inspection.
 #
 # Optional real-data resources from the paper's release (not used by the
 # scored benchmark) can be fetched with the flags below.
 #
-# Estimated size: 0 GB required; ~0.8 GB with CACHE_TRAIN_EPISODES=1;
+# Estimated size: 0 GB required; ~2.4 GB with CACHE_TRAIN_EPISODES=1;
 # 68 GB with DOWNLOAD_FULL_GELSLAM_DATASET=1.
 
 set -e

@@ -14,11 +14,11 @@ The evaluator always scores its own frozen NormalFlow frame-to-frame baseline as
 
 ## Compute
 
-Each episode is processed by one invocation on one CPU core and must finish within 15 minutes. The test runs inference only; train beforehand and store weights on disk.
+Each episode is processed by one invocation on one CPU core and has a budget of 7200 CPU seconds, including child processes (no elapsed-time deadline). The test runs inference only; train beforehand and store weights on disk.
 
 ## Evaluation
 
-The metrics are fixed: per-axis rotation and translation MAE, 95th-percentile rotation and translation error, and the false-relation rate, for both experiments. Do not drop `false_loop_excess`: reporting relations is optional, but any relation you report must be geometrically correct.
+The metrics are fixed: per-axis rotation and translation MAE, 95th-percentile rotation and translation error, and the false-relation rate, for both experiments. Do not drop `false_loop_excess`: reporting relations is optional, but any relation you report must be geometrically correct, finite and well formed. Report each unordered frame pair only once; duplicate records fail the run.
 
 ## Compliance checklist
 

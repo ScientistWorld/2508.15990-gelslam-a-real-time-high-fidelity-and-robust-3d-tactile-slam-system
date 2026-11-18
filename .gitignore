@@ -233,3 +233,7 @@ protocol.md
 *.egg-info
 core.[0-9]*
 redteam/hardening/results/final_rerun_complete.txt
+
+# Evaluator-private transient inputs and paired audit arrays
+eval/*/scratch/
+eval/*/audit_raw/

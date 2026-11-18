@@ -1,7 +1,7 @@
 {
   "experiments": {
     "long_horizon_tracking": {
-      "description": "Long-horizon 6DoF tactile tracking with continuous contact (paper Section V, Table IV). Held-out test: 12 synthetic GelSight-Mini-style episodes of 400 frames over four texture families (seed, fabric, wood, rock), rendered only inside eval/test/. Results below are the paper's Table IV axis-averaged MAEs on 140 real episodes (GS-Online and NF); the gym is a scaled synthetic substitute, so absolute values are not expected to match (see _paper_context).",
+      "description": "Long-horizon 6DoF tactile tracking with continuous contact (paper Section V, Table IV). Held-out test: 48 synthetic GelSight-Mini-style episodes of 400 frames over four texture families, rendered only inside eval/test/. The scaled gym reference and frozen baseline are in results; unchanged real-data paper numbers are under _paper_results.",
       "weight": 0.6,
       "primary_metric": "rotation_p95_deg",
       "metrics": {
@@ -28,7 +28,7 @@
         "false_loop_excess": {
           "higher_is_better": false,
           "coefficient": 0.5,
-          "description": "Constraint: fraction of the method's reported frame-pair relations (deduplicated by frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg (malformed or non-finite records count as false), minus a 2% allowance for the verification tolerance, floored at 0. Methods that report no relations score 0. If more than 10% of a method's relations over the whole test are false, the run fails (worst value in every metric). The paper reports no false loops (Section VI-B)."
+          "description": "Constraint: fraction of the method's reported frame-pair relations (one record per frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg (malformed, non-finite, impossible or duplicate records fail the run), minus a 2% allowance for the verification tolerance, floored at 0. Methods that report no relations score 0. If more than 10% of a method's relations within either experiment are false, the run fails (worst value in every metric). The paper reports no false loops (Section VI-B)."
         }
       },
       "_paper_results": {
@@ -62,11 +62,11 @@
           "false_loop_excess": 0.0
         }
       },
-      "results_note": "results: the reproduced reference (paper's GelSLAM, method/gelslam_sim) and the eval-owned NormalFlow baseline on the 40-episode held-out test, as in scoring/scores_test.json.",
+      "results_note": "results: reproduced reference and eval-owned baseline on the final 96-episode held-out test, regenerated end to end in isolation; same values as scoring/scores_test.json.",
       "primary_metric_note": "Primary label is the 95th-percentile rotation error: per-episode mean errors are heavy-tailed (a rare tracking loss that is never relocalised costs ~20 deg on one episode), so the tail metric is the stable headline across slices. Ranking uses every metric with the coefficients below; MAE keeps the largest coefficient."
     },
     "relocalization_after_contact_loss": {
-      "description": "Tracking when contact is periodically lost (paper Section V-E, Fig. 11: 25 frames removed after every 100 frames), so the tracker must relocalize new tracking sessions against earlier ones. Held-out test: 8 synthetic episodes of 400 kept frames over the four texture families. The paper reports this study only graphically (relocalized tracking 'nearly identical' to full episodes), so the proposed-method values are the full-episode Table IV GS-Online MAEs; the paper gives no NormalFlow number for this setting.",
+      "description": "Tracking after contact loss (paper Section V-E, Fig. 11: 25 frames removed after every 100 kept frames). Held-out test: 48 synthetic episodes of 400 kept frames over four texture families. Scaled gym measurements are under results; unchanged paper context is under _paper_results.",
       "weight": 0.4,
       "primary_metric": "rotation_mae_deg",
       "metrics": {
@@ -93,7 +93,7 @@
         "false_loop_excess": {
           "higher_is_better": false,
           "coefficient": 0.5,
-          "description": "Constraint: fraction of the method's reported frame-pair relations (deduplicated by frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg (malformed or non-finite records count as false), minus a 2% allowance for the verification tolerance, floored at 0. Methods that report no relations score 0. If more than 10% of a method's relations over the whole test are false, the run fails (worst value in every metric). The paper reports no false loops (Section VI-B)."
+          "description": "Constraint: fraction of the method's reported frame-pair relations (one record per frame pair) whose relative pose disagrees with ground truth by more than 1 mm or 5 deg (malformed, non-finite, impossible or duplicate records fail the run), minus a 2% allowance for the verification tolerance, floored at 0. Methods that report no relations score 0. If more than 10% of a method's relations within either experiment are false, the run fails (worst value in every metric). The paper reports no false loops (Section VI-B)."
         }
       },
       "_paper_results": {
@@ -125,7 +125,7 @@
           "false_loop_excess": 0.0
         }
       },
-      "results_note": "results: the reproduced reference (paper's GelSLAM, method/gelslam_sim) and the eval-owned NormalFlow baseline on the 40-episode held-out test, as in scoring/scores_test.json."
+      "results_note": "results: reproduced reference and eval-owned baseline on the final 96-episode held-out test, regenerated end to end in isolation; same values as scoring/scores_test.json."
     }
   },
   "_paper_context": {

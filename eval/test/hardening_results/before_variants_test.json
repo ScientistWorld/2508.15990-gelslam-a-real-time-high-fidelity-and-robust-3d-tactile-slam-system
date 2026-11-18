@@ -1,0 +1,391 @@
+{
+  "_metadata": {
+    "slice": "test",
+    "episodes": [
+      {
+        "name": "heldout_seed_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_3",
+        "contact_loss": true
+      }
+    ],
+    "methods_discovered": [
+      "exhaustive_two_stage",
+      "hybrid_local_loops",
+      "loop_ccs_070",
+      "nf_kf",
+      "only_nf_exhaustive",
+      "only_sift",
+      "reference_seed1",
+      "session_chain",
+      "session_chain_dense"
+    ]
+  },
+  "experiments": {
+    "long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 3.1665362089972446,
+          "translation_mae_mm": 0.7006527123393953,
+          "rotation_p95_deg": 14.614924587735011,
+          "translation_p95_mm": 3.968794510862936,
+          "false_loop_excess": 0.0
+        },
+        "exhaustive_two_stage": {
+          "rotation_mae_deg": 1.4233420861638428,
+          "translation_mae_mm": 0.1418456329313879,
+          "rotation_p95_deg": 4.2883171114528915,
+          "translation_p95_mm": 0.4922565006341274,
+          "false_loop_excess": 0.0
+        },
+        "hybrid_local_loops": {
+          "rotation_mae_deg": 1.4194904304734948,
+          "translation_mae_mm": 0.13247119431268095,
+          "rotation_p95_deg": 4.009223412416568,
+          "translation_p95_mm": 0.420435001533651,
+          "false_loop_excess": 0.0
+        },
+        "loop_ccs_070": {
+          "rotation_mae_deg": 1.4388966772403669,
+          "translation_mae_mm": 0.1419526040061766,
+          "rotation_p95_deg": 4.294562713525054,
+          "translation_p95_mm": 0.48418592177184333,
+          "false_loop_excess": 0.0
+        },
+        "nf_kf": {
+          "rotation_mae_deg": 2.0711765528751633,
+          "translation_mae_mm": 0.26199678909275814,
+          "rotation_p95_deg": 6.444970732247415,
+          "translation_p95_mm": 1.0713676632025397,
+          "false_loop_excess": 0.0
+        },
+        "only_nf_exhaustive": {
+          "rotation_mae_deg": 2.111275778792388,
+          "translation_mae_mm": 0.23457384135191695,
+          "rotation_p95_deg": 4.075919825436089,
+          "translation_p95_mm": 0.4509500967535137,
+          "false_loop_excess": 0.01691275167785235
+        },
+        "only_sift": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "reference_seed1": {
+          "rotation_mae_deg": 1.4389941638954198,
+          "translation_mae_mm": 0.14228978032903844,
+          "rotation_p95_deg": 4.294562713525054,
+          "translation_p95_mm": 0.49606073738809936,
+          "false_loop_excess": 0.0
+        },
+        "session_chain": {
+          "rotation_mae_deg": 1.4707508764421353,
+          "translation_mae_mm": 0.14221179143880525,
+          "rotation_p95_deg": 4.106631301602538,
+          "translation_p95_mm": 0.4661943465132082,
+          "false_loop_excess": 0.0
+        },
+        "session_chain_dense": {
+          "rotation_mae_deg": 1.4803135391735838,
+          "translation_mae_mm": 0.14217245365576822,
+          "rotation_p95_deg": 4.319224200436567,
+          "translation_p95_mm": 0.6191144943673926,
+          "false_loop_excess": 0.0
+        }
+      }
+    },
+    "relocalization_after_contact_loss": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 11.451145472699565,
+          "translation_mae_mm": 2.806023645153234,
+          "rotation_p95_deg": 62.40266851803462,
+          "translation_p95_mm": 13.624579015039714,
+          "false_loop_excess": 0.0
+        },
+        "exhaustive_two_stage": {
+          "rotation_mae_deg": 2.11583691877264,
+          "translation_mae_mm": 0.39724398109693965,
+          "rotation_p95_deg": 32.050698859802814,
+          "translation_p95_mm": 10.918708805844412,
+          "false_loop_excess": 0.0
+        },
+        "hybrid_local_loops": {
+          "rotation_mae_deg": 1.7825308548224028,
+          "translation_mae_mm": 0.4905866103353743,
+          "rotation_p95_deg": 28.339222770700008,
+          "translation_p95_mm": 12.382046980874291,
+          "false_loop_excess": 0.0
+        },
+        "loop_ccs_070": {
+          "rotation_mae_deg": 2.1272760218030764,
+          "translation_mae_mm": 0.39928301215373807,
+          "rotation_p95_deg": 32.050698859802814,
+          "translation_p95_mm": 10.918708805844412,
+          "false_loop_excess": 0.0
+        },
+        "nf_kf": {
+          "rotation_mae_deg": 19.487601919742733,
+          "translation_mae_mm": 3.0669715334912073,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 16.663811655833733,
+          "false_loop_excess": 0.0
+        },
+        "only_nf_exhaustive": {
+          "rotation_mae_deg": 19.408451016824337,
+          "translation_mae_mm": 3.027328355299159,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 16.66498117100914,
+          "false_loop_excess": 0.0
+        },
+        "only_sift": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "reference_seed1": {
+          "rotation_mae_deg": 2.1500371506874463,
+          "translation_mae_mm": 0.4011010747909716,
+          "rotation_p95_deg": 32.050698859802814,
+          "translation_p95_mm": 10.918708805844412,
+          "false_loop_excess": 0.0
+        },
+        "session_chain": {
+          "rotation_mae_deg": 1.8353904799442424,
+          "translation_mae_mm": 0.5059820657013608,
+          "rotation_p95_deg": 28.62306380065496,
+          "translation_p95_mm": 12.394817638620799,
+          "false_loop_excess": 0.0
+        },
+        "session_chain_dense": {
+          "rotation_mae_deg": 1.4010300801411395,
+          "translation_mae_mm": 0.29610182426032483,
+          "rotation_p95_deg": 4.10502647436159,
+          "translation_p95_mm": 0.6823892649184864,
+          "false_loop_excess": 0.0
+        }
+      }
+    }
+  },
+  "_diagnostics": {
+    "normalflow": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 166.03,
+      "episode_wall_seconds_max": 7.4
+    },
+    "exhaustive_two_stage": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 368.05,
+      "episode_wall_seconds_max": 63.41
+    },
+    "hybrid_local_loops": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 256.94,
+      "episode_wall_seconds_max": 15.02
+    },
+    "loop_ccs_070": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 369.89,
+      "episode_wall_seconds_max": 45.59
+    },
+    "nf_kf": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 300.24,
+      "episode_wall_seconds_max": 16.5
+    },
+    "only_nf_exhaustive": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 424.90999999999997,
+      "episode_wall_seconds_max": 38.91
+    },
+    "only_sift": {
+      "status": "failed",
+      "failure": "false-loop constraint failed: 619/807 unique loop constraints disagree with ground truth (gate 10%)",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 334.07,
+      "episode_wall_seconds_max": 30.11
+    },
+    "reference_seed1": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 345.59,
+      "episode_wall_seconds_max": 48.71
+    },
+    "session_chain": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 376.13,
+      "episode_wall_seconds_max": 67.07
+    },
+    "session_chain_dense": {
+      "status": "scored",
+      "episodes_completed": 40,
+      "episode_wall_seconds_sum": 825.51,
+      "episode_wall_seconds_max": 245.58
+    }
+  }
+}

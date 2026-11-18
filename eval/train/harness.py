@@ -26,6 +26,7 @@ import os
 import re
 import shutil
 import signal
+import sys
 import subprocess
 import tempfile
 import time
@@ -34,6 +35,8 @@ from typing import Callable
 
 import numpy as np
 from scipy.spatial.transform import Rotation
+
+from runner import run_isolated, configure_cpu
 
 EXPERIMENTS = {
     "long_horizon_tracking": False,  # value: episode has simulated contact loss
@@ -56,7 +59,7 @@ LOOP_ROT_TOL_DEG = 5.0
 FALSE_LOOP_GATE = 0.10
 FALSE_LOOP_ALLOWANCE = 0.02  # verification tolerance; only false relations beyond 2% are scored
 MAX_LOOP_RECORDS = 50000
-EPISODE_TIMEOUT_S = 900  # per episode on one CPU core (the reference needs < 20 s)
+EPISODE_CPU_SECONDS = 7200  # CPU consumed, never elapsed wall time; fixed one-thread execution
 RESERVED_NAMES = {"normalflow"}
 ARTIFACT_SUFFIXES = {".npy", ".npz", ".json", ".pt", ".pth", ".pkl", ".pickle", ".ckpt", ".safetensors"}
 
@@ -133,34 +136,12 @@ def discover_methods(checkpoints: Path) -> list[dict]:
 # running
 # --------------------------------------------------------------------------
 
-def run_command(method: dict, input_path: Path, out_dir: Path, root: Path, log_path: Path) -> float:
+def run_command(method: dict, input_path: Path, out_dir: Path, root: Path, log_path: Path) -> dict:
     command = [a.replace("{input}", str(input_path)).replace("{output}", str(out_dir)) for a in method["command"]]
-    env = os.environ.copy()
-    env["PYTHONPATH"] = str(root) + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
-    start = time.monotonic()
-    with open(log_path, "ab") as log:
-        log.write(f"\n$ {' '.join(command)}\n".encode())
-        log.flush()
-        try:
-            proc = subprocess.Popen(command, cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT,
-                                    start_new_session=True)
-        except OSError as exc:
-            raise MethodFailure(f"could not start command: {exc}") from exc
-        try:
-            returncode = proc.wait(timeout=EPISODE_TIMEOUT_S)
-        except subprocess.TimeoutExpired as exc:
-            try:
-                os.killpg(proc.pid, signal.SIGKILL)
-            except (ProcessLookupError, PermissionError):
-                pass
-            try:
-                proc.wait(timeout=60)
-            except subprocess.TimeoutExpired:
-                pass
-            raise MethodFailure(f"timed out after {EPISODE_TIMEOUT_S} s") from exc
-    if returncode != 0:
-        raise MethodFailure(f"command exited with code {returncode}")
-    return time.monotonic() - start
+    try:
+        return run_isolated(command, input_path, out_dir, root, log_path, EPISODE_CPU_SECONDS)
+    except (OSError, RuntimeError) as exc:
+        raise MethodFailure(str(exc)) from exc
 
 
 # --------------------------------------------------------------------------
@@ -192,6 +173,8 @@ def load_poses(out_dir: Path, n_frames: int) -> np.ndarray:
     path = out_dir / "poses.npy"
     if not path.is_file():
         raise MethodFailure("missing poses.npy")
+    if path.stat().st_size > n_frames * 16 * 16 + 65536:
+        raise MethodFailure("oversized poses.npy")
     try:
         poses = np.load(path, allow_pickle=False)
     except Exception as exc:  # noqa: BLE001
@@ -241,10 +224,12 @@ def _as_index(value) -> int:
 
 
 def score_loops(out_dir: Path, gt: np.ndarray) -> dict:
-    """Deduplicate loop records by frame pair and check each against ground truth."""
+    """Require unique, well-formed relations and check each against ground truth."""
     path = out_dir / "loops.json"
     if not path.exists():
         return {"unique": 0, "false": 0}
+    if path.stat().st_size > 64 * 1024 * 1024:
+        raise MethodFailure("oversized loops.json")
     try:
         data = json.loads(path.read_text())
     except Exception as exc:  # noqa: BLE001
@@ -263,19 +248,18 @@ def score_loops(out_dir: Path, gt: np.ndarray) -> dict:
             i = _as_index(record["i"])
             j = _as_index(record["j"])
             transform = np.asarray(record["T_ij"], dtype=np.float64)
-        except Exception:  # noqa: BLE001 - malformed record counts as a false loop
-            unique += 1
-            false += 1
-            continue
+        except Exception as exc:  # noqa: BLE001
+            raise MethodFailure("malformed loop record") from exc
         key = (min(i, j), max(i, j))
         if key in seen:
-            continue
+            raise MethodFailure("duplicate frame-pair relation")
         seen.add(key)
         unique += 1
         if not (0 <= i < n and 0 <= j < n) or i == j or transform.shape != (4, 4) \
                 or not np.isfinite(transform).all() or not _is_rigid(transform):
-            false += 1
-            continue
+            raise MethodFailure("invalid or non-finite loop relation")
+        if np.abs(transform[:3, 3]).max() > MAX_ABS_TRANSLATION_MM:
+            raise MethodFailure("loop translation outside the physically possible range")
         if i > j:
             transform = rigid_inverse(transform)
             i, j = j, i
@@ -334,53 +318,17 @@ def _episode_diag(row: dict) -> dict:
         "unique_loops": row["loops_unique"],
         "false_loops": row["loops_false"],
         "seconds": round(row.get("seconds", 0.0), 2),
-        **({"method_summary": row["method_summary"]} if row.get("method_summary") else {}),
+        "cpu_seconds": round(row.get("cpu_seconds", 0.0), 4),
     }
 
 
-def _read_summary(out_dir: Path) -> dict | None:
-    path = out_dir / "summary.json"
-    try:
-        if path.is_file() and path.stat().st_size < 20000:
-            data = json.loads(path.read_text())
-            if isinstance(data, dict):
-                return {k: v for k, v in data.items() if isinstance(v, (int, float, str, bool))}
-    except Exception:  # noqa: BLE001
-        return None
-    return None
-
-
-def _cache_file(slice_name: str, name: str, episode_name: str) -> Path | None:
-    """Optional per-episode result cache (audit jobs only; unset in the default scripts)."""
-    root = os.environ.get("TACTILE_EVAL_CACHE")
-    if not root:
-        return None
-    return Path(root) / slice_name / _sanitize(name) / f"{episode_name}.json"
-
-
-def _cache_load(slice_name: str, name: str, episode_name: str) -> dict | None:
-    path = _cache_file(slice_name, name, episode_name)
-    if path is None or not path.is_file():
-        return None
-    try:
-        row = json.loads(path.read_text())
-    except Exception:  # noqa: BLE001
-        return None
-    if "error" not in row:
-        row["geodesic"] = np.asarray(row["geodesic"], dtype=np.float64)
-        row["trans_norm"] = np.asarray(row["trans_norm"], dtype=np.float64)
-    return row
-
-
-def _cache_save(slice_name: str, name: str, episode_name: str, row: dict) -> None:
-    path = _cache_file(slice_name, name, episode_name)
-    if path is None:
-        return
-    path.parent.mkdir(parents=True, exist_ok=True)
-    payload = {k: (v.tolist() if isinstance(v, np.ndarray) else v) for k, v in row.items()}
-    tmp = path.with_name(path.name + ".tmp")
-    tmp.write_text(json.dumps(payload))
-    os.replace(tmp, path)
+def save_audit_errors(directory: Path, name: str, episode: str, row: dict) -> None:
+    """Evaluator-owned diagnostics, always regenerated from raw predictions and private GT."""
+    directory = directory / name
+    directory.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(directory / f"{episode}.npz", geodesic=row["geodesic"], trans_norm=row["trans_norm"],
+                        rot_axis_mae=row["rot_axis_mae"], trans_axis_mae=row["trans_axis_mae"],
+                        loops_unique=row["loops_unique"], loops_false=row["loops_false"])
 
 
 def evaluate(
@@ -392,12 +340,18 @@ def evaluate(
     output: Path,
     root: Path,
     keep_outputs: bool = False,
+    audit_dir: Path | None = None,
 ) -> dict:
+    configure_cpu()
+    if audit_dir is not None and not _within(audit_dir.resolve(), root / "eval" / slice_name):
+        raise ValueError("audit diagnostics must remain within their evaluator slice")
     checkpoints = root / "checkpoints"
     methods = discover_methods(checkpoints)
     metadata = {
         "episodes": [{"name": e["name"], "contact_loss": bool(e["contact_loss"])} for e in episodes],
         "methods_discovered": [m["name"] for m in methods],
+        "cpu_budget_seconds": EPISODE_CPU_SECONDS,
+        "execution": "one CPU affinity; one numerical-library thread; no wall-clock deadline",
     }
     worst = worst_results(episodes)
     pending = {"normalflow": worst, **{m["name"]: worst for m in methods}}
@@ -406,27 +360,15 @@ def evaluate(
     states = {m["name"]: {"error": m["error"], "episodes": {}} for m in methods}
     baseline_state = {"error": None, "episodes": {}}
     # Episode inputs are ~100 MB each; container /tmp is a small tmpfs, so the
-    # scratch space lives in the workspace's (gitignored) tmp/ directory.
-    scratch_root = Path(os.environ.get("TACTILE_EVAL_SCRATCH", str(root / "tmp" / "eval_scratch")))
+    # scratch stays within the private evaluator directory and is not method-readable.
+    scratch_root = root / "eval" / slice_name / "scratch"
     scratch_root.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=f"tactile_{slice_name}_", dir=str(scratch_root)) as tmp_name:
         tmp = Path(tmp_name)
         (tmp / "inputs").mkdir()
         (tmp / "logs").mkdir()
         for episode in episodes:
-            pending = set()
-            for name, state in [("normalflow", baseline_state)] + [(m["name"], states[m["name"]]) for m in methods]:
-                if state["error"] is not None:
-                    continue
-                cached = _cache_load(slice_name, name, episode["name"])
-                if cached is None:
-                    pending.add(name)
-                elif "error" in cached:
-                    state["error"] = cached["error"]
-                else:
-                    state["episodes"][episode["name"]] = cached
-            if not pending:
-                continue
+            pending = {"normalflow"} | {m["name"] for m in methods if states[m["name"]]["error"] is None}
             print(f"[{slice_name}] rendering {episode['name']}", flush=True)
             data = render(episode)
             gt = np.asarray(data["poses_mm"], dtype=np.float64)
@@ -441,7 +383,8 @@ def evaluate(
                     row = pose_errors(np.asarray(poses, dtype=np.float64), gt)
                     row.update({"loops_unique": 0, "loops_false": 0, "seconds": time.monotonic() - start})
                     baseline_state["episodes"][episode["name"]] = row
-                    _cache_save(slice_name, "normalflow", episode["name"], row)
+                    if audit_dir is not None:
+                        save_audit_errors(audit_dir, "normalflow", episode["name"], row)
                 except Exception as exc:  # noqa: BLE001
                     baseline_state["error"] = f"{episode['name']}: {exc!r}"
 
@@ -457,13 +400,13 @@ def evaluate(
                 out_dir.mkdir(parents=True, exist_ok=True)
                 print(f"[{slice_name}] {method['name']} on {episode['name']}", flush=True)
                 try:
-                    seconds = run_command(method, input_path, out_dir, root, tmp / "logs" / f"{method['name']}.log")
+                    timing = run_command(method, input_path, out_dir, root, tmp / "logs" / f"{method['name']}.log")
                     row = pose_errors(load_poses(out_dir, n_frames), gt)
                     loops = score_loops(out_dir, gt)
-                    row.update({"loops_unique": loops["unique"], "loops_false": loops["false"], "seconds": seconds,
-                                "method_summary": _read_summary(out_dir)})
+                    row.update({"loops_unique": loops["unique"], "loops_false": loops["false"], **timing})
                     state["episodes"][episode["name"]] = row
-                    _cache_save(slice_name, method["name"], episode["name"], row)
+                    if audit_dir is not None:
+                        save_audit_errors(audit_dir, method["name"], episode["name"], row)
                 except MethodFailure as exc:
                     state["error"] = f"{episode['name']}: {exc}"
                 except Exception as exc:  # noqa: BLE001 - never let one method stop the evaluation
@@ -472,7 +415,6 @@ def evaluate(
                     if not keep_outputs:
                         shutil.rmtree(out_dir, ignore_errors=True)
                 if state["error"] is not None:
-                    _cache_save(slice_name, method["name"], episode["name"], {"error": state["error"]})
                     log_file = tmp / "logs" / f"{method['name']}.log"
                     if log_file.exists():
                         tail = log_file.read_text(errors="replace")[-3000:]
@@ -485,11 +427,14 @@ def evaluate(
     for name, state in [("normalflow", baseline_state)] + list(states.items()):
         diag: dict = {}
         if state["error"] is None:
-            total_unique = sum(r["loops_unique"] for r in state["episodes"].values())
-            total_false = sum(r["loops_false"] for r in state["episodes"].values())
-            if total_unique and total_false / total_unique > FALSE_LOOP_GATE:
-                state["error"] = (f"false-loop constraint failed: {total_false}/{total_unique} unique loop "
-                                  f"constraints disagree with ground truth (gate {FALSE_LOOP_GATE:.0%})")
+            for experiment, contact_loss in EXPERIMENTS.items():
+                rows = [state["episodes"][e["name"]] for e in episodes if bool(e["contact_loss"]) == contact_loss]
+                total_unique = sum(r["loops_unique"] for r in rows)
+                total_false = sum(r["loops_false"] for r in rows)
+                if total_unique and total_false / total_unique > FALSE_LOOP_GATE:
+                    state["error"] = (f"{experiment}: false-loop constraint failed: {total_false}/{total_unique} "
+                                      f"(gate {FALSE_LOOP_GATE:.0%})")
+                    break
         if state["error"] is None:
             results[name] = aggregate(state["episodes"], episodes)
             diag["status"] = "scored"

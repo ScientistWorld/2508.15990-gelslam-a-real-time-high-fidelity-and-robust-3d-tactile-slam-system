@@ -1,5 +1,17 @@
 # Progress
 
+## 2026-11-18: final hardening after review
+
+Prepared one combined CPU validation job after reading the paper, REDTEAM.md and
+REVIEW.md. The fixes replace elapsed-time limits with a fixed-thread CPU budget,
+restrict method filesystem access to public assets and its current input/output,
+remove scalar-result caches, reject duplicate/invalid relation records, refresh
+and enlarge the hidden test to 96 episodes, and enlarge public development to 24.
+The job compares honest variants and affected shortcuts on paired inputs, computes
+whole-episode uncertainty, then reruns only the reference and frozen baseline to
+produce the final official scores. Results are pending; HARDENING.md will record
+the measured before/after comparisons and remaining limitations.
+
 ## What Works
 
 2026-06-04 fidelity reset: an independent method audit found that the previous

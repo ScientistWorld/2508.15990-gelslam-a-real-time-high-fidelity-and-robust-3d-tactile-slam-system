@@ -1,8 +1,5 @@
-# Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends.
-action: pending
+action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: ""
+notes: "Single combined final hardening audit: CPU/filesystem contracts, 96 paired hidden episodes, honest variants and affected shortcuts, 24 public episodes, then isolated end-to-end reference and fixed baseline with official scores and paired uncertainty."

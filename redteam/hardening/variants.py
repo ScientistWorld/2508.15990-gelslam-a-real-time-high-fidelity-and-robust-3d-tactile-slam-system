@@ -19,6 +19,7 @@ Variants (all deterministic):
   hybrid_local_loops   session_chain + loop CCS 0.80 + geometric loop proposals: up to 6 coverage
                        keyframes whose footprint overlaps the new keyframe under the current pose
                        estimate are also verified with NormalFlow initialised from that estimate
+  hybrid_dense_loops   hybrid_local_loops with 6000 samples for revisit registration only
 """
 
 from __future__ import annotations
@@ -75,6 +76,17 @@ class HybridGelSLAM(SessionChainGelSLAM):
         return matched
 
 
+class HybridDenseLoopsGelSLAM(HybridGelSLAM):
+    """Improve revisit registration without making local tracking less stable."""
+    def _detect_loops(self, tar: int) -> list[int]:
+        samples = self.n_samples
+        self.n_samples = 6000
+        try:
+            return super()._detect_loops(tar)
+        finally:
+            self.n_samples = samples
+
+
 def build(variant: str, mm_per_pixel: float) -> GelSLAM:
     if variant == "reference_seed1":
         return GelSLAM(mm_per_pixel, seed=1)
@@ -94,6 +106,8 @@ def build(variant: str, mm_per_pixel: float) -> GelSLAM:
         return SessionChainGelSLAM(mm_per_pixel)
     if variant == "session_chain_dense":
         return SessionChainGelSLAM(mm_per_pixel, n_samples=6000, loop_ccs=0.80)
+    if variant == "hybrid_dense_loops":
+        return HybridDenseLoopsGelSLAM(mm_per_pixel, loop_ccs=0.80)
     if variant == "hybrid_local_loops":
         return HybridGelSLAM(mm_per_pixel, loop_ccs=0.80)
     raise ValueError(variant)

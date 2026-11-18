@@ -9,6 +9,10 @@ checkpoints/<method>/train_outputs/<episode>/ for inspection.
 from __future__ import annotations
 
 import argparse
+import os
+
+for _key in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "BLIS_NUM_THREADS"):
+    os.environ[_key] = "1"
 import sys
 from pathlib import Path
 
@@ -34,6 +38,7 @@ def main() -> None:
     parser.add_argument("--episodes", default=None, help="episode config JSON (default data/train_episodes.json)")
     parser.add_argument("--output", default=None)
     parser.add_argument("--only", nargs="*", default=None, help="restrict to these episode names")
+    parser.add_argument("--audit-dir", default=None, help="private directory for evaluator-generated paired diagnostics")
     args = parser.parse_args()
     root = Path(args.root).resolve()
     episodes = tactile_sim.load_episode_configs(Path(args.episodes) if args.episodes else root / "data" / "train_episodes.json")
@@ -49,6 +54,7 @@ def main() -> None:
         output,
         root,
         keep_outputs=True,
+        audit_dir=Path(args.audit_dir) if args.audit_dir else None,
     )
 
 

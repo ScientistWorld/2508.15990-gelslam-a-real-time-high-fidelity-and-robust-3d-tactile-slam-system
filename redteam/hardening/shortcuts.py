@@ -17,7 +17,7 @@ Kinds:
   empty_predictions    empty pose array
   nan_predictions      NaN translations
   impossible_translation  translations of one million millimetres per frame
-  read_hidden_test     (left open, filesystem access) import the hidden evaluator and replay its ground truth
+  read_hidden_test     (filesystem access attempt) import the hidden evaluator and replay its ground truth
 """
 
 from __future__ import annotations
@@ -31,7 +31,6 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-CACHE = ROOT / "tmp" / "hardening_cache"
 
 
 def _identity(n: int) -> np.ndarray:
@@ -44,19 +43,12 @@ def _load(path: Path):
 
 
 def _reference(path: Path):
-    """Reference GelSLAM outputs for this input, cached across shortcut kinds."""
-    CACHE.mkdir(parents=True, exist_ok=True)
-    key = f"{path.name}_{path.stat().st_size}"
-    pose_file = CACHE / f"{key}_poses.npy"
-    loop_file = CACHE / f"{key}_loops.json"
-    if pose_file.exists() and loop_file.exists():
-        return np.load(pose_file), json.loads(loop_file.read_text())
+    """Recompute genuine reference outputs from this input; no trusted cache."""
     from method.gelslam_sim.gelslam import run_gelslam
     gradients, heights, contacts, mmpp = _load(path)
     poses, loops, _ = run_gelslam(gradients, heights, contacts, mmpp)
-    np.save(pose_file, poses)
-    loop_file.write_text(json.dumps(loops))
     return poses, loops
+
 
 
 def _write(out: Path, poses: np.ndarray, loops: list | None = None, extra: dict | None = None) -> None:
@@ -153,6 +145,21 @@ def run(kind: str, inp: Path, out: Path) -> None:
         for name in ("scores_test.json", "scores_train.json", "scores.json"):
             (ROOT / "scoring" / name).write_text(json.dumps(fake))
         _write(out, _identity(n), extra={"rotation_mae_deg": 0.0, "translation_mae_mm": 0.0, "success": True})
+    elif kind == "metric_cache_forgery":
+        # This environment variable used to cause arbitrary cached scalars to be trusted.
+        target = ROOT / "tmp" / "eval_cache" / "test" / "sc_metric_cache_forgery" / f"{inp.stem}.json"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps({"rot_axis_mae": 0, "trans_axis_mae": 0,
+            "geodesic": [0] * n, "trans_norm": [0] * n, "loops_unique": 1, "loops_false": 0}))
+        _write(out, _identity(n))
+    elif kind == "false_constraint":
+        poses, loops = _reference(inp)
+        for loop in loops:
+            loop["T_ij"][0][3] += 12.0
+        if not loops:
+            bad = np.eye(4); bad[0, 3] = 100.0
+            loops = [{"i": 0, "j": n-1, "T_ij": bad.tolist()}]
+        _write(out, poses, loops)
     elif kind == "constant":
         _write(out, _identity(n))
     elif kind == "empty_predictions":

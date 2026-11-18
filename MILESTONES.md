@@ -73,5 +73,9 @@
 - New synthetic GelSight-Mini-style simulator (four texture families, noisy gradients, Poisson heights); 40 held-out episodes rendered only inside `eval/test/` at test time; methods are run by the evaluator through `predict.json`; frozen eval-owned NormalFlow baseline; failed runs get worst values.
 - Held-out test: GelSLAM 1.439 deg / 0.142 mm vs NormalFlow 3.167 deg / 0.701 mm (continuous contact) and 2.150 deg vs 11.451 deg (contact loss), 659 loops, 0 false. Claim reproduced in the paper's direction; ablations NF-KF, GS-OnlySIFT and GS-OnlyNF behave as in the paper. See `HARDENING.md`.
 
+### [2026-11-18] - core_claim (final hardening in validation)
+- Preserved the paper-method implementation and paper-reported results. Prepared the combined CPU audit for the review's load-dependent deadline and unresolved headroom, together with runtime answer protection, raw-output-only scoring and strict invalid-output failure handling.
+- Final reference and baseline scores are pending the submitted job; no new empirical result is claimed yet.
+
 ## Stop Justification
 - Completed at milestone `core_claim`.
