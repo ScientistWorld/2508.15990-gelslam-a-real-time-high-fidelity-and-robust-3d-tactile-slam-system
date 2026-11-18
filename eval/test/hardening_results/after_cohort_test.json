@@ -1,0 +1,782 @@
+{
+  "_metadata": {
+    "slice": "test",
+    "episodes": [
+      {
+        "name": "heldout_seed_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_6",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_7",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_8",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_9",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_10",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_continuous_11",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_6",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_7",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_8",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_9",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_10",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_fabric_continuous_11",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_6",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_7",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_8",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_9",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_10",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_wood_continuous_11",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_0",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_1",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_2",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_3",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_4",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_5",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_6",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_7",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_8",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_9",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_10",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_rock_continuous_11",
+        "contact_loss": false
+      },
+      {
+        "name": "heldout_seed_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_4",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_5",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_6",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_7",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_8",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_9",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_10",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_seed_contact_loss_11",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_4",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_5",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_6",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_7",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_8",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_9",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_10",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_fabric_contact_loss_11",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_4",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_5",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_6",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_7",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_8",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_9",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_10",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_wood_contact_loss_11",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_0",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_1",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_2",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_3",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_4",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_5",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_6",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_7",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_8",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_9",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_10",
+        "contact_loss": true
+      },
+      {
+        "name": "heldout_rock_contact_loss_11",
+        "contact_loss": true
+      }
+    ],
+    "methods_discovered": [
+      "exhaustive_two_stage",
+      "gelslam_online",
+      "hybrid_dense_loops",
+      "hybrid_local_loops",
+      "nf_kf",
+      "only_nf_exhaustive",
+      "reference_seed1",
+      "sc_baseline_replacement",
+      "sc_constant",
+      "sc_duplicate_loops",
+      "sc_empty_predictions",
+      "sc_false_constraint",
+      "sc_forged_scores",
+      "sc_generator_replay",
+      "sc_gt_replacement",
+      "sc_impossible_translation",
+      "sc_invalid",
+      "sc_labels_copy",
+      "sc_metric_cache_forgery",
+      "sc_nan_loops",
+      "sc_nan_predictions",
+      "sc_read_hidden_test",
+      "session_chain_dense",
+      "sc_orphan"
+    ],
+    "cpu_budget_seconds": 7200,
+    "execution": "one CPU affinity; one numerical-library thread; no wall-clock deadline"
+  },
+  "experiments": {
+    "long_horizon_tracking": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "exhaustive_two_stage": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "hybrid_dense_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "hybrid_local_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "nf_kf": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "only_nf_exhaustive": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "reference_seed1": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_baseline_replacement": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_constant": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_duplicate_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_empty_predictions": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_false_constraint": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_forged_scores": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_generator_replay": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_gt_replacement": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_impossible_translation": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_invalid": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_labels_copy": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_metric_cache_forgery": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_nan_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_nan_predictions": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_read_hidden_test": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "session_chain_dense": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_orphan": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        }
+      }
+    },
+    "relocalization_after_contact_loss": {
+      "results": {
+        "normalflow": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "exhaustive_two_stage": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "gelslam_online": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "hybrid_dense_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "hybrid_local_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "nf_kf": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "only_nf_exhaustive": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "reference_seed1": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_baseline_replacement": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_constant": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_duplicate_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_empty_predictions": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_false_constraint": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_forged_scores": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_generator_replay": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_gt_replacement": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_impossible_translation": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_invalid": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_labels_copy": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_metric_cache_forgery": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_nan_loops": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_nan_predictions": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_read_hidden_test": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "session_chain_dense": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        },
+        "sc_orphan": {
+          "rotation_mae_deg": 90.0,
+          "translation_mae_mm": 30.0,
+          "rotation_p95_deg": 90.0,
+          "translation_p95_mm": 30.0,
+          "false_loop_excess": 0.98
+        }
+      }
+    }
+  },
+  "_diagnostics": {
+    "status": "pending: every method holds its worst values until scored"
+  }
+}

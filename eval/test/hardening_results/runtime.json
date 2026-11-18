@@ -1,0 +1,9 @@
+{
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "opencv": "4.13.0",
+  "numerical_threads": 1,
+  "cpu_affinity_cores": 1,
+  "episode_cpu_budget_seconds": 7200
+}
