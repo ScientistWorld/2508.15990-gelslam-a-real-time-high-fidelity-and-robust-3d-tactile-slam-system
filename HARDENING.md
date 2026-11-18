@@ -21,3 +21,20 @@ Completed checks: all filesystem, child-CPU, invalid-output, failure-matrix and 
 The new `hybrid_dense_loops` variant improves all eight error metrics, with gain +0.03922 in the full audit cohort (+0.22089 among honest methods), but its paired whole-episode bootstrap 95% interval is [-0.00566, +0.23545]. The next job expands the same parameter distribution to 384 independent episodes, without changing the reference, coefficients or experiment weights. The 96 unchanged inputs reuse private raw predictions only after source-provenance checks; every metric is recomputed from those predictions and freshly rendered truth. Remaining inputs execute each method afresh. The final reference uses its separate independent namespace.
 
 The NormalFlow-only exhaustive search loses (-0.78886). Exhaustive two-stage matching still gains +0.02188 by retaining all keyframes. The test does not yet establish the coverage set's efficiency advantage; this remains an explicit limitation, not a closed shortcut. No claim that the hardening is complete is made by these interim measurements.
+
+Job `888d31de-3d2` was cancelled after ten scheduler preemptions and about five
+hours of repeated recovery. Its incomplete output is not a measurement. Raw
+predictions remain available under private evaluator storage. The recovery job
+(`bash scripts/resume_scale.sh`) now completes missing inference first, skips
+observation generation when all needed predictions exist, and obtains exactly
+the same poses through the original contact solve without sensor simulation.
+It checks bitwise equality against the full renderer for every texture and both
+contact regimes before transferring source-verified raw predictions. Both old
+source snapshots are retained privately, and reviewed SHA-256 hashes lock the
+migration to these operational changes. Mathematical scoring functions and the
+full renderer are unchanged. Optional evaluator-owned truth checkpoints stay
+under `eval/test/resume/`, keyed by runtime, source and episode configuration;
+methods can neither read nor write them. They contain answers, never scored
+values or method-provided verdicts. Normal no-argument evaluation uses no resume
+or truth checkpoints. Completed audit phases also survive preemption. The
+384-episode paired result and independent official scores are still pending.

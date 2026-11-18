@@ -83,3 +83,7 @@
 ### [2026-11-18] - core_claim (paired scale check)
 - Completed the combined hardening audit with all protocol checks passing and exact independent reference/baseline agreement. Both experiments reproduce the paper's tracking direction and loop-safety constraint.
 - Enlarging the same paired distribution from 96 to 384 episodes because the honest improvement's aggregate confidence interval still crosses zero. Exhaustive two-stage matching remains an efficiency limitation.
+
+### [2026-11-18] - core_claim (preemption recovery)
+- The enlarged audit saved substantial inference, but ten scheduler preemptions made repeated observation rendering dominate recovery. Cancelled it to repair recovery only; method, data distribution, scored quantities and coefficients are unchanged.
+- Added incomplete-input priority, exact truth-only rendering, private evaluator-owned truth checkpoints, and completed-phase markers. The combined resubmission verifies equivalence before reusing previous raw predictions. Final headroom and shortcut results remain pending.

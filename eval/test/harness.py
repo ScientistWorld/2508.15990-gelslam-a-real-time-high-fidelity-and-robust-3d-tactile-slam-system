@@ -395,6 +395,21 @@ def save_resume_raw(destination: Path | None, poses: np.ndarray, timing: dict, s
         os.replace(stage, destination)
 
 
+
+def save_resume_truth(destination: Path, poses: np.ndarray) -> None:
+    """Cache evaluator-generated answers only inside the private resume tree.
+
+    The key includes source, runtime and episode configuration. Methods cannot
+    read or write this tree. No metric or method-provided value is stored here.
+    """
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="truth_", dir=destination.parent) as td:
+        stage = Path(td) / "complete"
+        stage.mkdir()
+        np.save(stage / "poses.npy", poses)
+        os.replace(stage, destination)
+
+
 def evaluate(
     slice_name: str,
     episodes: list[dict],
@@ -406,6 +421,8 @@ def evaluate(
     keep_outputs: bool = False,
     audit_dir: Path | None = None,
     resume_dir: Path | None = None,
+    render_ground_truth: Callable[[dict], np.ndarray] | None = None,
+    cache_ground_truth: bool = False,
 ) -> dict:
     configure_cpu()
     if audit_dir is not None and not _within(audit_dir.resolve(), root / "eval" / slice_name):
@@ -429,6 +446,16 @@ def evaluate(
 
     states = {m["name"]: {"error": m["error"], "episodes": {}} for m in methods}
     baseline_state = {"error": None, "episodes": {}}
+    # Complete missing inference before revisiting already finished inputs.
+    # Aggregation below retains the original episode order and paired inputs.
+    locations = {}
+    for episode in episodes:
+        locations[episode["name"]] = {"normalflow": resume_location(resume_dir, fingerprint, None, episode)}
+        locations[episode["name"]].update({
+            m["name"]: resume_location(resume_dir, fingerprint, m, episode)
+            for m in methods if m["error"] is None})
+    run_order = sorted(episodes, key=lambda e: sum(
+        p is not None and p.is_dir() for p in locations[e["name"]].values()))
     # Episode inputs are ~100 MB each; container /tmp is a small tmpfs, so the
     # scratch stays within the private evaluator directory and is not method-readable.
     scratch_root = root / "eval" / slice_name / "scratch"
@@ -437,19 +464,35 @@ def evaluate(
         tmp = Path(tmp_name)
         (tmp / "inputs").mkdir()
         (tmp / "logs").mkdir()
-        for episode in episodes:
-            pending = {"normalflow"} | {m["name"] for m in methods if states[m["name"]]["error"] is None}
-            print(f"[{slice_name}] rendering {episode['name']}", flush=True)
-            data = render(episode)
-            gt = np.asarray(data["poses_mm"], dtype=np.float64)
-            n_frames = len(gt)
+        for episode in run_order:
+            pending = {m["name"] for m in methods if states[m["name"]]["error"] is None}
+            if baseline_state["error"] is None:
+                pending.add("normalflow")
+            saved_paths = locations[episode["name"]]
+            complete = all(saved_paths[name] is not None and saved_paths[name].is_dir() for name in pending)
             input_path = tmp / "inputs" / f"{episode['name']}.npz"
-            save_observations(data, input_path)
+            truth_path = (resume_location(resume_dir / "_ground_truth", fingerprint, None, episode)
+                          if cache_ground_truth and resume_dir is not None else None)
+            if complete and render_ground_truth is not None:
+                print(f"[{slice_name}] rescoring raw predictions on {episode['name']}", flush=True)
+                if truth_path is not None and truth_path.is_dir():
+                    gt = load_poses(truth_path, int(episode["frames"]))
+                else:
+                    gt = np.asarray(render_ground_truth(episode), dtype=np.float64)
+                data = None  # no command needs observations for this episode
+            else:
+                print(f"[{slice_name}] rendering {episode['name']}", flush=True)
+                data = render(episode)
+                gt = np.asarray(data["poses_mm"], dtype=np.float64)
+                save_observations(data, input_path)
+            if truth_path is not None and not truth_path.exists():
+                save_resume_truth(truth_path, gt)
+            n_frames = len(gt)
 
             if baseline_state["error"] is None and "normalflow" in pending:
                 try:
                     start = time.monotonic()
-                    saved = resume_location(resume_dir, fingerprint, None, episode)
+                    saved = saved_paths["normalflow"]
                     if saved is not None and saved.is_dir():
                         poses = load_poses(saved, n_frames)
                         timing = json.loads((saved / "execution.json").read_text())
@@ -478,7 +521,7 @@ def evaluate(
                 out_dir.mkdir(parents=True, exist_ok=True)
                 print(f"[{slice_name}] {method['name']} on {episode['name']}", flush=True)
                 try:
-                    saved = resume_location(resume_dir, fingerprint, method, episode)
+                    saved = saved_paths[method["name"]]
                     restoring = saved is not None and saved.is_dir()
                     if restoring:
                         timing = json.loads((saved / "execution.json").read_text())

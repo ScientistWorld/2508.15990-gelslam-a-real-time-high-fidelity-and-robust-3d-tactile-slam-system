@@ -2,6 +2,20 @@
 
 ## 2026-11-18: final hardening after review
 
+Job `888d31de-3d2` was cancelled after ten scheduler preemptions. It had
+saved valid raw predictions through most of the enlarged test, but repeated
+observation rendering consumed each recovery window. No scientific setting
+changed. The next job prioritizes incomplete inference, regenerates only exact
+contact ground truth for completed episodes, and stores evaluator-owned truth
+checkpoints inside `eval/test/resume/`. A source/runtime/input fingerprint
+invalidates them after any change. Every metric and validity decision is still
+recomputed from raw poses and relations. The job checks truth-only/full-render
+bitwise equality for all four families and both contact regimes, then finishes
+the combined cohort, independent reference/baseline, and paired uncertainty.
+Completed phases are checkpointed as well. The final 384-episode result remains
+pending; the completed 96-episode result is retained without reinterpretation.
+
+
 Job `384d3d42-aab` finished with exit code 0. All protocol checks passed and the
 independent final reference and baseline matched their paired-cohort results
 exactly. The stronger revisit-registration variant improves all error metrics,

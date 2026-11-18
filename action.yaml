@@ -2,4 +2,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Complete the unresolved paired headroom check on 384 hidden episodes: source-verified raw rescoring for the first 96, new inference for 288, better/weaker and exhaustive variants plus affected shortcuts, then independent official reference/baseline scores. Scientific method and weights unchanged."
+notes: "Finish the unchanged 384-episode paired audit after preemption: reuse source-verified raw outputs, complete missing inference first, verify exact truth-only rendering, checkpoint private truth and finished phases, then independently finish official reference/baseline scores and paired uncertainty."

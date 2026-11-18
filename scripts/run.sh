@@ -1,5 +1,5 @@
 #!/bin/bash
-# Finish the enlarged paired headroom audit, then the independent reference.
+# Complete the enlarged audit without repeating finished inference or phases.
 set -euo pipefail
 cd /home/user
-bash redteam/hardening/audit_scale.sh
+bash scripts/resume_scale.sh

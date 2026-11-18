@@ -307,6 +307,27 @@ def render_episode(family: str, seed: int, n_frames: int = 400, contact_loss: bo
     }
 
 
+
+def render_ground_truth(family: str, seed: int, n_frames: int = 400,
+                        contact_loss: bool = False) -> np.ndarray:
+    """Recompute the exact poses without sensor noise, integration or input I/O.
+
+    Contact translation depends on the sampled surface, so retain the same
+    seven-iteration contact solve as the full renderer. Observation noise has
+    its own RNG and never changes the object, trajectory or contact translation.
+    """
+    obj = TactileObject(family, seed)
+    kept = kept_frame_indices(n_frames, contact_loss)
+    rotations, xy, depth = make_trajectory(obj, seed, int(kept[-1]) + 1)
+    poses = np.zeros((n_frames, 4, 4))
+    for out_idx, raw_idx in enumerate(kept):
+        _, t = render_contact(obj, rotations[raw_idx], xy[raw_idx], depth[raw_idx])
+        poses[out_idx] = np.eye(4)
+        poses[out_idx, :3, :3] = rotations[raw_idx]
+        poses[out_idx, :3, 3] = t * MM_PER_PIXEL
+    return poses
+
+
 def save_observations(episode: dict, path: Path) -> None:
     """Write the method-visible observation file (no ground truth)."""
     path.parent.mkdir(parents=True, exist_ok=True)

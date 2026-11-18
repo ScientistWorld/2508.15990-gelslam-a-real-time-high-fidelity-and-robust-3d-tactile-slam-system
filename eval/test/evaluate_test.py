@@ -1952,6 +1952,12 @@ def render(episode: dict) -> dict:
                                        bool(episode["contact_loss"]))
 
 
+
+def render_ground_truth(episode: dict):
+    return hidden_world.render_ground_truth(episode["family"], int(episode["seed"]), int(episode["frames"]),
+                                            bool(episode["contact_loss"]))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=str(HERE.parents[1]))
@@ -1972,6 +1978,8 @@ def main() -> None:
         keep_outputs=False,
         audit_dir=Path(args.audit_dir) if args.audit_dir else None,
         resume_dir=Path(args.resume_dir) if args.resume_dir else None,
+        render_ground_truth=render_ground_truth,
+        cache_ground_truth=args.resume_dir is not None,
     )
 
 

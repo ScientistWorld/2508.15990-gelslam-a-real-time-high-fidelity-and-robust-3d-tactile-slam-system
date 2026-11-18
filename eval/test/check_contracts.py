@@ -10,6 +10,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import harness
+import hidden_world
 from runner import run_isolated
 
 ROOT = HERE.parents[1]
@@ -92,23 +93,36 @@ importlib.import_module("method.gelslam_sim.run")
         (registration / "predict.json").write_text(json.dumps({"command": ["dummy", "{input}", "{output}"]}))
         truth = np.tile(np.eye(4), (3, 1, 1))
         calls = []
+        renders = []
+        writes = []
+        def render(ep):
+            renders.append(ep["name"])
+            return {"poses_mm": truth, "gradients": None, "heights": None,
+                    "contact_masks": None, "mm_per_pixel": 1.0}
+        def save_observations(data, path):
+            writes.append(path.name)
+            path.touch()
         def command(method, inp, out, root, log):
             calls.append(method["name"])
             np.save(out / "poses.npy", np.tile(np.eye(4), (3, 1, 1)))
             return {"seconds": 0.0, "cpu_seconds": 0.0}
         original = harness.run_command
         harness.run_command = command
-        def recovery():
-            return harness.evaluate("test", [{"name": "tiny", "contact_loss": False}],
-                lambda ep: {"poses_mm": truth, "gradients": None, "heights": None,
-                            "contact_masks": None, "mm_per_pixel": 1.0},
-                lambda data, path: path.touch(), lambda *args: np.tile(np.eye(4), (3, 1, 1)),
-                fixture / "scores.json", fixture, resume_dir=fixture / "eval/test/resume/unit")
+        truth_calls = []
+        def render_truth(ep):
+            truth_calls.append(ep["name"])
+            return truth.copy()
+        def recovery(cache=False):
+            return harness.evaluate("test", [{"name": "tiny", "frames": 3, "contact_loss": False}],
+                render, save_observations, lambda *args: np.tile(np.eye(4), (3, 1, 1)),
+                fixture / "scores.json", fixture, resume_dir=fixture / "eval/test/resume/unit",
+                render_ground_truth=render_truth, cache_ground_truth=cache)
         try:
             first = recovery()
             truth[1:, 0, 3] = 0.3
             second = recovery()
             assert calls == ["candidate"], "completed raw prediction was executed twice"
+            assert len(renders) == len(writes) == 1, "recovery regenerated observations"
             exp = "long_horizon_tracking"
             assert first["results"]["candidate"][exp]["translation_mae_mm"] == 0.0
             assert second["results"]["candidate"][exp]["translation_mae_mm"] > 0.0, "cached scalar trusted"
@@ -117,9 +131,24 @@ importlib.import_module("method.gelslam_sim.run")
             (source / "algorithm.py").write_text("changed = True\n")
             recovery()
             assert calls == ["candidate", "candidate"], "changed source restored stale predictions"
+            assert len(renders) == len(writes) == 2
+            fourth = recovery(cache=True)
+            count = len(truth_calls)
+            fifth = recovery(cache=True)
+            assert len(truth_calls) == count, "private truth checkpoint was not reused"
+            assert fourth["results"] == fifth["results"]
+            assert calls == ["candidate", "candidate"]
         finally:
             harness.run_command = original
-    print('Evaluation integrity contracts passed', flush=True)
+    # Exact equivalence, including the contact-loss jump and every texture.
+    # This runs only in the submitted CPU job, never on the login node.
+    for family_index, family in enumerate(hidden_world.FAMILIES):
+        for contact_loss, frames in [(False, 16), (True, 126)]:
+            seed = 100003 + family_index
+            full = hidden_world.render_episode(family, seed, frames, contact_loss)["poses_mm"]
+            truth_only = hidden_world.render_ground_truth(family, seed, frames, contact_loss)
+            assert np.array_equal(full, truth_only), f"ground-truth fast path changed {family}/{contact_loss}"
+    print('Evaluation integrity contracts passed; truth-only poses exactly match full rendering', flush=True)
 
 
 if __name__ == '__main__':
