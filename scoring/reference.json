@@ -47,18 +47,18 @@
       "results": {
         "normalflow": {
           "type": "baseline",
-          "rotation_mae_deg": 3.1665362089972446,
-          "translation_mae_mm": 0.7006527123393953,
-          "rotation_p95_deg": 14.614924587735011,
-          "translation_p95_mm": 3.968794510862936,
+          "rotation_mae_deg": 3.156428091678705,
+          "translation_mae_mm": 0.6998754444754614,
+          "rotation_p95_deg": 18.891124734056213,
+          "translation_p95_mm": 4.207183668049835,
           "false_loop_excess": 0.0
         },
         "gelslam_online": {
           "type": "proposed",
-          "rotation_mae_deg": 1.4389941638954198,
-          "translation_mae_mm": 0.14228978032903844,
-          "rotation_p95_deg": 4.294562713525054,
-          "translation_p95_mm": 0.49606073738809936,
+          "rotation_mae_deg": 0.5540123925365779,
+          "translation_mae_mm": 0.051699931771268325,
+          "rotation_p95_deg": 2.98284982891887,
+          "translation_p95_mm": 0.3437188867747438,
           "false_loop_excess": 0.0
         }
       },
@@ -110,18 +110,18 @@
       "results": {
         "normalflow": {
           "type": "baseline",
-          "rotation_mae_deg": 11.451145472699565,
-          "translation_mae_mm": 2.806023645153234,
-          "rotation_p95_deg": 62.40266851803462,
-          "translation_p95_mm": 13.624579015039714,
+          "rotation_mae_deg": 9.019147441569887,
+          "translation_mae_mm": 2.2736092697107657,
+          "rotation_p95_deg": 41.339819565640624,
+          "translation_p95_mm": 11.535458761610332,
           "false_loop_excess": 0.0
         },
         "gelslam_online": {
           "type": "proposed",
-          "rotation_mae_deg": 2.1500371506874463,
-          "translation_mae_mm": 0.4011010747909716,
-          "rotation_p95_deg": 32.050698859802814,
-          "translation_p95_mm": 10.918708805844412,
+          "rotation_mae_deg": 1.6912980314410146,
+          "translation_mae_mm": 0.2230851495975432,
+          "rotation_p95_deg": 8.037542435900978,
+          "translation_p95_mm": 1.5455474329918393,
           "false_loop_excess": 0.0
         }
       },
