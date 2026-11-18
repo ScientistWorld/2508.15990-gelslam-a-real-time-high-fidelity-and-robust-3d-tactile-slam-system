@@ -8,11 +8,9 @@
     "exhaustive_two_stage",
     "gelslam_online",
     "hybrid_dense_loops",
-    "hybrid_local_loops",
     "nf_kf",
     "normalflow",
     "only_nf_exhaustive",
-    "reference_seed1",
     "sc_baseline_replacement",
     "sc_constant",
     "sc_duplicate_loops",
@@ -28,62 +26,55 @@
     "sc_nan_loops",
     "sc_nan_predictions",
     "sc_orphan",
-    "sc_read_hidden_test",
-    "session_chain_dense"
+    "sc_read_hidden_test"
   ],
   "rank_gain": {
-    "exhaustive_two_stage": 0.021881883357907726,
+    "exhaustive_two_stage": 0.002497343259773455,
     "gelslam_online": 0.0,
-    "hybrid_dense_loops": 0.03921532203922652,
-    "hybrid_local_loops": 0.009211811880185362,
-    "nf_kf": -0.8208931438507353,
-    "normalflow": -0.6373595644823637,
-    "only_nf_exhaustive": -0.7888554099393005,
-    "reference_seed1": 0.0,
-    "sc_baseline_replacement": -6.977185507321255,
-    "sc_constant": -1.8467439300280026,
-    "sc_duplicate_loops": -6.977185507321255,
-    "sc_empty_predictions": -6.977185507321255,
-    "sc_false_constraint": -6.977185507321255,
-    "sc_forged_scores": -6.977185507321255,
-    "sc_generator_replay": -1.8467439300280026,
-    "sc_gt_replacement": -6.977185507321255,
-    "sc_impossible_translation": -6.977185507321255,
-    "sc_invalid": -6.977185507321255,
-    "sc_labels_copy": -1.8467439300280026,
-    "sc_metric_cache_forgery": -6.977185507321255,
-    "sc_nan_loops": -6.977185507321255,
-    "sc_nan_predictions": -6.977185507321255,
-    "sc_orphan": -6.977185507321255,
-    "sc_read_hidden_test": -6.977185507321255,
-    "session_chain_dense": -0.053967805511773416
+    "hybrid_dense_loops": 0.013898533630287063,
+    "nf_kf": -0.9422163665121155,
+    "normalflow": -0.7669135679687014,
+    "only_nf_exhaustive": -0.9112317416338365,
+    "sc_baseline_replacement": -7.348191264229868,
+    "sc_constant": -2.046178396933234,
+    "sc_duplicate_loops": -7.348191264229868,
+    "sc_empty_predictions": -7.348191264229868,
+    "sc_false_constraint": -7.348191264229868,
+    "sc_forged_scores": -7.348191264229868,
+    "sc_generator_replay": -2.046178396933234,
+    "sc_gt_replacement": -7.348191264229868,
+    "sc_impossible_translation": -7.348191264229868,
+    "sc_invalid": -7.348191264229868,
+    "sc_labels_copy": -2.046178396933234,
+    "sc_metric_cache_forgery": -7.348191264229868,
+    "sc_nan_loops": -7.348191264229868,
+    "sc_nan_predictions": -7.348191264229868,
+    "sc_orphan": -7.348191264229868,
+    "sc_read_hidden_test": -7.348191264229868
   },
   "genuine_rank_gain": {
-    "exhaustive_two_stage": 0.04663984430259752,
+    "exhaustive_two_stage": 0.014516460383959854,
     "gelslam_online": 0.0,
-    "hybrid_dense_loops": 0.22089231640959175,
-    "hybrid_local_loops": 0.16865509139025067,
-    "nf_kf": -3.324221930324988,
-    "normalflow": -6.895907885225365,
-    "only_nf_exhaustive": -2.623043731658943,
-    "reference_seed1": 0.0,
-    "sc_baseline_replacement": -180.68619274443606,
-    "sc_constant": -32.098880817162446,
-    "sc_duplicate_loops": -180.68619274443606,
-    "sc_empty_predictions": -180.68619274443606,
-    "sc_false_constraint": -180.68619274443606,
-    "sc_forged_scores": -180.68619274443606,
-    "sc_generator_replay": -32.098880817162446,
-    "sc_gt_replacement": -180.68619274443606,
-    "sc_impossible_translation": -180.68619274443606,
-    "sc_invalid": -180.68619274443606,
-    "sc_labels_copy": -32.098880817162446,
-    "sc_metric_cache_forgery": -180.68619274443606,
-    "sc_nan_loops": -180.68619274443606,
-    "sc_nan_predictions": -180.68619274443606,
-    "sc_orphan": -180.68619274443606,
-    "sc_read_hidden_test": -180.68619274443606,
-    "session_chain_dense": -0.0323558376060417
+    "hybrid_dense_loops": 0.12290558404493895,
+    "nf_kf": -3.0756562632181246,
+    "normalflow": -6.195029966993772,
+    "only_nf_exhaustive": -2.4772787374018983,
+    "sc_baseline_replacement": -155.722330162352,
+    "sc_constant": -28.479862202036475,
+    "sc_duplicate_loops": -155.722330162352,
+    "sc_empty_predictions": -155.722330162352,
+    "sc_false_constraint": -155.722330162352,
+    "sc_forged_scores": -155.722330162352,
+    "sc_generator_replay": -28.479862202036475,
+    "sc_gt_replacement": -155.722330162352,
+    "sc_impossible_translation": -155.722330162352,
+    "sc_invalid": -155.722330162352,
+    "sc_labels_copy": -28.479862202036475,
+    "sc_metric_cache_forgery": -155.722330162352,
+    "sc_nan_loops": -155.722330162352,
+    "sc_nan_predictions": -155.722330162352,
+    "sc_orphan": -155.722330162352,
+    "sc_read_hidden_test": -155.722330162352
   },
   "train_rank_gain": {
     "exhaustive_two_stage": 0.051381226210573276,
@@ -99,37 +90,37 @@
   "paired": {
     "exhaustive_two_stage": {
       "gain_ci95": [
-        -0.0009041651163146135,
-        0.15596758761918672
+        0.0007591070506567127,
+        0.006250934893864223
       ],
       "paired": {
         "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": -0.001129343576977872,
-          "se": 0.0032119751265681624,
-          "better": 8,
-          "worse": 10,
-          "n": 48
+          "mean_diff": -0.004515729053058936,
+          "se": 0.0019097509488005576,
+          "better": 50,
+          "worse": 33,
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": -0.00016623571048608805,
-          "se": 0.0005315135764212706,
-          "better": 9,
-          "worse": 9,
-          "n": 48
+          "mean_diff": -0.0007854011971455639,
+          "se": 0.0003265395262010791,
+          "better": 53,
+          "worse": 30,
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": -0.20471965147749835,
-          "se": 0.19949928866565775,
-          "better": 23,
-          "worse": 19,
-          "n": 48
+          "mean_diff": -0.06125397294749479,
+          "se": 0.04992132216536794,
+          "better": 104,
+          "worse": 56,
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": -0.025001502313098983,
-          "se": 0.023584139731000837,
-          "better": 30,
-          "worse": 12,
-          "n": 48
+          "mean_diff": -0.00783893138870091,
+          "se": 0.0059112649894080245,
+          "better": 118,
+          "worse": 42,
+          "n": 192
         }
       }
     },
@@ -144,413 +135,303 @@
           "se": 0.0,
           "better": 0,
           "worse": 0,
-          "n": 48
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
           "mean_diff": 0.0,
           "se": 0.0,
           "better": 0,
           "worse": 0,
-          "n": 48
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
           "mean_diff": 0.0,
           "se": 0.0,
           "better": 0,
           "worse": 0,
-          "n": 48
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
           "mean_diff": 0.0,
           "se": 0.0,
           "better": 0,
           "worse": 0,
-          "n": 48
+          "n": 192
         }
       }
     },
     "hybrid_dense_loops": {
       "gain_ci95": [
-        -0.005663498099885619,
-        0.23544683764013263
+        0.008082627700992655,
+        0.02529510949576097
       ],
       "paired": {
         "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": -0.06791849458474457,
-          "se": 0.028071837255690017,
-          "better": 34,
-          "worse": 13,
-          "n": 48
+          "mean_diff": -0.047512202004778535,
+          "se": 0.012567390273780529,
+          "better": 132,
+          "worse": 57,
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": -0.00880440085387118,
-          "se": 0.003603386259749757,
-          "better": 37,
-          "worse": 10,
-          "n": 48
+          "mean_diff": -0.010246575242880094,
+          "se": 0.0033900270818072622,
+          "better": 141,
+          "worse": 48,
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": -0.8072461553877964,
-          "se": 0.3996016476841283,
-          "better": 30,
-          "worse": 18,
-          "n": 48
+          "mean_diff": -0.4466843438899704,
+          "se": 0.14259798637569368,
+          "better": 136,
+          "worse": 56,
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": -0.043216885720197086,
-          "se": 0.036373706861770654,
-          "better": 32,
-          "worse": 16,
-          "n": 48
-        }
-      }
-    },
-    "hybrid_local_loops": {
-      "gain_ci95": [
-        -0.04063287009022984,
-        0.232233216095339
-      ],
-      "paired": {
-        "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": -0.06433593583425475,
-          "se": 0.027927971809298242,
-          "better": 15,
-          "worse": 9,
-          "n": 48
-        },
-        "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": -0.008325530321050614,
-          "se": 0.0034214248719164103,
-          "better": 18,
-          "worse": 6,
-          "n": 48
-        },
-        "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": -0.7693143513116274,
-          "se": 0.4009336019470147,
-          "better": 24,
-          "worse": 23,
-          "n": 48
-        },
-        "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": -0.03382242386192683,
-          "se": 0.03762642964648587,
-          "better": 23,
-          "worse": 23,
-          "n": 48
+          "mean_diff": -0.03255522716814813,
+          "se": 0.012156156195868408,
+          "better": 139,
+          "worse": 53,
+          "n": 192
         }
       }
     },
     "nf_kf": {
       "gain_ci95": [
-        -0.8891206907883089,
-        -0.5098467422738625
+        -0.9656016419618234,
+        -0.9135560974888454
       ],
       "paired": {
         "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": 0.4729537532565337,
-          "se": 0.14739258343682543,
-          "better": 2,
-          "worse": 43,
-          "n": 48
+          "mean_diff": 0.4685360135201428,
+          "se": 0.07563671371060315,
+          "better": 12,
+          "worse": 169,
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": 0.06877219261994952,
-          "se": 0.012757261746592969,
-          "better": 2,
-          "worse": 43,
-          "n": 48
+          "mean_diff": 0.09134438560823528,
+          "se": 0.025448810483263407,
+          "better": 7,
+          "worse": 174,
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": 16.70484580316236,
-          "se": 0.9204934659842589,
+          "mean_diff": 16.456295239918152,
+          "se": 0.4237136040282263,
           "better": 0,
-          "worse": 47,
-          "n": 48
+          "worse": 190,
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": 2.5881865944414497,
-          "se": 0.10444645492534571,
+          "mean_diff": 2.623696500650776,
+          "se": 0.05788281001727636,
           "better": 0,
-          "worse": 47,
-          "n": 48
+          "worse": 190,
+          "n": 192
         }
       }
     },
     "normalflow": {
       "gain_ci95": [
-        -0.7314414273002988,
-        -0.332622949678588
+        -0.8026274585585836,
+        -0.7328698592014652
       ],
       "paired": {
         "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": 2.6024156991421274,
-          "se": 0.2790917045712642,
+          "mean_diff": 2.6229046622251446,
+          "se": 0.11189505122901319,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": 0.6481755127041929,
-          "se": 0.06005681106374682,
+          "mean_diff": 0.656427143505139,
+          "se": 0.02931844553873458,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": 7.327849410128873,
-          "se": 0.5751027525804533,
-          "better": 2,
-          "worse": 46,
-          "n": 48
+          "mean_diff": 7.834879446712435,
+          "se": 0.2758117983774172,
+          "better": 6,
+          "worse": 186,
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": 2.0505241201132223,
-          "se": 0.11078371550030178,
-          "better": 1,
-          "worse": 47,
-          "n": 48
+          "mean_diff": 2.321372384128914,
+          "se": 0.07049252686480448,
+          "better": 3,
+          "worse": 189,
+          "n": 192
         }
       }
     },
     "only_nf_exhaustive": {
       "gain_ci95": [
-        -0.8626696791835978,
-        -0.4821026021194003
+        -0.9323686344698092,
+        -0.8829971595334667
       ],
       "paired": {
         "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": 0.0804558280567274,
-          "se": 0.13753816875906655,
-          "better": 24,
-          "worse": 23,
-          "n": 48
+          "mean_diff": 0.06725822344137473,
+          "se": 0.068297604096574,
+          "better": 111,
+          "worse": 78,
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": 0.0033405709928164998,
-          "se": 0.00971187248891285,
-          "better": 27,
-          "worse": 20,
-          "n": 48
+          "mean_diff": 0.026651279669199047,
+          "se": 0.024998145934616762,
+          "better": 127,
+          "worse": 62,
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": 16.601565985117684,
-          "se": 0.9180867732647717,
-          "better": 1,
-          "worse": 47,
-          "n": 48
+          "mean_diff": 16.403645042442914,
+          "se": 0.4243741351732375,
+          "better": 2,
+          "worse": 190,
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": 2.5756833855506307,
-          "se": 0.10609569703626441,
-          "better": 1,
-          "worse": 47,
-          "n": 48
-        }
-      }
-    },
-    "reference_seed1": {
-      "gain_ci95": [
-        0.0,
-        0.0
-      ],
-      "paired": {
-        "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": 0.0,
-          "se": 0.0,
-          "better": 0,
-          "worse": 0,
-          "n": 48
-        },
-        "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": 0.0,
-          "se": 0.0,
-          "better": 0,
-          "worse": 0,
-          "n": 48
-        },
-        "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": 0.0,
-          "se": 0.0,
-          "better": 0,
-          "worse": 0,
-          "n": 48
-        },
-        "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": 0.0,
-          "se": 0.0,
-          "better": 0,
-          "worse": 0,
-          "n": 48
+          "mean_diff": 2.6167708695297778,
+          "se": 0.05848815447079119,
+          "better": 2,
+          "worse": 190,
+          "n": 192
         }
       }
     },
     "sc_constant": {
       "gain_ci95": [
-        -1.9156551888839166,
-        -1.537557729379277
+        -2.065349879554372,
+        -2.0202927098304415
       ],
       "paired": {
         "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": 20.437094525179756,
-          "se": 0.7978873512871881,
+          "mean_diff": 20.321259619490625,
+          "se": 0.3661295487408104,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": 2.815791800479964,
-          "se": 0.06992344420956355,
+          "mean_diff": 2.8617152853933985,
+          "se": 0.03628762827299151,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": 19.117634642471256,
-          "se": 0.9297426621814611,
-          "better": 0,
-          "worse": 48,
-          "n": 48
+          "mean_diff": 19.185721235033267,
+          "se": 0.4123127724168241,
+          "better": 1,
+          "worse": 191,
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": 2.6524215320280837,
-          "se": 0.07312909707461752,
+          "mean_diff": 2.7290853755926108,
+          "se": 0.03893595933597927,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         }
       }
     },
     "sc_generator_replay": {
       "gain_ci95": [
-        -1.9156551888839166,
-        -1.537557729379277
+        -2.065349879554372,
+        -2.0202927098304415
       ],
       "paired": {
         "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": 20.437094525179756,
-          "se": 0.7978873512871881,
+          "mean_diff": 20.321259619490625,
+          "se": 0.3661295487408104,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": 2.815791800479964,
-          "se": 0.06992344420956355,
+          "mean_diff": 2.8617152853933985,
+          "se": 0.03628762827299151,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": 19.117634642471256,
-          "se": 0.9297426621814611,
-          "better": 0,
-          "worse": 48,
-          "n": 48
+          "mean_diff": 19.185721235033267,
+          "se": 0.4123127724168241,
+          "better": 1,
+          "worse": 191,
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": 2.6524215320280837,
-          "se": 0.07312909707461752,
+          "mean_diff": 2.7290853755926108,
+          "se": 0.03893595933597927,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         }
       }
     },
     "sc_labels_copy": {
       "gain_ci95": [
-        -1.9156551888839166,
-        -1.537557729379277
+        -2.065349879554372,
+        -2.0202927098304415
       ],
       "paired": {
         "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": 20.437094525179756,
-          "se": 0.7978873512871881,
+          "mean_diff": 20.321259619490625,
+          "se": 0.3661295487408104,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         },
         "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": 2.815791800479964,
-          "se": 0.06992344420956355,
+          "mean_diff": 2.8617152853933985,
+          "se": 0.03628762827299151,
           "better": 0,
-          "worse": 48,
-          "n": 48
+          "worse": 192,
+          "n": 192
         },
         "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": 19.117634642471256,
-          "se": 0.9297426621814611,
-          "better": 0,
-          "worse": 48,
-          "n": 48
+          "mean_diff": 19.185721235033267,
+          "se": 0.4123127724168241,
+          "better": 1,
+          "worse": 191,
+          "n": 192
         },
         "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": 2.6524215320280837,
-          "se": 0.07312909707461752,
+          "mean_diff": 2.7290853755926108,
+          "se": 0.03893595933597927,
           "better": 0,
-          "worse": 48,
-          "n": 48
-        }
-      }
-    },
-    "session_chain_dense": {
-      "gain_ci95": [
-        -0.1469679294531214,
-        0.21931150944096095
-      ],
-      "paired": {
-        "long_horizon_tracking:rotation_mae_deg": {
-          "mean_diff": -0.04346229370908245,
-          "se": 0.018282614210631924,
-          "better": 38,
-          "worse": 10,
-          "n": 48
-        },
-        "long_horizon_tracking:translation_mae_mm": {
-          "mean_diff": 0.0006604817457931886,
-          "se": 0.0039687085163273945,
-          "better": 31,
-          "worse": 17,
-          "n": 48
-        },
-        "relocalization_after_contact_loss:rotation_mae_deg": {
-          "mean_diff": -0.6266365962058144,
-          "se": 0.44846187088046763,
-          "better": 33,
-          "worse": 15,
-          "n": 48
-        },
-        "relocalization_after_contact_loss:translation_mae_mm": {
-          "mean_diff": 0.003932157039586798,
-          "se": 0.05333254413649644,
-          "better": 35,
-          "worse": 13,
-          "n": 48
+          "worse": 192,
+          "n": 192
         }
       }
     }
   },
   "stds": {
-    "long_horizon_tracking:rotation_mae_deg": 42.44423663212722,
-    "long_horizon_tracking:translation_mae_mm": 14.60479592491668,
-    "long_horizon_tracking:rotation_p95_deg": 41.06232257148761,
-    "long_horizon_tracking:translation_p95_mm": 13.705338526549326,
-    "long_horizon_tracking:false_loop_excess": 0.48960784307443445,
-    "relocalization_after_contact_loss:rotation_mae_deg": 40.60796002835069,
-    "relocalization_after_contact_loss:translation_mae_mm": 14.276622285233056,
-    "relocalization_after_contact_loss:rotation_p95_deg": 35.28958706785673,
-    "relocalization_after_contact_loss:translation_p95_mm": 12.046441590020187,
-    "relocalization_after_contact_loss:false_loop_excess": 0.48960784307443445
+    "long_horizon_tracking:rotation_mae_deg": 40.91098559885109,
+    "long_horizon_tracking:translation_mae_mm": 14.235783223960562,
+    "long_horizon_tracking:rotation_p95_deg": 37.86803936035317,
+    "long_horizon_tracking:translation_p95_mm": 12.995733706329867,
+    "long_horizon_tracking:false_loop_excess": 0.4818327613574604,
+    "relocalization_after_contact_loss:rotation_mae_deg": 38.71309609139438,
+    "relocalization_after_contact_loss:translation_mae_mm": 13.844786080558295,
+    "relocalization_after_contact_loss:rotation_p95_deg": 30.62563287447161,
+    "relocalization_after_contact_loss:translation_p95_mm": 11.22749851311813,
+    "relocalization_after_contact_loss:false_loop_excess": 0.4818327613574604
   },
   "status": {
     "exhaustive_two_stage": "scored",
     "gelslam_online": "scored",
     "hybrid_dense_loops": "scored",
-    "hybrid_local_loops": "scored",
     "nf_kf": "scored",
     "normalflow": "scored",
     "only_nf_exhaustive": "scored",
-    "reference_seed1": "scored",
     "sc_baseline_replacement": "failed",
     "sc_constant": "scored",
     "sc_duplicate_loops": "failed",
@@ -566,7 +447,6 @@
     "sc_nan_loops": "failed",
     "sc_nan_predictions": "failed",
     "sc_orphan": "failed",
-    "sc_read_hidden_test": "failed",
-    "session_chain_dense": "scored"
+    "sc_read_hidden_test": "failed"
   }
 }
